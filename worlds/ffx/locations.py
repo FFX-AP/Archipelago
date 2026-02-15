@@ -76,9 +76,9 @@ encounter_to_id = {
     "CALM: Defeat Defender X (Boss)"                 : ["nagi01_00"],
     "MOAR: Defeat Nemesis (Superboss)"               : ["zzzz02_76"],
     "COSF: Defeat Dark Yojimbo (Superboss)"          : ["nagi05_74"],
-    "MTGZ: Defeat Biran and Yenke (Boss)"            : ["mtgz01_10"],
-    "MTGZ: Defeat Seymour Flux (Boss)"               : ["mtgz02_00"],
-    "MTGZ: Defeat Dark Anima (Superboss)"            : ["mtgz01_70"],
+    "MTGS: Defeat Biran and Yenke (Boss)"            : ["mtgz01_10"],
+    "MTGS: Defeat Seymour Flux (Boss)"               : ["mtgz02_00"],
+    "MTGS: Defeat Dark Anima (Superboss)"            : ["mtgz01_70"],
     "MTGC: Defeat Sanctuary Keeper (Boss)"           : ["mtgz08_00"],
     "ZNKD: Defeat Spectral Keeper (Boss)"            : ["dome02_00"],
     "ZNKD: Defeat Yunalesca (Boss)"                  : ["dome06_00"],
@@ -130,9 +130,9 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
     ("CALM: Defeat Defender X (Boss)",                29, False),
     ("MOAR: Defeat Nemesis (Superboss)",              30, False),
     ("COSF: Defeat Dark Yojimbo (Superboss)",         31, False),
-    ("MTGZ: Defeat Biran and Yenke (Boss)",           32, False),
-    ("MTGZ: Defeat Seymour Flux (Boss)",              33, False),
-    ("MTGZ: Defeat Dark Anima (Superboss)",           34, False),
+    ("MTGS: Defeat Biran and Yenke (Boss)",           32, False),
+    ("MTGS: Defeat Seymour Flux (Boss)",              33, False),
+    ("MTGS: Defeat Dark Anima (Superboss)",           34, False),
     ("MTGC: Defeat Sanctuary Keeper (Boss)",          35, False),
     ("ZNKD: Defeat Spectral Keeper (Boss)",           36, False),
     ("ZNKD: Defeat Yunalesca (Boss)",                 37, False),
@@ -259,16 +259,16 @@ FFXOtherLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OtherOf
     ("COSF: Dead End West of Third Intersection (Primer)",                       25, False), # Al Bhed Primer XXV
     ("OMGR: North Side of Four Chest Intersection (Primer)",                     26, False), # Al Bhed Primer XXVI
  
-    ("Macalania Woods: After Spherimorph (Jecht's Sphere)",                         27, False), # Jecht Sphere 1
-    ("Macalania Woods: South - Near Entrance (Jecht's Sphere)",                     52, False), # Jecht Sphere 2
-    ("Besaid: Village - East of Temple (Jecht's Sphere)",                           28, False), # Jecht Sphere 3
-    ("S.S. Liki: Captains Room (Jecht's Sphere)",                                   29, False), # Jecht Sphere 4
-    ("Luca: Stadium Basement A - East Locker Hall (Jecht's Sphere)",                30, False), # Jecht Sphere 5
-    ("Mi'ihen: Oldroad, South - South End (Jecht's Sphere)",                        31, False), # Jecht Sphere 6
-    ("MRR: Precipice - South of Large Elevator (Auron's Sphere)",                   32, False), # Auron Sphere
-    ("Moonflow: South Warf (Jecht's Sphere)",                                       33, False), # Jecht Sphere 7
-    ("Thunder Plains: South - Near Tower (Jecht's Sphere)",                         34, False), # Jecht Sphere 8
-    ("Gagazet: Trail - Side Road (Braska's Sphere)",                                35, False), # Braska Sphere
+    ("MCWO: After Spherimorph (Jecht's Sphere)",                                 27, False), # Jecht Sphere 1
+    ("MCWO: South - Near Entrance (Jecht's Sphere)",                             52, False), # Jecht Sphere 2
+    ("BSIL: Village - East of Temple (Jecht's Sphere)",                          28, False), # Jecht Sphere 3
+    ("SSLI: Captains Room (Jecht's Sphere)",                                     29, False), # Jecht Sphere 4
+    ("LUCA: Stadium Basement A - East Locker Hall (Jecht's Sphere)",             30, False), # Jecht Sphere 5
+    ("MIHN: Oldroad, South - South End (Jecht's Sphere)",                        31, False), # Jecht Sphere 6
+    ("MUSH: Precipice - South of Large Elevator (Auron's Sphere)",               32, False), # Auron Sphere
+    ("MOON: South Warf (Jecht's Sphere)",                                        33, False), # Jecht Sphere 7
+    ("THPL: South - Near Tower (Jecht's Sphere)",                                34, False), # Jecht Sphere 8
+    ("MTGS: Trail - Side Road (Braska's Sphere)",                                35, False), # Braska Sphere
                                        
     #("SSWI: Jecht Shot (Event)",                                                36, False),
     ("GUAD: Automatic Upon Leaving Farplane (Event)",                            37, False), # Brotherhood Upgrade
@@ -606,7 +606,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("ZNKD: Dome Beyond - Chest After Taking Left or Right in Yunalesca Arena (Chest)",             267, False),  # Key Item: Sun Crest [A023h]
     ("BSIL: Beach - East Alcove (Chest)",                                                           268, False),  # Key Item: Moon Crest [A025h]
     ("MIHN: Oldroad, South - South End (Chest)",                                                    269, False),  # Key Item: Mars Crest [A027h]
-    ("MTGZ: Prominence - Hidden Between Left Pillars (Chest)",                                      270, False),  # Key Item: Saturn Crest [A02Ah]
+    ("MTGS: Prominence - Hidden Between Left Pillars (Chest)",                                      270, False),  # Key Item: Saturn Crest [A02Ah]
     ("LUCA: Stadium Locker Room - Inside Back Right Locker (Event)",                                271, False),  # Key Item: Jupiter Crest [A02Ch]
     ("GUAD: Farplane - West Side (Chest)",                                                          272, False),  # Key Item: Venus Crest [A02Eh]
     ("BIKA: Desert, West - First Western Alcove, Sinkhole (Chest)",                                 273, False),  # Key Item: Mercury Crest [A030h]
