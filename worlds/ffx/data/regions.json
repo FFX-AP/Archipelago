@@ -659,7 +659,7 @@
     "overdrives": [],
     "other": [],
     "recruits": [3],
-    "leads_to": [143],
+    "leads_to": [143, 1022],
     "rules": ["Defender X"]
   },
   {
@@ -684,7 +684,7 @@
     "overdrives": [],
     "other": [25],
     "recruits": [],
-    "leads_to": [151, 1016, 1015],
+    "leads_to": [151, 1016, 1015, 1022],
     "rules": ["Cavern of the Stolen Fayth"]
   },
 
@@ -1071,6 +1071,18 @@
   {
     "name": "Captures: City of Dying Dreams & Omega Ruins",
     "id": 1021,
+    "treasures": [],
+    "party_members": [],
+    "bosses": [],
+    "overdrives": [],
+    "other": [],
+    "recruits": [],
+    "leads_to": [],
+    "rules": []
+  },
+  {
+    "name": "Captures: Gorge Bottom & Cavern of the Stolen Fayth",
+    "id": 1022,
     "treasures": [],
     "party_members": [],
     "bosses": [],

@@ -176,7 +176,7 @@ def create_regions(world: FFXWorld, player) -> None:
     65:  "Macalania Woods 1st visit: Pre-Spherimorph",                      # Blue Element
     66:  "Cavern of the Stolen Fayth 1st visit",                            # Dark Element
     67:  "Omega Ruins: Pre-Ultima Weapon",                                  # Black Element
-    68:  "Cavern of the Stolen Fayth 1st visit",                            # Epaaj
+    68:  "Captures: Gorge Bottom & Cavern of the Stolen Fayth",             # Epaaj
     69:  "Captures: Mt. Gagazet Caves & Zanarkand",                         # Behemoth
     70:  "Sin: Pre-Seymour Omnis",                                          # Behemoth King
     71:  "Macalania Woods 1st visit: Pre-Spherimorph",                      # Chimera
