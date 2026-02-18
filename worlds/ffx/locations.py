@@ -330,7 +330,7 @@ FFXRecruitLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Recru
     ("Recruit: Wakka",      20, False),
     ("Recruit: Wedge",      21, False),
     ("Recruit: Yuma Guado", 22, False),
-    ("Recruit: Zalits",     23, False),
+    ("Recruit: Zalitz",     23, False),
     ("Recruit: Zev Ronso",  24, False)
 ]]
 
