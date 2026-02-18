@@ -823,7 +823,7 @@
     "overdrives": [],
     "other": [],
     "recruits": [],
-    "leads_to": [181, 1019, 1020],
+    "leads_to": [181, 1019, 1020, 1023],
     "rules": ["Sin"]
   },
   {
@@ -884,7 +884,7 @@
     "overdrives": [],
     "other": [],
     "recruits": [],
-    "leads_to": [],
+    "leads_to": [1023],
     "rules": ["Omega Weapon"]
   },
 
@@ -1083,6 +1083,18 @@
   {
     "name": "Captures: Gorge Bottom & Cavern of the Stolen Fayth",
     "id": 1022,
+    "treasures": [],
+    "party_members": [],
+    "bosses": [],
+    "overdrives": [],
+    "other": [],
+    "recruits": [],
+    "leads_to": [],
+    "rules": []
+  },
+  {
+    "name": "Captures: Inside Sin & Omega Ruins Post-Omega Weapon",
+    "id": 1023,
     "treasures": [],
     "party_members": [],
     "bosses": [],
