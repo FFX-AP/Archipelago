@@ -389,7 +389,7 @@
     "party_members": [],
     "bosses": [14],
     "overdrives": [],
-    "other": [27],
+    "other": [27, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
     "recruits": [],
     "leads_to": [102],
     "rules": ["Spherimorph"]
@@ -449,7 +449,7 @@
     "party_members": [],
     "bosses": [18],
     "overdrives": [],
-    "other": [38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
+    "other": [],
     "recruits": [],
     "leads_to": [],
     "rules": []
