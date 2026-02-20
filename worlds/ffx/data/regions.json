@@ -389,7 +389,7 @@
     "party_members": [],
     "bosses": [14],
     "overdrives": [],
-    "other": [27, 52],
+    "other": [27, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52],
     "recruits": [],
     "leads_to": [102],
     "rules": ["Spherimorph"]
@@ -449,7 +449,7 @@
     "party_members": [],
     "bosses": [18],
     "overdrives": [],
-    "other": [38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
+    "other": [],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -653,13 +653,13 @@
   {
     "name": "Calm Lands 1st visit: Post-Defender X",
     "id": 142,
-    "treasures": [118, 337, 338, 339, 340, 114, 274],
+    "treasures": [337, 338, 339, 340, 114, 274],
     "party_members": [],
     "bosses": [29],
     "overdrives": [],
     "other": [],
-    "recruits": [3],
-    "leads_to": [143],
+    "recruits": [],
+    "leads_to": [143, 1022],
     "rules": ["Defender X"]
   },
   {
@@ -678,13 +678,13 @@
   {
     "name": "Cavern of the Stolen Fayth 1st visit",
     "id": 150,
-    "treasures": [120, 121, 122, 123, 124, 125, 126],
+    "treasures": [118, 120, 121, 122, 123, 124, 125, 126],
     "party_members": [14],
     "bosses": [],
     "overdrives": [],
     "other": [25],
-    "recruits": [],
-    "leads_to": [151, 1016, 1015],
+    "recruits": [3],
+    "leads_to": [151, 1016, 1015, 1022],
     "rules": ["Cavern of the Stolen Fayth"]
   },
 
@@ -823,7 +823,7 @@
     "overdrives": [],
     "other": [],
     "recruits": [],
-    "leads_to": [181, 1019, 1020],
+    "leads_to": [181, 1019, 1020, 1023],
     "rules": ["Sin"]
   },
   {
@@ -884,7 +884,7 @@
     "overdrives": [],
     "other": [],
     "recruits": [],
-    "leads_to": [],
+    "leads_to": [1023],
     "rules": ["Omega Weapon"]
   },
 
@@ -1071,6 +1071,30 @@
   {
     "name": "Captures: City of Dying Dreams & Omega Ruins",
     "id": 1021,
+    "treasures": [],
+    "party_members": [],
+    "bosses": [],
+    "overdrives": [],
+    "other": [],
+    "recruits": [],
+    "leads_to": [],
+    "rules": []
+  },
+  {
+    "name": "Captures: Gorge Bottom & Cavern of the Stolen Fayth",
+    "id": 1022,
+    "treasures": [],
+    "party_members": [],
+    "bosses": [],
+    "overdrives": [],
+    "other": [],
+    "recruits": [],
+    "leads_to": [],
+    "rules": []
+  },
+  {
+    "name": "Captures: Inside Sin & Omega Ruins Post-Omega Weapon",
+    "id": 1023,
     "treasures": [],
     "party_members": [],
     "bosses": [],

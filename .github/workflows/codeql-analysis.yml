@@ -32,6 +32,10 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    permissions:
+      security-events: read  # Grants read access to security alerts
+      actions: read          # Often required to list previous actions
+      contents: read         # Required for code checkout
 
     strategy:
       fail-fast: false

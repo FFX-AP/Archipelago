@@ -331,7 +331,7 @@ FFXRecruitLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Recru
     ("Recruit: Wakka",      20, False),
     ("Recruit: Wedge",      21, False),
     ("Recruit: Yuma Guado", 22, False),
-    ("Recruit: Zalits",     23, False),
+    ("Recruit: Zalitz",     23, False),
     ("Recruit: Zev Ronso",  24, False)
 ]]
 
@@ -454,7 +454,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("CALM: South - Southeast Corner, Left (Chest)",                                                115, False),  # Gil: 10000 [64h]
     ("CALM: South - Southeast Corner, Right (Chest)",                                               116, False),  # Gil: 5000 [32h]
     ("CALM: Central - Behind Agency Tent (Chest)",                                                  117, False),  # Item: 1x Lv. 2 Key Sphere [2052h]
-    ("CALM: Gorge Bottom - Rusty Sword Between Two Rocks, East End (Event)",                        118, False),  # Key Item: Rusty Sword [A021h]
+    ("COSF: Gorge Bottom - Rusty Sword Between Two Rocks, East End (Event)",                        118, False),  # Key Item: Rusty Sword [A021h]
     #("Treasure 119 (Trashed)",                                                                     119, False),  # Gear: buki_get #38 [26h] { Kimahri [03h], Armor {HP +10% [8073h], Empty, Empty, Empty} }
     ("COSF: First Branch East (Chest)",                                                             120, False),  # Item: 1x Megalixir [2009h]
     ("COSF: Chamber East of First Intersection (Chest)",                                            121, False),  # Item: 1x Lv. 2 Key Sphere [2052h]
