@@ -20,14 +20,15 @@ class FFXItem(Item):
     game: str = "Final Fantasy X"
 
 
-normalItemOffset      = 0x2000
-keyItemOffset         = 0xA000
-equipItemOffset       = 0x5000
-partyMemberItemOffset = 0xF000
-regionItemOffset      = 0xE000
-abilityItemOffset     = 0xD000
-gilItemOffset         = 0x1000
-trapItemOffset        = 0x9000
+normalItemOffset        = 0x2000
+keyItemOffset           = 0xA000
+equipItemOffset         = 0x5000
+partyMemberItemOffset   = 0xF000
+regionItemOffset        = 0xE000
+abilityItemOffset       = 0xD000
+gilItemOffset           = 0x1000
+trapItemOffset          = 0x9000
+otherItemOffset         = 0xC000
 
 
 
@@ -671,6 +672,134 @@ trap_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | trapItemOffset) for x 
     ("Voice Trap", ItemClassification.trap, 0x0000),
 ]]
 
+other_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | otherItemOffset) for x in [
+    ("Customization: Sensor",             ItemClassification.useful, 0x0000),
+    ("Customization: Piercing",           ItemClassification.useful, 0x0001),
+    ("Customization: First Strike",       ItemClassification.useful, 0x0002),
+    ("Customization: Initiative",         ItemClassification.useful, 0x0003),
+    ("Customization: Firestrike",         ItemClassification.useful, 0x0004),
+    ("Customization: Fire Ward",          ItemClassification.useful, 0x0005),
+    ("Customization: Fireproof",          ItemClassification.useful, 0x0006),
+    ("Customization: Fire Eater",         ItemClassification.useful, 0x0007),
+    ("Customization: Lightningstrike",    ItemClassification.useful, 0x0008),
+    ("Customization: Lightning Ward",     ItemClassification.useful, 0x0009),
+    ("Customization: Lightningproof",     ItemClassification.useful, 0x000A),
+    ("Customization: Lightning Eater",    ItemClassification.useful, 0x000B),
+    ("Customization: Waterstrike",        ItemClassification.useful, 0x000C),
+    ("Customization: Water Ward",         ItemClassification.useful, 0x000D),
+    ("Customization: Waterproof",         ItemClassification.useful, 0x000E),
+    ("Customization: Water Eater",        ItemClassification.useful, 0x000F),
+    ("Customization: Icestrike",          ItemClassification.useful, 0x0010),
+    ("Customization: Ice Ward",           ItemClassification.useful, 0x0011),
+    ("Customization: Iceproof",           ItemClassification.useful, 0x0012),
+    ("Customization: Ice Eater",          ItemClassification.useful, 0x0013),
+    ("Customization: Darktouch",          ItemClassification.useful, 0x0014),
+    ("Customization: Darkstrike",         ItemClassification.useful, 0x0015),
+    ("Customization: Dark Ward",          ItemClassification.useful, 0x0016),
+    ("Customization: Darkproof",          ItemClassification.useful, 0x0017),
+    ("Customization: Silencetouch",       ItemClassification.useful, 0x0018),
+    ("Customization: Silencestrike",      ItemClassification.useful, 0x0019),
+    ("Customization: Silence Ward",       ItemClassification.useful, 0x001A),
+    ("Customization: Silenceproof",       ItemClassification.useful, 0x001B),
+    ("Customization: Sleeptouch",         ItemClassification.useful, 0x001C),
+    ("Customization: Sleepstrike",        ItemClassification.useful, 0x001D),
+    ("Customization: Sleep Ward",         ItemClassification.useful, 0x001E),
+    ("Customization: Sleepproof",         ItemClassification.useful, 0x001F),
+    ("Customization: Poisontouch",        ItemClassification.useful, 0x0020),
+    ("Customization: Poisonstrike",       ItemClassification.useful, 0x0021),
+    ("Customization: Poison Ward",        ItemClassification.useful, 0x0022),
+    ("Customization: Poisonproof",        ItemClassification.useful, 0x0023),
+    ("Customization: Stonetouch",         ItemClassification.useful, 0x0024),
+    ("Customization: Stonestrike",        ItemClassification.useful, 0x0025),
+    ("Customization: Stone Ward",         ItemClassification.useful, 0x0026),
+    ("Customization: Stoneproof",         ItemClassification.useful, 0x0027),
+    ("Customization: Deathtouch",         ItemClassification.useful, 0x0028),
+    ("Customization: Deathstrike",        ItemClassification.useful, 0x0029),
+    ("Customization: Death Ward",         ItemClassification.useful, 0x002A),
+    ("Customization: Deathproof",         ItemClassification.useful, 0x002B),
+    ("Customization: Zombietouch",        ItemClassification.useful, 0x002C),
+    ("Customization: Zombiestrike",       ItemClassification.useful, 0x002D),
+    ("Customization: Zombie Ward",        ItemClassification.useful, 0x002E),
+    ("Customization: Zombieproof",        ItemClassification.useful, 0x002F),
+    ("Customization: Slowtouch",          ItemClassification.useful, 0x0030),
+    ("Customization: Slowstrike",         ItemClassification.useful, 0x0031),
+    ("Customization: Slow Ward",          ItemClassification.useful, 0x0032),
+    ("Customization: Slowproof",          ItemClassification.useful, 0x0033),
+    ("Customization: Confuse Ward",       ItemClassification.useful, 0x0034),
+    ("Customization: Confuseproof",       ItemClassification.useful, 0x0035),
+    ("Customization: Berserk Ward",       ItemClassification.useful, 0x0036),
+    ("Customization: Berserkproof",       ItemClassification.useful, 0x0037),
+    ("Customization: Curseproof",         ItemClassification.useful, 0x0038),
+    ("Customization: Distill Power",      ItemClassification.useful, 0x0039),
+    ("Customization: Distill Mana",       ItemClassification.useful, 0x003A),
+    ("Customization: Distill Speed",      ItemClassification.useful, 0x003B),
+    ("Customization: Distill Ability",    ItemClassification.useful, 0x003C),
+    ("Customization: SOS NulBlaze",       ItemClassification.useful, 0x003D),
+    ("Customization: SOS NulShock",       ItemClassification.useful, 0x003E),
+    ("Customization: SOS NulTide",        ItemClassification.useful, 0x003F),
+    ("Customization: SOS NulFrost",       ItemClassification.useful, 0x0040),
+    ("Customization: SOS Shell",          ItemClassification.useful, 0x0041),
+    ("Customization: SOS Protect",        ItemClassification.useful, 0x0042),
+    ("Customization: SOS Reflect",        ItemClassification.useful, 0x0043),
+    ("Customization: SOS Haste",          ItemClassification.useful, 0x0044),
+    ("Customization: SOS Regen",          ItemClassification.useful, 0x0045),
+    ("Customization: Auto-Shell",         ItemClassification.useful, 0x0046),
+    ("Customization: Auto-Protect",       ItemClassification.useful, 0x0047),
+    ("Customization: Auto-Reflect",       ItemClassification.useful, 0x0048),
+    ("Customization: Auto-Haste",         ItemClassification.useful, 0x0049),
+    ("Customization: Auto-Regen",         ItemClassification.useful, 0x004A),
+    ("Customization: Strength +3%",       ItemClassification.useful, 0x004B),
+    ("Customization: Strength +5%",       ItemClassification.useful, 0x004C),
+    ("Customization: Strength +10%",      ItemClassification.useful, 0x004D),
+    ("Customization: Strength +20%",      ItemClassification.useful, 0x004E),
+    ("Customization: Magic +3%",          ItemClassification.useful, 0x004F),
+    ("Customization: Magic +5%",          ItemClassification.useful, 0x0050),
+    ("Customization: Magic +10%",         ItemClassification.useful, 0x0051),
+    ("Customization: Magic +20%",         ItemClassification.useful, 0x0052),
+    ("Customization: Defense +3%",        ItemClassification.useful, 0x0053),
+    ("Customization: Defense +5%",        ItemClassification.useful, 0x0054),
+    ("Customization: Defense +10%",       ItemClassification.useful, 0x0055),
+    ("Customization: Defense +20%",       ItemClassification.useful, 0x0056),
+    ("Customization: Magic Def +3%",      ItemClassification.useful, 0x0057),
+    ("Customization: Magic Def +5%",      ItemClassification.useful, 0x0058),
+    ("Customization: Magic Def +10%",     ItemClassification.useful, 0x0059),
+    ("Customization: Magic Def +20%",     ItemClassification.useful, 0x005A),
+    ("Customization: HP +5%",             ItemClassification.useful, 0x005B),
+    ("Customization: HP +10%",            ItemClassification.useful, 0x005C),
+    ("Customization: HP +20%",            ItemClassification.useful, 0x005D),
+    ("Customization: HP +30%",            ItemClassification.useful, 0x005E),
+    ("Customization: MP +5%",             ItemClassification.useful, 0x005F),
+    ("Customization: MP +10%",            ItemClassification.useful, 0x0060),
+    ("Customization: MP +20%",            ItemClassification.useful, 0x0061),
+    ("Customization: MP +30%",            ItemClassification.useful, 0x0062),
+    ("Customization: Counterattack",      ItemClassification.useful, 0x0063),
+    ("Customization: Evade & Counter",    ItemClassification.useful, 0x0064),
+    ("Customization: Magic Counter",      ItemClassification.useful, 0x0065),
+    ("Customization: Magic Booster",      ItemClassification.useful, 0x0066),
+    ("Customization: Alchemy",            ItemClassification.useful, 0x0067),
+    ("Customization: Auto-Potion",        ItemClassification.useful, 0x0068),
+    ("Customization: Auto-Med",           ItemClassification.useful, 0x0069),
+    ("Customization: Auto-Phoenix",       ItemClassification.useful, 0x006A),
+    ("Customization: Half MP Cost",       ItemClassification.useful, 0x006B),
+    ("Customization: One MP Cost",        ItemClassification.useful, 0x006C),
+    ("Customization: Double AP",          ItemClassification.useful, 0x006D),
+    ("Customization: Triple AP",          ItemClassification.useful, 0x006E),
+    ("Customization: Overdrive to AP",    ItemClassification.useful, 0x006F),
+    ("Customization: SOS Overdrive",      ItemClassification.useful, 0x0070),
+    ("Customization: Double Overdrive",   ItemClassification.useful, 0x0071),
+    ("Customization: Triple Overdrive",   ItemClassification.useful, 0x0072),
+    ("Customization: Gillionaire",        ItemClassification.useful, 0x0073),
+    ("Customization: Pickpocket",         ItemClassification.useful, 0x0074),
+    ("Customization: Master Thief",       ItemClassification.useful, 0x0075),
+    ("Customization: HP Stroll",          ItemClassification.useful, 0x0076),
+    ("Customization: MP Stroll",          ItemClassification.useful, 0x0077),
+    ("Customization: No Encounters",      ItemClassification.useful, 0x0078),
+    ("Customization: Break MP Limit",     ItemClassification.useful, 0x0079),
+    ("Customization: Break HP Limit",     ItemClassification.useful, 0x007A),
+    ("Customization: Break Damage Limit", ItemClassification.useful, 0x007B),
+    ("Customization: Ribbon",             ItemClassification.useful, 0x007C),
+]]
+
 stat_abilities = [ability for ability in abilities_per_character if ability.itemID & 0xFF <= 0x26]
 
 skill_abilities = [ability for ability in abilities_per_character if ability not in stat_abilities]
@@ -694,7 +823,8 @@ AllItems = list(chain(normal_items,
                       equip_items,
                       party_member_items,
                       region_unlock_items,
-                      trap_items))
+                      trap_items,
+                      other_items))
 
 filler_items: list[ItemData] = [item for item in AllItems if item.progression == ItemClassification.filler]
 
