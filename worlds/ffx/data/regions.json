@@ -653,12 +653,12 @@
   {
     "name": "Calm Lands 1st visit: Post-Defender X",
     "id": 142,
-    "treasures": [118, 337, 338, 339, 340, 114, 274],
+    "treasures": [337, 338, 339, 340, 114, 274],
     "party_members": [],
     "bosses": [29],
     "overdrives": [],
     "other": [],
-    "recruits": [3],
+    "recruits": [],
     "leads_to": [143, 1022],
     "rules": ["Defender X"]
   },
@@ -678,12 +678,12 @@
   {
     "name": "Cavern of the Stolen Fayth 1st visit",
     "id": 150,
-    "treasures": [120, 121, 122, 123, 124, 125, 126],
+    "treasures": [118, 120, 121, 122, 123, 124, 125, 126],
     "party_members": [14],
     "bosses": [],
     "overdrives": [],
     "other": [25],
-    "recruits": [],
+    "recruits": [3],
     "leads_to": [151, 1016, 1015, 1022],
     "rules": ["Cavern of the Stolen Fayth"]
   },
