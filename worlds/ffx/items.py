@@ -784,7 +784,7 @@ other_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | otherItemOffset) for 
     ("Customization: One MP Cost",        ItemClassification.useful, 0x006C),
     ("Customization: Double AP",          ItemClassification.useful, 0x006D),
     ("Customization: Triple AP",          ItemClassification.useful, 0x006E),
-    ("Customization: Overdrive -> AP",    ItemClassification.useful, 0x006F),
+    ("Customization: Overdrive to AP",    ItemClassification.useful, 0x006F),
     ("Customization: SOS Overdrive",      ItemClassification.useful, 0x0070),
     ("Customization: Double Overdrive",   ItemClassification.useful, 0x0071),
     ("Customization: Triple Overdrive",   ItemClassification.useful, 0x0072),
