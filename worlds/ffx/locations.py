@@ -268,7 +268,7 @@ FFXOtherLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OtherOf
     #("Jecht Sphere - Moonflow",                                                 33, False),
     #("Jecht Sphere - Thunder Plains",                                           34, False),
     #("Braska's Sphere - Mt. Gagazet",                                           35, False),
-                                       
+
     #("SSWI: Jecht Shot (Event)",                                                36, False),
     ("GUAD: Automatic Upon Leaving Farplane (Event)",                            37, False), # Brotherhood Upgrade
 
