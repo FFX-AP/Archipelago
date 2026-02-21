@@ -385,11 +385,11 @@
   {
     "name": "Macalania Woods 1st visit: Post-Spherimorph",
     "id": 101,
-    "treasures": [],
+    "treasures": [177],
     "party_members": [],
     "bosses": [14],
     "overdrives": [],
-    "other": [27, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52],
+    "other": [27, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
     "recruits": [],
     "leads_to": [102],
     "rules": ["Spherimorph"]
