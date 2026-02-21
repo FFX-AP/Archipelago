@@ -500,8 +500,7 @@ def create_regions(world: FFXWorld, player) -> None:
     
     if not world.options.jecht_spheres.value:
         jecht_sphere_location_ids = [
-            27, # Jecht Sphere 1
-            52, # Jecht Sphere 2
+            27, # Jecht Sphere 2
             28, # Jecht Sphere 3
             29, # Jecht Sphere 4
             30, # Jecht Sphere 5
@@ -513,7 +512,9 @@ def create_regions(world: FFXWorld, player) -> None:
         ]
         for id in jecht_sphere_location_ids:
             location_name = world.location_id_to_name[id | OtherOffset]
-            world.options.exclude_locations.value.add(location_name)  
+            world.options.exclude_locations.value.add(location_name) 
+        location_name = world.location_id_to_name[177 | TreasureOffset]
+        world.options.exclude_locations.value.add(location_name)
     
     final_region = world.get_region("Sin: Braska's Final Aeon")
     final_region.add_event("Sin: Braska's Final Aeon", "Victory", location_type=FFXLocation, item_type=FFXItem)
