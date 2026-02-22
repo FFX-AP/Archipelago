@@ -259,15 +259,15 @@ FFXOtherLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OtherOf
     ("COSF: Dead End West of Third Intersection (Primer)",                       25, False), # Al Bhed Primer XXV
     ("OMGR: North Side of Four Chest Intersection (Primer)",                     26, False), # Al Bhed Primer XXVI
  
-    ("MCWO: South - Near Entrance (Jecht's Sphere)",                             27, False), # Jecht Sphere 2
-    ("BSIL: Village - East of Temple (Jecht's Sphere)",                          28, False), # Jecht Sphere 3
-    ("SSLI: Captains Room (Jecht's Sphere)",                                     29, False), # Jecht Sphere 4
-    ("LUCA: Stadium Basement A - East Locker Hall (Jecht's Sphere)",             30, False), # Jecht Sphere 5
-    ("MIHN: Oldroad, South - South End (Jecht's Sphere)",                        31, False), # Jecht Sphere 6
-    ("MUSH: Precipice - South of Large Elevator (Auron's Sphere)",               32, False), # Auron Sphere
-    ("MOON: South Warf (Jecht's Sphere)",                                        33, False), # Jecht Sphere 7
-    ("THPL: South - Near Tower (Jecht's Sphere)",                                34, False), # Jecht Sphere 8
-    ("MTGS: Trail - Side Road (Braska's Sphere)",                                35, False), # Braska Sphere
+    ("BSIL: Village - East of Temple (Jecht's Sphere)",                          27, False), # Jecht Sphere 2
+    ("THPL: South - Near Tower (Jecht's Sphere)",                                28, False), # Jecht Sphere 3
+    ("MOON: South Warf (Jecht's Sphere)",                                        29, False), # Jecht Sphere 4
+    ("MIHN: Oldroad, South - South End (Jecht's Sphere)",                        30, False), # Jecht Sphere 5
+    ("LUCA: Stadium Basement A - East Locker Hall (Jecht's Sphere)",             31, False), # Jecht Sphere 6
+    ("SSLI: Captains Room (Jecht's Sphere)",                                     32, False), # Auron Sphere
+    ("MTGS: Trail - Side Road (Braska's Sphere)",                                33, False), # Jecht Sphere 7
+    ("MCWO: South - Near Entrance (Jecht's Sphere)",                             34, False), # Jecht Sphere 8
+    ("MUSH: Precipice - South of Large Elevator (Auron's Sphere)",               35, False), # Braska Sphere
                                        
     #("SSWI: Jecht Shot (Event)",                                                36, False),
     ("GUAD: Automatic Upon Leaving Farplane (Event)",                            37, False), # Brotherhood Upgrade

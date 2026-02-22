@@ -485,7 +485,7 @@ def create_regions(world: FFXWorld, player) -> None:
             332, # Omega Ruins - Behind Omega Weapon Chest
         ]
         super_boss_other_ids = [
-            28, # Jecht Sphere 3 - Requires Dark Valefor
+            27, # Jecht Sphere 2 - Requires Dark Valefor
         ]
         for id in super_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]

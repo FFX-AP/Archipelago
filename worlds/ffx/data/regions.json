@@ -67,7 +67,7 @@
     "party_members": [],
     "bosses": [2],
     "overdrives": [],
-    "other": [28],
+    "other": [27],
     "recruits": [],
     "leads_to": [13],
     "rules": []
@@ -79,7 +79,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [29],
+    "other": [32],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -178,7 +178,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [30],
+    "other": [31],
     "recruits": [16],
     "leads_to": [],
     "rules": []
@@ -215,7 +215,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [31],
+    "other": [30],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -252,7 +252,7 @@
     "party_members": [],
     "bosses": [45, 46, 47],
     "overdrives": [],
-    "other": [32],
+    "other": [35],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -314,7 +314,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [33],
+    "other": [29],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -364,7 +364,7 @@
     "party_members": [],
     "bosses": [13],
     "overdrives": [],
-    "other": [34],
+    "other": [28],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -389,7 +389,7 @@
     "party_members": [],
     "bosses": [14],
     "overdrives": [],
-    "other": [27, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
+    "other": [34, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
     "recruits": [],
     "leads_to": [102],
     "rules": ["Spherimorph"]
@@ -735,7 +735,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [35],
+    "other": [33],
     "recruits": [],
     "leads_to": [162, 1016, 1017],
     "rules": ["Biran and Yenke"]
