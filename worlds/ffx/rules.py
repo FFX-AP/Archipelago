@@ -263,6 +263,13 @@ def set_rules(world: FFXWorld) -> None:
     # Send Belgemine? (Moon sigil)
     add_rule(world.get_location(world.location_id_to_name[275 | TreasureOffset]), lambda state: state.has(f"Party Member: Yuna", world.player) and state.has_all([f"Party Member: {name}" for name in ["Yojimbo", "Anima", "Magus Sisters"]], world.player))
 
+    ## Belgemine
+    # Mi'ihen fight
+    add_rule(world.get_location(world.location_id_to_name[186 | TreasureOffset]), create_min_summon_rule(world, 2))
+    # Moonflow fight
+    add_rule(world.get_location(world.location_id_to_name[372 | TreasureOffset]), create_min_summon_rule(world, 2))
+    # Calm Lands fight
+    add_rule(world.get_location(world.location_id_to_name[187 | TreasureOffset]), create_min_summon_rule(world, 2))
 
     ## Dark Aeons
     dark_aeons = [

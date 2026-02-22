@@ -6,7 +6,7 @@ from typing import NamedTuple, List
 
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
     FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, RecruitOffset, CaptureOffset, OtherOffset
-from .rules import ruleDict
+from .rules import ruleDict, create_min_summon_rule
 from .items import party_member_items, key_items, FFXItem
 from worlds.generic.Rules import add_rule
 from ..AutoWorld import World
@@ -316,6 +316,12 @@ def create_regions(world: FFXWorld, player) -> None:
                 new_rule = None
             menu_entrance: Entrance = menu_region.connect(other_region, rule=new_rule)
             top_level_regions.append((other_region, menu_entrance))
+
+    # Connect Remiem Temple to Summoner's Soul and Aeon's Soul
+    # Defined here instead of regions.json because there is no rule from Moonflow/Calm Lands
+    remiem_region = region_dict[141]
+    remiem_region.connect(region_dict[1100], rule=create_min_summon_rule(world, 2))
+    remiem_region.connect(region_dict[1101], rule=create_min_summon_rule(world, 2))
 
     #for this_region, _ in top_level_regions:
     #    for other_region, menu_entrance in top_level_regions:

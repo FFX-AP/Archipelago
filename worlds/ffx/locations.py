@@ -522,7 +522,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("THPL: North - West Side, Near North Exit (Chest)",                                            184, False),  # Item: 1x Remedy [200Fh]
     ("THPL: North - East of Final Lightning Rod (Chest)",                                           185, False),  # Gil: 2000 [14h]
     ("MIHN: South End - Fight Belgemine (Win) (Event)",                                             186, False),  # Gear: buki_get #74 [4Ah] { Yuna [01h], Armor {HP +10% [8073h], Silence Ward [8045h]} }
-    ("REMI: Beat Belgemine (NPC)",                                                                  187, False),  # Item: 30x Power Sphere [2046h]
+    ("CALM: Central - Fight Belgemine (Win) (Event)",                                               187, False),  # Item: 30x Power Sphere [2046h]
     ("THPL: Cactuar Statue Minigame (Event)",                                                       188, False),  # Gear: buki_get #56 [38h] { Kimahri [03h], Weapon Formula=Celestial HP-based [11h] {No AP [8014h], Empty, Empty, Empty} }
     ("THPL: Lightning Dodger - 5 Consecutive Dodges (Event)",                                       189, False),  # Item: 2x X-Potion [2002h]
     ("THPL: Lightning Dodger - 10 Consecutive Dodges (Event)",                                      190, False),  # Item: 2x Mega-Potion [2003h]
@@ -701,14 +701,14 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("HOME: Outside Summoner's Sanctum - Left (Chest)",                                             363, False),  # Item: 1x Lv. 4 Key Sphere [2054h]
     ("HOME: Environment Controls (Chest)",                                                          364, False),  # Gil: 10000 [64h]
     ("SSWI: Deck - Top Floor, Counting Gulls (NPC)",                                                365, False),  # Gear: buki_get #70 [46h] { Wakka [04h], Weapon {Magic +20% [8069h], Magic +10% [8068h], Magic +5% [8067h], Magic +3% [8066h]} }
-    ("MIHN: South End - Fight Belgemine (Lose) (Event)",                                            366, False),  # Gear: buki_get #71 [47h] { Yuna [01h], Armor {HP +10% [8073h], Empty} }
+    #("MIHN: South End - Fight Belgemine (Lose) (Event)",                                            366, False),  # Gear: buki_get #71 [47h] { Yuna [01h], Armor {HP +10% [8073h], Empty} }
     ("HOME: Keyakku, on Ground (NPC)",                                                              367, False),  # Item: 2x Hi-Potion [2001h]
     #("MUSH: Valley - Code VICTORIOUS",                                                             368, False),  # Gear: buki_get #72 [48h] { Rikku [06h], Armor {Lightningproof [8028h], Fireproof [8020h], Iceproof [8024h], Empty} } UNCOMMENT WHEN CODES ARE INCORPORATED
     #("BSIL: BSIL Ruins - Code MURASAME",                                                           369, False),  # Gear: buki_get #73 [49h] { Auron [02h], Weapon {Piercing [800Bh], One MP Cost [800Dh], Empty, Empty} } UNCOMMENT WHEN CODES ARE INCORPORATED
     ("CALM: Speed Sphere x30 (Lose Aeon Fight)",                                                    370, False),  # Item: 30x Speed Sphere [2048h]
     ("Defeat Belgemine Twice",                                                                      371, False),  # Key Item: Aeon's Soul [A01Fh]
-    ("MOON: South Bank Road - Fight Belgemine (Win) (Event) (1)",                                   372, False),  # Item: 2x Dragon Scale [2021h]
-    ("MOON: South Bank Road - Fight Belgemine (Lose) (Event) (1)",                                  373, False),  # Item: 6x Smoke Bomb [2028h]
+    ("MOON: South Bank Road - Fight Belgemine (Win) (Event)",                                       372, False),  # Item: 2x Dragon Scale [2021h]
+    #("MOON: South Bank Road - Fight Belgemine (Lose) (Event)",                                     373, False),  # Item: 6x Smoke Bomb [2028h]
     ("Defeat Belgemine Once",                                                                       374, False),  # Key Item: Summoner's Soul [A01Eh]
     ("AIRS: Cabin - Before Evrae, Yellow Al Bhed on Left (NPC)",                                    375, False),  # Item: 4x Al Bhed Potion [2014h]
     ("MOON: South Bank Road - Right of Shelinda (Chest)",                                           376, False),  # Item: 3x Lv. 1 Key Sphere [2051h]
