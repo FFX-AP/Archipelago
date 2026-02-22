@@ -385,7 +385,7 @@
   {
     "name": "Macalania Woods 1st visit: Post-Spherimorph",
     "id": 101,
-    "treasures": [],
+    "treasures": [177],
     "party_members": [],
     "bosses": [14],
     "overdrives": [],

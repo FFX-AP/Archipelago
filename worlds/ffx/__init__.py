@@ -93,7 +93,10 @@ class FFXWorld(World):
         required_items = []
 
         for item in key_items:
-            required_items.append(item.itemName)
+            if item.itemName == "Progressive Jecht's Sphere":
+                required_items.extend([item.itemName]*10)
+            else:
+                required_items.append(item.itemName)
 
         # Progressive celestial weapons and Brotherhood
         for item in equip_items:
@@ -199,6 +202,7 @@ class FFXWorld(World):
             "creation_rewards": self.options.creation_rewards.value,
             "arena_bosses": self.options.arena_bosses.value,
             "super_bosses": self.options.super_bosses.value,
+            "jecht_spheres": self.options.jecht_spheres.value,
             "always_capture": self.options.always_capture.value,
             "logic_difficulty": self.options.logic_difficulty.value,            
         }

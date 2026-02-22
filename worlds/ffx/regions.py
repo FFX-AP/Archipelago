@@ -5,7 +5,7 @@ import typing
 from typing import NamedTuple, List
 
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
-    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, RecruitOffset, CaptureOffset
+    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, RecruitOffset, CaptureOffset, OtherOffset
 from .rules import ruleDict
 from .items import party_member_items, key_items, FFXItem
 from worlds.generic.Rules import add_rule
@@ -481,12 +481,40 @@ def create_regions(world: FFXWorld, player) -> None:
           # 25, # "Airship: Penance"
             44, # "Omega Ruins: Omega Weapon"
         ]
+        super_boss_treasure_ids = [
+            332, # Omega Ruins - Behind Omega Weapon Chest
+        ]
+        super_boss_other_ids = [
+            28, # Jecht Sphere 3 - Requires Dark Valefor
+        ]
         for id in super_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]
             world.options.exclude_locations.value.add(location_name)
-        location_name = world.location_id_to_name[332 | TreasureOffset]
+        for id in super_boss_treasure_ids:
+            location_name = world.location_id_to_name[id | TreasureOffset]
+            world.options.exclude_locations.value.add(location_name)
+        if world.options.jecht_spheres.value:
+            for id in super_boss_other_ids:
+                location_name = world.location_id_to_name[id | OtherOffset]
+                world.options.exclude_locations.value.add(location_name)    
+    
+    if not world.options.jecht_spheres.value:
+        jecht_sphere_location_ids = [
+            27, # Jecht Sphere 2
+            28, # Jecht Sphere 3
+            29, # Jecht Sphere 4
+            30, # Jecht Sphere 5
+            31, # Jecht Sphere 6
+            32, # Auron Sphere
+            33, # Jecht Sphere 7
+            34, # Jecht Sphere 8
+            35, # Braska Sphere
+        ]
+        for id in jecht_sphere_location_ids:
+            location_name = world.location_id_to_name[id | OtherOffset]
+            world.options.exclude_locations.value.add(location_name) 
+        location_name = world.location_id_to_name[177 | TreasureOffset]
         world.options.exclude_locations.value.add(location_name)
-        
     
     final_region = world.get_region("Sin: Braska's Final Aeon")
     final_region.add_event("Sin: Braska's Final Aeon", "Victory", location_type=FFXLocation, item_type=FFXItem)
@@ -498,7 +526,6 @@ def create_regions(world: FFXWorld, player) -> None:
     final_aeon.access_rule = lambda state: goal_requirement_rule(state) and primer_requirement_rule(state)
 
 
-        #world.get_location("Monster Arena: Nemesis"                  ).progress_type = LocationProgressType.EXCLUDED
 
     # character_names = [
     #     "Tidus",

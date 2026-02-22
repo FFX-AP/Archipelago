@@ -164,6 +164,18 @@ class SuperBosses(Toggle):
     option_on = 1
 
 
+class JechtSpheres(Toggle):
+    """
+    Sets whether Jecht Sphere locations are included or not. If off they will only have filler items.
+    Includes all 8 Jecht Spheres, as well as the Auron & Braska Sphere
+    Default is off.
+    """
+    display_name = "Jecht Spheres"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
 class LogicDifficulty(Range):
     """
     Sets how strict the logic is for region access. Higher is harder / less restrictive.
@@ -244,6 +256,7 @@ class FFXOptions(PerGameCommonOptions):
     creation_rewards: CreationRewards
     arena_bosses: MonsterArenaBosses
     super_bosses: SuperBosses
+    jecht_spheres: JechtSpheres
     trap_percentage: TrapPercentage
     logic_difficulty: LogicDifficulty
     early_party_members: EarlyPartyMembers
