@@ -465,6 +465,8 @@ def create_regions(world: FFXWorld, player) -> None:
         for id in arena_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]
             world.options.exclude_locations.value.add(location_name)
+        location_name = world.location_id_to_name[496 | TreasureOffset]
+        world.options.exclude_locations.value.add(location_name)
 
     if not world.options.super_bosses.value:
         super_boss_location_ids = [

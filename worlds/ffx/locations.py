@@ -831,7 +831,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("SINS: Wicked Cait Sith (Point of No Return)",                                                 493, False),  # Gear: buki_get #84 [54h] { Lulu [05h], Weapon {Deathstrike [802Eh], Empty, Empty, Empty} }
     ("SINS: Attribute Sphere x1 (Point of No Return)",                                              494, False),  # Item: 1x Attribute Sphere [204Bh]
     ("SINS: Hrunting (Point of No Return)",                                                         495, False),  # Gear: buki_get #85 [55h] { Tidus [00h], Weapon {SOS Overdrive [8010h]} }
-    ("MOAR: Defeat Nemesis",                                                                        496, False),  # Key Item: Mark of Conquest [A029h]
+    ("MOAR: Become 'The One Who Conquered All' (Event)",                                            496, False),  # Key Item: Mark of Conquest [A029h]
     ("LUCA: Win the Story Blitzball Tournament (Event)",                                            497, False),  # Item: 1x Strength Sphere [2057h]
 ]]
 

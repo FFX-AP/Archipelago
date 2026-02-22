@@ -436,6 +436,7 @@ def set_rules(world: FFXWorld) -> None:
         creation_name = world.location_id_to_name[creation_id | BossOffset]
         add_rule(nemesis, lambda state, creation_name=creation_name: state.can_reach_location(creation_name, world.player))
     add_rule(nemesis, ruleDict[nemesis.name](world))
+    add_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), lambda state: state.can_reach_location(nemesis.name, world.player))
 
 
     ## Celestials
