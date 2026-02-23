@@ -46,10 +46,10 @@ class RequiredPrimers(Range):
 
 class APMultiplier(Range):
     """
-    Sets the AP multiplier.
+    Sets the AP (Ability Point) multiplier.
     Default is 2.
     """
-    display_name = "AP Multiplier"
+    display_name = "Ability Point Multiplier"
     default = 2
     range_start = 1
     range_end = 10
