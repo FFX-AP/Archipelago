@@ -222,6 +222,22 @@ class AlwaysCapture(Toggle):
     option_on = 1
 
 
+class CaptureDamage(Choice):
+    """
+    Sets which damage type(s) will trigger a capture attempt, assuming that you have a capture weapon or 'Always Capture' is enabled.
+    - Physical: Only physical damage originating from a party member (base game rules).
+    - All Direct: Any damage directly caused by a party member (or Aeon if 'Always Capture' is enabled). This includes items, magical damage and overdrives.
+    - All: Any damage caused by a party member (or Aeon if 'Always Capture' is enabled). This includes status effects.
+      - Behaves the same as 'All Direct' when 'Always Capture' is disabled.
+    Default is Physical.
+    """
+    display_name = "Capture Damage"
+    default = 0
+    option_physical = 0
+    option_all_direct = 1
+    option_all = 2
+
+
 class TrapPercentage(Range):
     """
     Sets the percentage of non-progression items that will be traps.
@@ -262,4 +278,5 @@ class FFXOptions(PerGameCommonOptions):
     early_party_members: EarlyPartyMembers
     always_sensor: AlwaysSensor
     always_capture: AlwaysCapture
+    capture_damage: CaptureDamage
     sphere_grid_randomization: SphereGridRandomization
