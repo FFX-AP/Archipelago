@@ -18,7 +18,7 @@ else:
     FFXWorld = object
 
 
-class FFXContainer(APPlayerContainer):
+class FFXContainer(APPatch):
     game: Optional[str] = "Final Fantasy X"
     patch_file_ending = ".apffx"
 
