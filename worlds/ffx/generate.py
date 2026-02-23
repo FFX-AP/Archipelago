@@ -6,9 +6,10 @@ import json
 import typing
 
 from settings import get_settings
+from typing import Optional, Dict
 from Options import OptionError
 from worlds.AutoWorld import World
-from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatch
+from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatch, APPlayerContainer
 from .locations import location_types, get_location_type
 
 if typing.TYPE_CHECKING:
@@ -17,12 +18,41 @@ else:
     FFXWorld = object
 
 
-class APFFXFile(APPatch):
-    game = "Final Fantasy X"
-    def get_manifest(self):
-        manifest = super().get_manifest()
-        manifest["patch_file_ending"] = ".apffx"
-        return manifest
+# class APFFXFile(APPatch):
+#     game = "Final Fantasy X"
+#     def get_manifest(self):
+#         manifest = super().get_manifest()
+#         manifest["patch_file_ending"] = ".apffx"
+#         return manifest
+
+# class FFXContainer(APPlayerContainer):
+#     game = "Final Fantasy X"
+#     patch_file_ending = ".apffx"
+
+#     def __init__(self, locations, misc_data, path, player, player_name = "", server = ""):
+#         self.data = json.dumps(misc_data | locations, indent=4)
+#         self.file_path = path
+#         super().__init__(path, player, player_name, server)
+
+#     def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
+#         opened_zipfile.writestr(self.file_path, self.data)
+#         super().write_contents(opened_zipfile)
+
+class FFXContainer(APPlayerContainer):
+    game: Optional[str] = "Final Fantasy X"
+    patch_file_ending = ".apffx"
+
+    def __init__(self, patch_data: Dict[str, str], base_path: str = "", output_directory: str = "",
+                 player: Optional[int] = None, player_name: str = "", server: str = ""):
+        self.patch_data = patch_data
+        self.file_path = base_path
+        container_path = os.path.join(output_directory, base_path + ".apffx")
+        super().__init__(container_path, player, player_name, server)
+
+    def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
+        for filename, yml in self.patch_data.items():
+            opened_zipfile.writestr(filename, yml)
+        super().write_contents(opened_zipfile)
 
 
 def options_validation(world: FFXWorld) -> None:
@@ -81,14 +111,28 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
         starting_items.append(item.code)
     locations["StartingItems"] = starting_items
 
+    mod_name = world.multiworld.get_out_file_name_base(world.player)
+    mod_dir = os.path.join(output_directory, mod_name)
+    mod_files = {
+        "locations.json": json.dumps(miscellaneous_data | locations, indent=4)
+    }
+    mod = FFXContainer(mod_files, mod_dir, output_directory, world.player,
+                       world.multiworld.get_file_safe_player_name(world.player))
+    mod.write()
 
-    file_path = os.path.join(output_directory, f"{world.multiworld.get_out_file_name_base(world.player)}.json")
-    with open(file_path, "w", encoding="utf-8") as outfile:
-        outfile.write(json.dumps(miscellaneous_data | locations, indent=4))
 
-    #file_path = os.path.join(output_directory, f"{world.multiworld.get_out_file_name_base(world.player)}.apffx")
-    #APFFX = APFFXFile(file_path, player=world.player, player_name=world.multiworld.player_name[world.player])
-    #with zipfile.ZipFile(file_path, mode="w", compression=zipfile.ZIP_DEFLATED,
+
+    # file_path = os.path.join(output_directory, f"{world.multiworld.get_out_file_name_base(world.player)}.json")
+    # with open(file_path, "w", encoding="utf-8") as outfile:
+    #     outfile.write(json.dumps(miscellaneous_data | locations, indent=4))
+
+
+
+    
+
+    # file_path = os.path.join(output_directory, f"{world.multiworld.get_out_file_name_base(world.player)}.apffx")
+    # APFFX = APFFXFile(file_path, player=world.player, player_name=world.multiworld.player_name[world.player])
+    # with zipfile.ZipFile(file_path, mode="w", compression=zipfile.ZIP_DEFLATED,
     #                     compresslevel=9) as zf:
-    #    zf.writestr("locations.json", json.dumps(locations))
+    #    zf.writestr("locations.json", json.dumps(miscellaneous_data | locations, indent=4))
     #    APFFX.write_contents(zf)
