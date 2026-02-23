@@ -706,10 +706,10 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     #("MUSH: Valley - Code VICTORIOUS",                                                             368, False),  # Gear: buki_get #72 [48h] { Rikku [06h], Armor {Lightningproof [8028h], Fireproof [8020h], Iceproof [8024h], Empty} } UNCOMMENT WHEN CODES ARE INCORPORATED
     #("BSIL: BSIL Ruins - Code MURASAME",                                                           369, False),  # Gear: buki_get #73 [49h] { Auron [02h], Weapon {Piercing [800Bh], One MP Cost [800Dh], Empty, Empty} } UNCOMMENT WHEN CODES ARE INCORPORATED
     ("CALM: Speed Sphere x30 (Lose Aeon Fight)",                                                    370, False),  # Item: 30x Speed Sphere [2048h]
-    ("CALM & REMI: Defeat Belgemine to obtain the Aeon's Soul",                                   371, False),  # Key Item: Aeon's Soul [A01Fh]
+    ("CALM & REMI: Fight Belgemine - Aeon's Soul",                                                  371, False),  # Key Item: Aeon's Soul [A01Fh]
     ("MOON: South Bank Road - Fight Belgemine (Win) (Event)",                                       372, False),  # Item: 2x Dragon Scale [2021h]
     #("MOON: South Bank Road - Fight Belgemine (Lose) (Event)",                                     373, False),  # Item: 6x Smoke Bomb [2028h]
-    ("MOON & REMI: Defeat Belgemine to obtain the Summoner's Soul",                                  374, False),  # Key Item: Summoner's Soul [A01Eh]
+    ("MOON & REMI: Fight Belgemine - Summoner's Soul",                                              374, False),  # Key Item: Summoner's Soul [A01Eh]
     ("AIRS: Cabin - Before Evrae, Yellow Al Bhed on Left (NPC)",                                    375, False),  # Item: 4x Al Bhed Potion [2014h]
     ("MOON: South Bank Road - Right of Shelinda (Chest)",                                           376, False),  # Item: 3x Lv. 1 Key Sphere [2051h]
     ("MOON: South Bank Road - East Alcove as Path Bends North (Chest)",                             377, False),  # Item: 3x Lv. 1 Key Sphere [2051h]
