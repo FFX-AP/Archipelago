@@ -67,7 +67,8 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
         "APMultiplier":         world.options.ap_multiplier.value,
         "AlwaysSensor":         world.options.always_sensor.value,
         "AlwaysCapture":        world.options.always_capture.value,
-        "CaptureDamage":        world.options.capture_damage.value
+        "CaptureDamage":        world.options.capture_damage.value,
+        "SkipContestOfAeons":   world.options.skip_contest_of_aeons.value,
     }
 
     locations: dict[str, list[dict[str, int | str] | int] | str] = {x: list() for x in location_types.values()}

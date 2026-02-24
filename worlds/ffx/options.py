@@ -237,6 +237,16 @@ class CaptureDamage(Choice):
     option_all_direct = 1
     option_all = 2
 
+class SkipContestOfAeons(Toggle):
+    """
+    Sets whether to skip Contest of Aeons before fighting Yu Yevon
+    Default is off.
+    """
+    display_name = "Skip Contest Of Aeons"
+    default = 0
+    option_off = 0
+    option_on = 1
+
 
 class TrapPercentage(Range):
     """
@@ -279,4 +289,5 @@ class FFXOptions(PerGameCommonOptions):
     always_sensor: AlwaysSensor
     always_capture: AlwaysCapture
     capture_damage: CaptureDamage
+    skip_contest_of_aeons: SkipContestOfAeons
     sphere_grid_randomization: SphereGridRandomization
