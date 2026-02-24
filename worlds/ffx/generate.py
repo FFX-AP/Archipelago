@@ -59,7 +59,7 @@ def options_validation(world: FFXWorld) -> None:
 
 
 def generate_output(world: FFXWorld, player: int, output_directory: str) -> None:
-    seed_data = {
+    options_data = {
         "SeedId":               world.multiworld.get_out_file_name_base(world.player),
         "GoalRequirement":      world.options.goal_requirement.value,
         "RequiredPartyMembers": world.options.required_party_members.value,
@@ -94,8 +94,8 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
     mod_name = world.multiworld.get_out_file_name_base(world.player)
     mod_dir = os.path.join(output_directory, mod_name)
     mod_files = {
-        "seed.json"     : json.dumps(seed_data, indent=4),
-        "locations.json": json.dumps(locations, indent=4),
+        "options.json"  : json.dumps(options_data, indent=4),
+        "locations.json": json.dumps(locations   , indent=4),
     }
     mod = FFXContainer(mod_files, mod_dir, output_directory, world.player,
                        world.multiworld.get_file_safe_player_name(world.player))
