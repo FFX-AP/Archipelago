@@ -6,7 +6,7 @@ import json
 import typing
 
 from settings import get_settings
-from typing import Optional, Dict
+from typing import Optional
 from Options import OptionError
 from worlds.AutoWorld import World
 from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatch, APPlayerContainer
@@ -22,7 +22,7 @@ class FFXContainer(APPatch):
     game: Optional[str] = "Final Fantasy X"
     patch_file_ending = ".apffx"
 
-    def __init__(self, patch_data: Dict[str, str], base_path: str = "", output_directory: str = "",
+    def __init__(self, patch_data: dict[str, str], base_path: str = "", output_directory: str = "",
                  player: Optional[int] = None, player_name: str = "", server: str = ""):
         self.patch_data = patch_data
         self.file_path = base_path
