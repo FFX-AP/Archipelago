@@ -60,6 +60,7 @@ def options_validation(world: FFXWorld) -> None:
 
 def generate_output(world: FFXWorld, player: int, output_directory: str) -> None:
     options_data = {
+        "PlayerName":           world.player_name,
         "SeedId":               world.multiworld.get_out_file_name_base(world.player),
         "GoalRequirement":      world.options.goal_requirement.value,
         "RequiredPartyMembers": world.options.required_party_members.value,
