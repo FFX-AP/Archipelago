@@ -160,6 +160,8 @@ ruleDict: dict[str, Callable[[FFXWorld], CollectionRule]] = {
     "Omega Weapon":        lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
     "Geosgaeno":           lambda world: lambda state: create_level_rule(world, 15)(state) and create_min_swimmers_rule(world, 3)(state),
 
+    "Belgemine":           lambda world: lambda state: create_min_summon_rule(world, 2)(state),
+
     "BSIL: Defeat Dark Valefor (Superboss)":       lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state) and state.has("Party Member: Yuna", world.player),
     "BIKA: Defeat Dark Ifrit (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
     "THPL: Defeat Dark Ixion (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state) and state.has("Party Member: Yuna", world.player),
