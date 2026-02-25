@@ -317,12 +317,6 @@ def create_regions(world: FFXWorld, player) -> None:
             menu_entrance: Entrance = menu_region.connect(other_region, rule=new_rule)
             top_level_regions.append((other_region, menu_entrance))
 
-    # Connect Remiem Temple to Summoner's Soul and Aeon's Soul
-    # Defined here instead of regions.json because there is no rule from Moonflow/Calm Lands
-    remiem_region = region_dict[141]
-    remiem_region.connect(region_dict[1100], rule=create_min_summon_rule(world, 2))
-    remiem_region.connect(region_dict[1101], rule=create_min_summon_rule(world, 2))
-
     #for this_region, _ in top_level_regions:
     #    for other_region, menu_entrance in top_level_regions:
     #        if this_region == other_region:

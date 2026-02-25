@@ -647,7 +647,7 @@
     "overdrives": [],
     "other": [24],
     "recruits": [],
-    "leads_to": [],
+    "leads_to": [1100, 1101],
     "rules": []
   },
   {
@@ -1114,7 +1114,7 @@
     "other": [],
     "recruits": [],
     "leads_to": [],
-    "rules": []
+    "rules": ["Belgemine"]
   },
   {
     "name": "Aeon's Soul",
@@ -1126,6 +1126,6 @@
     "other": [],
     "recruits": [],
     "leads_to": [],
-    "rules": []
+    "rules": ["Belgemine"]
   }
 ]
