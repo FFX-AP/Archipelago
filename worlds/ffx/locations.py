@@ -261,10 +261,10 @@ FFXOtherLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OtherOf
  
     ("BSIL: Village - East of Temple (Jecht's Sphere)",                          27, False), # Jecht Sphere 2
     ("THPL: South - Near Tower (Jecht's Sphere)",                                28, False), # Jecht Sphere 3
-    ("MOON: South Warf (Jecht's Sphere)",                                        29, False), # Jecht Sphere 4
+    ("MOON: South Wharf (Jecht's Sphere)",                                       29, False), # Jecht Sphere 4
     ("MIHN: Oldroad, South - South End (Jecht's Sphere)",                        30, False), # Jecht Sphere 5
     ("LUCA: Stadium Basement A - East Locker Hall (Jecht's Sphere)",             31, False), # Jecht Sphere 6
-    ("SSLI: Captains Room (Jecht's Sphere)",                                     32, False), # Auron Sphere
+    ("SSLI: Captain's Room (Jecht's Sphere)",                                    32, False), # Auron Sphere
     ("MTGS: Trail - Side Road (Braska's Sphere)",                                33, False), # Jecht Sphere 7
     ("MCWO: South - Near Entrance (Jecht's Sphere)",                             34, False), # Jecht Sphere 8
     ("MUSH: Precipice - South of Large Elevator (Auron's Sphere)",               35, False), # Braska Sphere
