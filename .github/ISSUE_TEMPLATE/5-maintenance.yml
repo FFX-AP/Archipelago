@@ -1,5 +1,5 @@
 name: Maintenance
-about: Chores, routine tasks, and refactors
+description: Chores, routine tasks, and refactors
 type: Maintenance
 labels: "Maintenance"
 projects: "FFX-AP/1"
