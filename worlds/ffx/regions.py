@@ -323,41 +323,127 @@ def create_regions(world: FFXWorld, player) -> None:
     #            continue
     #        world.multiworld.register_indirect_condition(this_region, menu_entrance)
 
-    if not world.options.mini_games.value:
-        mini_game_location_ids = [
-            337, # "Calm Lands: Wobbly Chocobo Minigame (Event)"
-            338, # "Calm Lands: Dodger Chocobo Minigame (Event)"
-            339, # "Calm Lands: Hyper Dodger Chocobo Minigame (Event)"
-            340, # "Calm Lands: Catcher Chocobo Minigame (Event)"
-            417, # "Calm Lands: Elixir x1 (Chocobo Race Reward)"
-            418, # "Calm Lands: Megalixir x1 (Chocobo Race Reward)"
-            419, # "Calm Lands: Three Stars x60 (Chocobo Race Reward)"
-            420, # "Calm Lands: Pendulum x30 (Chocobo Race Reward)"
-            421, # "Calm Lands: Wings to Discovery x30 (Chocobo Race Reward)"
-            189, # "Thunder Plains: Megalixir x4 (Dodging Minigame Reward)",
-            190, # "Thunder Plains: HP Sphere x3 (Dodging Minigame Reward)",
-            191, # "Thunder Plains: Strength Sphere x3 (Dodging Minigame Reward)",
-            192, # "Thunder Plains: MP Sphere x2 (Dodging Minigame Reward)",
-            193, # "Thunder Plains: Mega-Potion x2 (Dodging Minigame Reward)",
-            194, # "Thunder Plains: X-Potion x2 (Dodging Minigame Reward)",
-            497, # "Story Win vs. Luca Goers Reward",
-            274, # "Sun Sigil",
-            278, # "Venus Sigil",
-            277, # "Saturn Sigil",
-            279, # "Mercury Sigil",
-            244, # "Jupiter Sigil",
-            114, # "Caladbolg",
-            93,  # "World Champion",
-            176, # "Cloudy Mirror",
+    if not world.options.mini_game_blitzball:
+        blitzball_location_ids = [
+            497, # "LUCA: Win the Story Blitzball Tournament (Event)", 
+            244, # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
+            93,  # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
         ]
-        for id in mini_game_location_ids:
+
+        for id in blitzball_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
             world.options.exclude_locations.value.add(location_name)
-        calm_lands_to_remiem = world.get_region("Remiem Temple").entrances[0]
-        new_parent = world.get_region("Calm Lands 1st visit: Post-Defender X")
-        calm_lands_to_remiem.parent_region.exits.remove(calm_lands_to_remiem)
-        calm_lands_to_remiem.parent_region = new_parent
-        new_parent.exits.append(calm_lands_to_remiem)
+    
+    if not world.options.mini_game_butterflies:
+        butterfly_location_ids = [
+            71,  # "MCWO: MP Sphere x1 (Butterfly Minigame Reward before Spherimorph)",
+            72,  # "MCWO: Ether x1 (Butterfly Minigame Reward before Spherimorph)",
+            280, # "MCWO: Megalixir x2 (Butterfly Game after defeating Spherimorph)",
+            281, # "MCWO: Elixir x2 (Butterfly Game after defeating Spherimorph)",
+            394, # "MCWO: Teleport Sphere x1 (Butterfly Game after Airship)",
+            277, # "MCWO: Finish Butterfly Minigame (Event)" (Saturn Sigil),
+        ]
+
+        for id in butterfly_location_ids:
+            location_name = world.location_id_to_name[id | TreasureOffset]
+            world.options.exclude_locations.value.add(location_name)
+    
+    if not world.options.mini_game_lightning_dodging is world.options.mini_game_lightning_dodging.option_up_to_200:
+        lightning_dodging_location_ids = []
+
+        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_200:
+            lightning_dodging_location_ids.append(278) # "THPL: Lightning Dodger - 200 Consecutive Dodges (Event)",
+
+        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_150:
+            lightning_dodging_location_ids.append(194) # "THPL: Lightning Dodger - 150 Consecutive Dodges (Event)",
+
+        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_100:
+            lightning_dodging_location_ids.append(193) # "THPL: Lightning Dodger - 100 Consecutive Dodges (Event)",
+
+        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_50:
+            lightning_dodging_location_ids.append(192) # "THPL: Lightning Dodger - 50 Consecutive Dodges (Event)",
+
+        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_20:
+            lightning_dodging_location_ids.append(191) # "THPL: Lightning Dodger - 20 Consecutive Dodges (Event)",
+
+        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_10:
+            lightning_dodging_location_ids.append(190) # "THPL: Lightning Dodger - 10 Consecutive Dodges (Event)",
+
+        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_5:
+            lightning_dodging_location_ids.append(189) # "THPL: Lightning Dodger - 5 Consecutive Dodges (Event)",
+
+        for id in lightning_dodging_location_ids:
+            location_name = world.location_id_to_name[id | TreasureOffset]
+            world.options.exclude_locations.value.add(location_name)
+
+    if not world.options.mini_game_cactuar_village:
+        cactuar_village_location_ids = [
+            469, # "BIKA: Shadow Gem x2 (Robeya Minigame Chest)",
+            470, # "BIKA: Shining Gem x1 (Robeya Minigame Chest)",
+            471, # "BIKA: Blessed Gem x1 (Robeya Minigame Chest)",
+            472, # "BIKA: Potion x1 (Cactuar Sidequest Prize)",
+            473, # "BIKA: Elixir x1 (Cactuar Sidequest Prize)",
+            474, # "BIKA: Megalixir x1 (Cactuar Sidequest Prize)",
+            475, # "BIKA: Friend Sphere x1 (Cactuar Sidequest Prize)",
+            279, # "BIKA: Desert - Complete Cactuar Village Quest (Event)", (Mercury Sigil)
+        ]
+
+        for id in cactuar_village_location_ids:
+            location_name = world.location_id_to_name[id | TreasureOffset]
+            world.options.exclude_locations.value.add(location_name)
+    
+    if not world.options.mini_game_chocobo_training is world.options.mini_game_chocobo_training.option_up_to_sigil:
+        chocobo_training_location_ids = []
+
+        up_to = world.options.mini_game_chocobo_training
+        up_to_sigil = world.options.mini_game_chocobo_training.option_up_to_sigil
+        up_to_catcher = world.options.mini_game_chocobo_traning.option_up_to_catcher
+        up_to_hyper_dodger = world.options.mini_game_chocobo_traning.option_up_to_hyper_dodger
+        up_to_dodger = world.options.mini_game_chocobo_traning.option_up_to_dodger
+        up_to_wobbly = world.options.mini_game_chocobo_traning.option_up_to_wobbly
+
+        if up_to < up_to_sigil:
+            chocobo_training_location_ids.append(274) # "CALM: Catcher chocobo Minigame, Time Under 0.00 (Event)",
+        
+        if up_to < up_to_catcher:
+            chocobo_training_location_ids.extend([
+                340, # "CALM: Catcher Chocobo Minigame (Event)",
+                114, # "CALM: North - NW Corner, Blocked Until Winning Catcher Chocobo (Event)" (Caladbolg),
+            ])
+        
+        if up_to < up_to_hyper_dodger:
+            chocobo_training_location_ids.append(339) # "CALM: Hyper Dodger Chocobo Minigame (Event)",
+        
+        if up_to < up_to_dodger:
+            chocobo_training_location_ids.append(338) # "CALM: Dodger Chocobo Minigame (Event)",
+        
+        if up_to < up_to_wobbly:
+            chocobo_training_location_ids.append(337) # "CALM: Wobbly Chocobo Minigame (Event)",
+
+            # Change Remiem access from Wobbly Chocobo to Post-Defender X
+            calm_lands_to_remiem = world.get_region("Remiem Temple").entrances[0]
+            new_parent = world.get_region("Calm Lands 1st visit: Post-Defender X")
+            calm_lands_to_remiem.parent_region.exits.remove(calm_lands_to_remiem)
+            calm_lands_to_remiem.parent_region = new_parent
+            new_parent.exits.append(calm_lands_to_remiem)
+
+        for id in chocobo_training_location_ids:
+            location_name = world.location_id_to_name[id | TreasureOffset]
+            world.options.exclude_locations.value.add(location_name)
+    
+    if not world.options.mini_game_chocobo_race:
+        chocobo_race_location_ids = [
+            176, # "REMI: Win Chocobo Race (Event)" (Cloudy Mirror)
+            417, # "REMI: 1st Chest in Chocobo Race",
+            418, # "REMI: 2nd Chest in Chocobo Race",
+            419, # "REMI: 3rd Chest in Chocobo Race",
+            420, # "REMI: 4th Chest in Chocobo Race",
+            421, # "REMI: 5th Chest in Chocobo Race",
+        ]
+
+        for id in chocobo_race_location_ids:
+            location_name = world.location_id_to_name[id | TreasureOffset]
+            world.options.exclude_locations.value.add(location_name)
 
     if not world.options.recruit_sanity.value:
         recruit_location_ids = []
