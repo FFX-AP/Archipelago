@@ -8,6 +8,7 @@ from settings import Group, FilePath
 
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
 from worlds.AutoWorld import WebWorld, World
+from Options import OptionGroup
 from Utils import visualize_regions
 
 from .client import FFXClient
@@ -16,7 +17,7 @@ from .items import create_item_label_to_code_map, item_table, key_items, filler_
     party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items
 from .locations import create_location_label_to_id_map, FFXLocation, allLocations
 from .regions import create_regions
-from .options import FFXOptions
+from .options import FFXOptions, create_option_groups
 from .generate import generate_output, options_validation
 from .rules import set_rules, world_battle_levels
 from .ut import tracker_world, setup_options_from_slot_data
@@ -27,6 +28,7 @@ class FFXWebWorld(WebWorld):
     Webhost info for Final Fantasy X
     """
     theme = "grass"
+    option_groups = create_option_groups()
     setup_en = Tutorial(
         "Multiworld Setup Guide",
         "A guide to playing Final Fantasy X with Archipelago.",

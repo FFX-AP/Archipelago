@@ -1,8 +1,9 @@
 """
 Option definitions for Final Fantasy ¨X
 """
+from typing import Any
 from dataclasses import dataclass
-from Options import Choice, DefaultOnToggle, Option, Range, Toggle, PerGameCommonOptions
+from Options import Choice, DefaultOnToggle, Option, OptionGroup, Range, Toggle, PerGameCommonOptions
 
 class GoalRequirement(Choice):
     """
@@ -357,3 +358,53 @@ class FFXOptions(PerGameCommonOptions):
     capture_damage: CaptureDamage
     skip_contest_of_aeons: SkipContestOfAeons
     sphere_grid_randomization: SphereGridRandomization
+
+# Ethically inspired by A Hat in Time's world
+def create_option_groups() -> list[OptionGroup]:
+    option_group_list: list[OptionGroup] = []
+    for name, options in ffx_option_groups.items():
+        option_group_list.append(OptionGroup(name=name, options=options))
+
+    return option_group_list
+
+ffx_option_groups: dict[str, list[Any]] = {
+    "Goal Options": [
+        GoalRequirement,
+        RequiredPartyMembers,
+        RequiredPrimers,
+    ],
+
+    "Progression Options": [
+        TrapPercentage,
+        LogicDifficulty,
+        EarlyPartyMembers,
+    ],
+
+    "General Options": [
+        APMultiplier,
+        RecruitSanity,
+        SuperBosses,
+        JechtSpheres,
+        AlwaysSensor,
+        SkipContestOfAeons,
+        SphereGridRandomization,
+    ],
+
+    "Minigame Options": [
+        MiniGameBlitzball,
+        MiniGameButterflies,
+        MiniGameLightningDodging,
+        MiniGameCactuarVillage,
+        MiniGameChocoboTraining,
+        MiniGameChocoboRace,
+    ],
+
+    "Monster Arena Options": [
+        CaptureSanity,
+        MonsterArenaAccess,
+        CreationRewards,
+        MonsterArenaBosses,
+        AlwaysCapture,
+        CaptureDamage,
+    ],
+}
