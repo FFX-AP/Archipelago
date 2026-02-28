@@ -351,25 +351,34 @@ def create_regions(world: FFXWorld, player) -> None:
     if not world.options.mini_game_lightning_dodging is world.options.mini_game_lightning_dodging.option_up_to_200:
         lightning_dodging_location_ids = []
 
-        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_200:
+        up_to     = world.options.mini_game_lightning_dodging
+        up_to_200 = world.options.mini_game_lightning_dodging.option_up_to_200
+        up_to_150 = world.options.mini_game_lightning_dodging.option_up_to_150
+        up_to_100 = world.options.mini_game_lightning_dodging.option_up_to_100
+        up_to_50  = world.options.mini_game_lightning_dodging.option_up_to_50
+        up_to_20  = world.options.mini_game_lightning_dodging.option_up_to_20
+        up_to_10  = world.options.mini_game_lightning_dodging.option_up_to_10
+        up_to_5   = world.options.mini_game_lightning_dodging.option_up_to_5
+
+        if up_to < up_to_200:
             lightning_dodging_location_ids.append(278) # "THPL: Lightning Dodger - 200 Consecutive Dodges (Event)",
 
-        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_150:
+        if up_to < up_to_150:
             lightning_dodging_location_ids.append(194) # "THPL: Lightning Dodger - 150 Consecutive Dodges (Event)",
 
-        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_100:
+        if up_to < up_to_100:
             lightning_dodging_location_ids.append(193) # "THPL: Lightning Dodger - 100 Consecutive Dodges (Event)",
 
-        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_50:
+        if up_to < up_to_50:
             lightning_dodging_location_ids.append(192) # "THPL: Lightning Dodger - 50 Consecutive Dodges (Event)",
 
-        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_20:
+        if up_to < up_to_20:
             lightning_dodging_location_ids.append(191) # "THPL: Lightning Dodger - 20 Consecutive Dodges (Event)",
 
-        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_10:
+        if up_to < up_to_10:
             lightning_dodging_location_ids.append(190) # "THPL: Lightning Dodger - 10 Consecutive Dodges (Event)",
 
-        if world.options.mini_game_lightning_dodging < world.options.mini_game_lightning_dodging.option_up_to_5:
+        if up_to < up_to_5:
             lightning_dodging_location_ids.append(189) # "THPL: Lightning Dodger - 5 Consecutive Dodges (Event)",
 
         for id in lightning_dodging_location_ids:
@@ -395,12 +404,12 @@ def create_regions(world: FFXWorld, player) -> None:
     if not world.options.mini_game_chocobo_training is world.options.mini_game_chocobo_training.option_up_to_sigil:
         chocobo_training_location_ids = []
 
-        up_to = world.options.mini_game_chocobo_training
-        up_to_sigil = world.options.mini_game_chocobo_training.option_up_to_sigil
-        up_to_catcher = world.options.mini_game_chocobo_training.option_up_to_catcher
+        up_to              = world.options.mini_game_chocobo_training
+        up_to_sigil        = world.options.mini_game_chocobo_training.option_up_to_sigil
+        up_to_catcher      = world.options.mini_game_chocobo_training.option_up_to_catcher
         up_to_hyper_dodger = world.options.mini_game_chocobo_training.option_up_to_hyper_dodger
-        up_to_dodger = world.options.mini_game_chocobo_training.option_up_to_dodger
-        up_to_wobbly = world.options.mini_game_chocobo_training.option_up_to_wobbly
+        up_to_dodger       = world.options.mini_game_chocobo_training.option_up_to_dodger
+        up_to_wobbly       = world.options.mini_game_chocobo_training.option_up_to_wobbly
 
         if up_to < up_to_sigil:
             chocobo_training_location_ids.append(274) # "CALM: Catcher chocobo Minigame, Time Under 0.00 (Event)",
