@@ -1,0 +1,8 @@
+---
+name: Enhancement Request
+about: Improvements to the player experience
+title: ''
+type: 'Enhancement'
+labels: 'Enhancement'
+projects: FFX-AP/1
+assignees: ''
