@@ -1,6 +1,5 @@
 name: Bug Report
-about: An unexpected problem or behaviour
-title: ""
+title: "An unexpected problem or behaviour"
 type: Bug
 labels: "Bug"
 projects: "FFX-AP/1"
