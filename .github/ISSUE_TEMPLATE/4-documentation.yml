@@ -1,7 +1,13 @@
 name: Documentation
 about: Additions or changes to documentation
-title: ''
-type: 'Documentation'
-labels: 'Documentation'
-projects: FFX-AP/1
-assignees: ''
+type: Documentation
+labels: "Documentation"
+projects: "FFX-AP/1"
+body:
+  - type: textarea
+    id: documentation
+    attributes:
+      label: Documentation
+      description: What documentation needs to be updated, and what needs to be edited therein?
+    validations:
+      required: true
