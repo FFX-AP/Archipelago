@@ -397,10 +397,10 @@ def create_regions(world: FFXWorld, player) -> None:
 
         up_to = world.options.mini_game_chocobo_training
         up_to_sigil = world.options.mini_game_chocobo_training.option_up_to_sigil
-        up_to_catcher = world.options.mini_game_chocobo_traning.option_up_to_catcher
-        up_to_hyper_dodger = world.options.mini_game_chocobo_traning.option_up_to_hyper_dodger
-        up_to_dodger = world.options.mini_game_chocobo_traning.option_up_to_dodger
-        up_to_wobbly = world.options.mini_game_chocobo_traning.option_up_to_wobbly
+        up_to_catcher = world.options.mini_game_chocobo_training.option_up_to_catcher
+        up_to_hyper_dodger = world.options.mini_game_chocobo_training.option_up_to_hyper_dodger
+        up_to_dodger = world.options.mini_game_chocobo_training.option_up_to_dodger
+        up_to_wobbly = world.options.mini_game_chocobo_training.option_up_to_wobbly
 
         if up_to < up_to_sigil:
             chocobo_training_location_ids.append(274) # "CALM: Catcher chocobo Minigame, Time Under 0.00 (Event)",
