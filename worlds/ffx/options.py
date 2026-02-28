@@ -55,20 +55,81 @@ class APMultiplier(Range):
     range_end = 10
 
 
-class MiniGames(Toggle):
+class MiniGameBlitzball(Toggle):
     """
-    Sets whether minigames are included or not. If off they will only have filler items.
-    Minigames include;
-    - Blitzball (World Champion & Jupiter Sigil)
+    Sets whether Blitzball is included.
+    If off it will only have filler items.
+    This includes:
     - Luca Story Blitzball win
-    - Macalania Butterflies (Saturn Sigil)
-    - Thunder Plains Lightning Dodging (including Venus Sigil)
-    - Bikanel Cactuar Village (Mercury Sigil)
-    - Calm Lands Chocobo Training (Dodger, Hyper Dodger, Catcher, Caladbolg & Sun Sigil)
-    - Remiem Temple Chocobo Race (Cloudy Mirror)
-    Default is off.
+    - World Champion
+    - Jupiter Sigil
     """
-    display_name = "Minigames"
+    display_name = "Blitzball"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
+class MiniGameButterflies(Toggle):
+    """
+    Sets whether the Macalania Butterflies are included.
+    If off they will only have filler items.
+    """
+    display_name = "Macalania Butterflies"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
+class MiniGameLightningDodging(Choice):
+    """
+    Sets whether the Thunder Plains Lightning Dodging is included.
+    If off it will only have filler items.
+    """
+    display_name = "Lightning Dodging"
+    default = 0
+    option_off = 0
+    option_up_to_5 = 1
+    option_up_to_10 = 2
+    option_up_to_20 = 3
+    option_up_to_50 = 4
+    option_up_to_100 = 5
+    option_up_to_150 = 6
+    option_up_to_200 = 7
+
+
+class MiniGameCactuarVillage(Toggle):
+    """
+    Sets whether the Bikanel Cactuar Village sidequest is included.
+    If off it will only have filler items.
+    """
+    display_name = "Cactuar Village"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
+class MiniGameChocoboTraining(Choice):
+    """
+    Sets whether the Calm Lands Chocobo Training minigames are included.
+    If off they will only have filler items.
+    """
+    display_name = "Chocobo Training"
+    default = 0
+    option_off = 0
+    option_up_to_wobbly = 1
+    option_up_to_dodger = 2
+    option_up_to_hyper_dodger = 3
+    option_up_to_catcher = 4
+    option_up_to_sigil = 5
+
+
+class MiniGameChocoboRace(Toggle):
+    """
+    Sets whether the Remiem Temple Chocobo Race minigames are included.
+    If off they will only have filler items.
+    """
+    display_name = "Remiem Chocobo Race"
     default = 0
     option_off = 0
     option_on = 1
@@ -275,7 +336,12 @@ class FFXOptions(PerGameCommonOptions):
     required_party_members: RequiredPartyMembers
     required_primers: RequiredPrimers
     ap_multiplier: APMultiplier
-    mini_games: MiniGames
+    mini_game_blitzball: MiniGameBlitzball
+    mini_game_butterflies: MiniGameButterflies
+    mini_game_lightning_dodging: MiniGameLightningDodging
+    mini_game_cactuar_village: MiniGameCactuarVillage
+    mini_game_chocobo_training: MiniGameChocoboTraining
+    mini_game_chocobo_race: MiniGameChocoboRace
     recruit_sanity: RecruitSanity
     capture_sanity: CaptureSanity
     arena_access: MonsterArenaAccess
