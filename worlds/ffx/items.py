@@ -190,7 +190,7 @@ key_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | keyItemOffset) for x in
     ("Moon Sigil",                  ItemClassification.progression, 0x0026),
     ("Mars Crest",                  ItemClassification.progression, 0x0027),
     ("Mars Sigil",                  ItemClassification.progression, 0x0028),
-    ("Mark of Conquest",            ItemClassification.progression, 0x0029),
+    ("Mark of Conquest",            ItemClassification.filler, 0x0029),
     ("Saturn Crest",                ItemClassification.progression, 0x002A),
     ("Saturn Sigil",                ItemClassification.progression, 0x002B),
     ("Jupiter Crest",               ItemClassification.progression, 0x002C),
