@@ -76,9 +76,9 @@ encounter_to_id = {
     "CALM: Defeat Defender X (Boss)"                 : ["nagi01_00"],
     "MOAR: Defeat Nemesis (Superboss)"               : ["zzzz02_76"],
     "COSF: Defeat Dark Yojimbo (Superboss)"          : ["nagi05_74"],
-    "MTGZ: Defeat Biran and Yenke (Boss)"            : ["mtgz01_10"],
-    "MTGZ: Defeat Seymour Flux (Boss)"               : ["mtgz02_00"],
-    "MTGZ: Defeat Dark Anima (Superboss)"            : ["mtgz01_70"],
+    "MTGS: Defeat Biran and Yenke (Boss)"            : ["mtgz01_10"],
+    "MTGS: Defeat Seymour Flux (Boss)"               : ["mtgz02_00"],
+    "MTGS: Defeat Dark Anima (Superboss)"            : ["mtgz01_70"],
     "MTGC: Defeat Sanctuary Keeper (Boss)"           : ["mtgz08_00"],
     "ZNKD: Defeat Spectral Keeper (Boss)"            : ["dome02_00"],
     "ZNKD: Defeat Yunalesca (Boss)"                  : ["dome06_00"],
@@ -130,9 +130,9 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
     ("CALM: Defeat Defender X (Boss)",                29, False),
     ("MOAR: Defeat Nemesis (Superboss)",              30, False),
     ("COSF: Defeat Dark Yojimbo (Superboss)",         31, False),
-    ("MTGZ: Defeat Biran and Yenke (Boss)",           32, False),
-    ("MTGZ: Defeat Seymour Flux (Boss)",              33, False),
-    ("MTGZ: Defeat Dark Anima (Superboss)",           34, False),
+    ("MTGS: Defeat Biran and Yenke (Boss)",           32, False),
+    ("MTGS: Defeat Seymour Flux (Boss)",              33, False),
+    ("MTGS: Defeat Dark Anima (Superboss)",           34, False),
     ("MTGC: Defeat Sanctuary Keeper (Boss)",          35, False),
     ("ZNKD: Defeat Spectral Keeper (Boss)",           36, False),
     ("ZNKD: Defeat Yunalesca (Boss)",                 37, False),
@@ -259,16 +259,16 @@ FFXOtherLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OtherOf
     ("COSF: Dead End West of Third Intersection (Primer)",                       25, False), # Al Bhed Primer XXV
     ("OMGR: North Side of Four Chest Intersection (Primer)",                     26, False), # Al Bhed Primer XXVI
  
-    #("MCWO: Spherimorph Jecht Sphere",                                          27, False),
-    #("BSIL: Village - East of Temple (Jecht Sphere)",                           28, False),
-    #("Jecht Sphere - SSLI",                                                     29, False),
-    #("LUCA: Stadium Basement A - East Locker Hall (Jecht Sphere)",              30, False),
-    #("MIHN: Oldroad, South - South End (Jecht Sphere)",                         31, False),
-    #("MUSH: Precipice - South of Large Elevator (Auron's Sphere)",              32, False),
-    #("Jecht Sphere - Moonflow",                                                 33, False),
-    #("Jecht Sphere - Thunder Plains",                                           34, False),
-    #("Braska's Sphere - Mt. Gagazet",                                           35, False),
-
+    ("BSIL: Village - East of Temple (Jecht's Sphere)",                          27, False), # Jecht Sphere 2
+    ("THPL: South - Near Tower (Jecht's Sphere)",                                28, False), # Jecht Sphere 3
+    ("MOON: South Wharf (Jecht's Sphere)",                                       29, False), # Jecht Sphere 4
+    ("MIHN: Oldroad, South - South End (Jecht's Sphere)",                        30, False), # Jecht Sphere 5
+    ("LUCA: Stadium Basement A - East Locker Hall (Jecht's Sphere)",             31, False), # Jecht Sphere 6
+    ("SSLI: Captain's Room (Jecht's Sphere)",                                    32, False), # Auron Sphere
+    ("MTGS: Trail - Side Road (Braska's Sphere)",                                33, False), # Jecht Sphere 7
+    ("MCWO: South - Near Entrance (Jecht's Sphere)",                             34, False), # Jecht Sphere 8
+    ("MUSH: Precipice - South of Large Elevator (Auron's Sphere)",               35, False), # Braska Sphere
+                                       
     #("SSWI: Jecht Shot (Event)",                                                36, False),
     ("GUAD: Automatic Upon Leaving Farplane (Event)",                            37, False), # Brotherhood Upgrade
 
@@ -512,7 +512,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("SINS: City of Dying Dreams - First Open Area, Glyph in Northwest Corner (Chest)",             174, False),  # Item: 1x Megalixir [2009h]
     ("SINS: City of Dying Dreams - Secret Slide South of Rising Block Area (Chest)",                175, False),  # Gear: buki_get #54 [36h] { Yuna [01h], Weapon {SOS Overdrive [8010h]} }
     ("REMI: Win Chocobo Race (Event)",                                                              176, False),  # Key Item: Cloudy Mirror [A002h]
-    ("BSIL: Village - East of Temple (Jecht's Sphere)",                                             177, False),  # Key Item: Jecht's Sphere [A020h]
+    ("MCWO: After Spherimorph (Jecht's Sphere)",                                                    177, False),  # Key Item: Jecht's Sphere [A020h]
     ("THPL: South - West Side, South of Save Sphere (Chest)",                                       178, False),  # Item: 2x Phoenix Down [2006h]
     ("THPL: South - West Side, North of Save Sphere (Chest)",                                       179, False),  # Item: 2x Hi-Potion [2001h]
     ("THPL: South - West Side, Behind First Cactuar Statue (Chest)",                                180, False),  # Gil: 5000 [32h]
@@ -522,7 +522,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("THPL: North - West Side, Near North Exit (Chest)",                                            184, False),  # Item: 1x Remedy [200Fh]
     ("THPL: North - East of Final Lightning Rod (Chest)",                                           185, False),  # Gil: 2000 [14h]
     ("MIHN: South End - Fight Belgemine (Win) (Event)",                                             186, False),  # Gear: buki_get #74 [4Ah] { Yuna [01h], Armor {HP +10% [8073h], Silence Ward [8045h]} }
-    ("REMI: Beat Belgemine (NPC)",                                                                  187, False),  # Item: 30x Power Sphere [2046h]
+    ("CALM: Central - Fight Belgemine (Win) (Event)",                                               187, False),  # Item: 30x Power Sphere [2046h]
     ("THPL: Cactuar Statue Minigame (Event)",                                                       188, False),  # Gear: buki_get #56 [38h] { Kimahri [03h], Weapon Formula=Celestial HP-based [11h] {No AP [8014h], Empty, Empty, Empty} }
     ("THPL: Lightning Dodger - 5 Consecutive Dodges (Event)",                                       189, False),  # Item: 2x X-Potion [2002h]
     ("THPL: Lightning Dodger - 10 Consecutive Dodges (Event)",                                      190, False),  # Item: 2x Mega-Potion [2003h]
@@ -605,7 +605,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("ZNKD: Dome Beyond - Chest After Taking Left or Right in Yunalesca Arena (Chest)",             267, False),  # Key Item: Sun Crest [A023h]
     ("BSIL: Beach - East Alcove (Chest)",                                                           268, False),  # Key Item: Moon Crest [A025h]
     ("MIHN: Oldroad, South - South End (Chest)",                                                    269, False),  # Key Item: Mars Crest [A027h]
-    ("MTGZ: Prominence - Hidden Between Left Pillars (Chest)",                                      270, False),  # Key Item: Saturn Crest [A02Ah]
+    ("MTGS: Prominence - Hidden Between Left Pillars (Chest)",                                      270, False),  # Key Item: Saturn Crest [A02Ah]
     ("LUCA: Stadium Locker Room - Inside Back Right Locker (Event)",                                271, False),  # Key Item: Jupiter Crest [A02Ch]
     ("GUAD: Farplane - West Side (Chest)",                                                          272, False),  # Key Item: Venus Crest [A02Eh]
     ("BIKA: Desert, West - First Western Alcove, Sinkhole (Chest)",                                 273, False),  # Key Item: Mercury Crest [A030h]
@@ -615,8 +615,8 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("MCWO: Finish Butterfly Minigame (Event)",                                                     277, False),  # Key Item: Saturn Sigil [A02Bh]
     ("THPL: Lightning Dodger - 200 Consecutive Dodges (Event)",                                     278, False),  # Key Item: Venus Sigil [A02Fh]
     ("BIKA: Desert - Complete Cactuar Village Quest (Event)",                                       279, False),  # Key Item: Mercury Sigil [A031h]
-    ("MCLA: Megalixir x2 (Butterfly Game after defeating Spherimorph)",                             280, False),  # Item: 2x Megalixir [2009h]
-    ("MCLA: Elixir x2 (Butterfly Game after defeating Spherimorph)",                                281, False),  # Item: 2x Elixir [2008h]
+    ("MCWO: Megalixir x2 (Butterfly Game after defeating Spherimorph)",                             280, False),  # Item: 2x Megalixir [2009h]
+    ("MCWO: Elixir x2 (Butterfly Game after defeating Spherimorph)",                                281, False),  # Item: 2x Elixir [2008h]
     ("BSIL: Beach - Datto (NPC)",                                                                   282, False),  # Item: 1x Hi-Potion [2001h]
     ("BSIL: Beach - Jassu (NPC)",                                                                   283, False),  # Item: 3x Potion [2000h]
     ("BSIL: Beach - Botta (NPC)",                                                                   284, False),  # Item: 2x Potion [2000h]
@@ -701,15 +701,15 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("HOME: Outside Summoner's Sanctum - Left (Chest)",                                             363, False),  # Item: 1x Lv. 4 Key Sphere [2054h]
     ("HOME: Environment Controls (Chest)",                                                          364, False),  # Gil: 10000 [64h]
     ("SSWI: Deck - Top Floor, Counting Gulls (NPC)",                                                365, False),  # Gear: buki_get #70 [46h] { Wakka [04h], Weapon {Magic +20% [8069h], Magic +10% [8068h], Magic +5% [8067h], Magic +3% [8066h]} }
-    ("MIHN: South End - Fight Belgemine (Lose) (Event)",                                            366, False),  # Gear: buki_get #71 [47h] { Yuna [01h], Armor {HP +10% [8073h], Empty} }
+    #("MIHN: South End - Fight Belgemine (Lose) (Event)",                                            366, False),  # Gear: buki_get #71 [47h] { Yuna [01h], Armor {HP +10% [8073h], Empty} }
     ("HOME: Keyakku, on Ground (NPC)",                                                              367, False),  # Item: 2x Hi-Potion [2001h]
     #("MUSH: Valley - Code VICTORIOUS",                                                             368, False),  # Gear: buki_get #72 [48h] { Rikku [06h], Armor {Lightningproof [8028h], Fireproof [8020h], Iceproof [8024h], Empty} } UNCOMMENT WHEN CODES ARE INCORPORATED
     #("BSIL: BSIL Ruins - Code MURASAME",                                                           369, False),  # Gear: buki_get #73 [49h] { Auron [02h], Weapon {Piercing [800Bh], One MP Cost [800Dh], Empty, Empty} } UNCOMMENT WHEN CODES ARE INCORPORATED
     ("CALM: Speed Sphere x30 (Lose Aeon Fight)",                                                    370, False),  # Item: 30x Speed Sphere [2048h]
-    ("Defeat Belgemine Twice",                                                                      371, False),  # Key Item: Aeon's Soul [A01Fh]
-    ("MOON: South Bank Road - Fight Belgemine (Win) (Event) (1)",                                   372, False),  # Item: 2x Dragon Scale [2021h]
-    ("MOON: South Bank Road - Fight Belgemine (Lose) (Event) (1)",                                  373, False),  # Item: 6x Smoke Bomb [2028h]
-    ("Defeat Belgemine Once",                                                                       374, False),  # Key Item: Summoner's Soul [A01Eh]
+    ("CALM & REMI: Fight Belgemine - Aeon's Soul",                                                  371, False),  # Key Item: Aeon's Soul [A01Fh]
+    ("MOON: South Bank Road - Fight Belgemine (Win) (Event)",                                       372, False),  # Item: 2x Dragon Scale [2021h]
+    #("MOON: South Bank Road - Fight Belgemine (Lose) (Event)",                                     373, False),  # Item: 6x Smoke Bomb [2028h]
+    ("MOON & REMI: Fight Belgemine - Summoner's Soul",                                              374, False),  # Key Item: Summoner's Soul [A01Eh]
     ("AIRS: Cabin - Before Evrae, Yellow Al Bhed on Left (NPC)",                                    375, False),  # Item: 4x Al Bhed Potion [2014h]
     ("MOON: South Bank Road - Right of Shelinda (Chest)",                                           376, False),  # Item: 3x Lv. 1 Key Sphere [2051h]
     ("MOON: South Bank Road - East Alcove as Path Bends North (Chest)",                             377, False),  # Item: 3x Lv. 1 Key Sphere [2051h]
@@ -729,7 +729,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("REMI: Anima Post First Fight (Boss)",                                                         391, False),  # Item: 10x Mana Sphere [2047h]
     ("REMI: Defeat Magus Sisters (Boss)",                                                           392, False),  # Item: 40x Shining Gem [202Ah]
     ("REMI: Magus Sisters Post First Fight (Boss)",                                                 393, False),  # Item: 12x Power Sphere [2046h]
-    ("MCLA: Teleport Sphere x1 (Butterfly Game after Airship)",                                     394, False),  # Item: 1x Teleport Sphere [2062h]
+    ("MCWO: Teleport Sphere x1 (Butterfly Game after Airship)",                                     394, False),  # Item: 1x Teleport Sphere [2062h]
     ("HOME: Living Quarters, East of Main Corridor - Quiz (Chest)",                                 395, False),  # Item: 1x Skill Sphere [204Dh]
     ("HOME: Living Quarters, East of Main Corridor - Password (Chest)",                             396, False),  # Item: 1x Special Sphere [204Ch]
     ("HOME: Living Quarters, South of Main Corridor - Vocabulary Test (Chest)",                     397, False),  # Item: 1x Friend Sphere [2061h]
@@ -831,7 +831,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("SINS: Wicked Cait Sith (Point of No Return)",                                                 493, False),  # Gear: buki_get #84 [54h] { Lulu [05h], Weapon {Deathstrike [802Eh], Empty, Empty, Empty} }
     ("SINS: Attribute Sphere x1 (Point of No Return)",                                              494, False),  # Item: 1x Attribute Sphere [204Bh]
     ("SINS: Hrunting (Point of No Return)",                                                         495, False),  # Gear: buki_get #85 [55h] { Tidus [00h], Weapon {SOS Overdrive [8010h]} }
-    ("MOAR: Defeat Nemesis",                                                                        496, False),  # Key Item: Mark of Conquest [A029h]
+    ("MOAR: Become 'The One Who Conquered All' (Event)",                                            496, False),  # Key Item: Mark of Conquest [A029h]
     ("LUCA: Win the Story Blitzball Tournament (Event)",                                            497, False),  # Item: 1x Strength Sphere [2057h]
 ]]
 

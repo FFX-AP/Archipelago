@@ -160,12 +160,14 @@ ruleDict: dict[str, Callable[[FFXWorld], CollectionRule]] = {
     "Omega Weapon":        lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
     "Geosgaeno":           lambda world: lambda state: create_level_rule(world, 15)(state) and create_min_swimmers_rule(world, 3)(state),
 
+    "Belgemine":           lambda world: lambda state: create_min_summon_rule(world, 2)(state),
+
     "BSIL: Defeat Dark Valefor (Superboss)":       lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state) and state.has("Party Member: Yuna", world.player),
     "BIKA: Defeat Dark Ifrit (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
     "THPL: Defeat Dark Ixion (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state) and state.has("Party Member: Yuna", world.player),
     "MCLA: Defeat Dark Shiva (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
     "ZNKD: Defeat Dark Bahamut (Superboss)":       lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MTGZ: Defeat Dark Anima (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
+    "MTGS: Defeat Dark Anima (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
     "COSF: Defeat Dark Yojimbo (Superboss)":       lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
     "MUSH: Defeat Dark Mindy (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
     "MUSH: Defeat Dark Sandy (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
@@ -263,6 +265,13 @@ def set_rules(world: FFXWorld) -> None:
     # Send Belgemine? (Moon sigil)
     add_rule(world.get_location(world.location_id_to_name[275 | TreasureOffset]), lambda state: state.has(f"Party Member: Yuna", world.player) and state.has_all([f"Party Member: {name}" for name in ["Yojimbo", "Anima", "Magus Sisters"]], world.player))
 
+    ## Belgemine
+    # Mi'ihen fight
+    add_rule(world.get_location(world.location_id_to_name[186 | TreasureOffset]), create_min_summon_rule(world, 2))
+    # Moonflow fight
+    add_rule(world.get_location(world.location_id_to_name[372 | TreasureOffset]), create_min_summon_rule(world, 2))
+    # Calm Lands fight
+    add_rule(world.get_location(world.location_id_to_name[187 | TreasureOffset]), create_min_summon_rule(world, 2))
 
     ## Dark Aeons
     dark_aeons = [
@@ -436,6 +445,7 @@ def set_rules(world: FFXWorld) -> None:
         creation_name = world.location_id_to_name[creation_id | BossOffset]
         add_rule(nemesis, lambda state, creation_name=creation_name: state.can_reach_location(creation_name, world.player))
     add_rule(nemesis, ruleDict[nemesis.name](world))
+    add_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), lambda state: state.can_reach_location(nemesis.name, world.player))
 
 
     ## Celestials

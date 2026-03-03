@@ -1,8 +1,9 @@
 """
 Option definitions for Final Fantasy ¨X
 """
+from typing import Any
 from dataclasses import dataclass
-from Options import Choice, DefaultOnToggle, Option, Range, Toggle, PerGameCommonOptions
+from Options import Choice, DefaultOnToggle, Option, OptionGroup, Range, Toggle, PerGameCommonOptions
 
 class GoalRequirement(Choice):
     """
@@ -46,29 +47,90 @@ class RequiredPrimers(Range):
 
 class APMultiplier(Range):
     """
-    Sets the AP multiplier.
+    Sets the AP (Ability Point) multiplier.
     Default is 2.
     """
-    display_name = "AP Multiplier"
+    display_name = "Ability Point Multiplier"
     default = 2
     range_start = 1
     range_end = 10
 
 
-class MiniGames(Toggle):
+class MiniGameBlitzball(Toggle):
     """
-    Sets whether minigames are included or not. If off they will only have filler items.
-    Minigames include;
-    - Blitzball (World Champion & Jupiter Sigil)
+    Sets whether Blitzball is included.
+    If off it will only have filler items.
+    This includes:
     - Luca Story Blitzball win
-    - Macalania Butterflies (Saturn Sigil)
-    - Thunder Plains Lightning Dodging (including Venus Sigil)
-    - Bikanel Cactuar Village (Mercury Sigil)
-    - Calm Lands Chocobo Training (Dodger, Hyper Dodger, Catcher, Caladbolg & Sun Sigil)
-    - Remiem Temple Chocobo Race (Cloudy Mirror)
-    Default is off.
+    - World Champion
+    - Jupiter Sigil
     """
-    display_name = "Minigames"
+    display_name = "Blitzball"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
+class MiniGameButterflies(Toggle):
+    """
+    Sets whether the Macalania Butterflies are included.
+    If off they will only have filler items.
+    """
+    display_name = "Macalania Butterflies"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
+class MiniGameLightningDodging(Choice):
+    """
+    Sets whether the Thunder Plains Lightning Dodging is included.
+    If off it will only have filler items.
+    """
+    display_name = "Lightning Dodging"
+    default = 0
+    option_off = 0
+    option_up_to_5 = 1
+    option_up_to_10 = 2
+    option_up_to_20 = 3
+    option_up_to_50 = 4
+    option_up_to_100 = 5
+    option_up_to_150 = 6
+    option_up_to_200 = 7
+
+
+class MiniGameCactuarVillage(Toggle):
+    """
+    Sets whether the Bikanel Cactuar Village sidequest is included.
+    If off it will only have filler items.
+    """
+    display_name = "Cactuar Village"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
+class MiniGameChocoboTraining(Choice):
+    """
+    Sets whether the Calm Lands Chocobo Training minigames are included.
+    If off they will only have filler items.
+    """
+    display_name = "Chocobo Training"
+    default = 0
+    option_off = 0
+    option_up_to_wobbly = 1
+    option_up_to_dodger = 2
+    option_up_to_hyper_dodger = 3
+    option_up_to_catcher = 4
+    option_up_to_sigil = 5
+
+
+class MiniGameChocoboRace(Toggle):
+    """
+    Sets whether the Remiem Temple Chocobo Race minigames are included.
+    If off they will only have filler items.
+    """
+    display_name = "Remiem Chocobo Race"
     default = 0
     option_off = 0
     option_on = 1
@@ -164,6 +226,18 @@ class SuperBosses(Toggle):
     option_on = 1
 
 
+class JechtSpheres(Toggle):
+    """
+    Sets whether Jecht Sphere locations are included or not. If off they will only have filler items.
+    Includes all 8 Jecht Spheres, as well as the Auron & Braska Sphere
+    Default is off.
+    """
+    display_name = "Jecht Spheres"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
 class LogicDifficulty(Range):
     """
     Sets how strict the logic is for region access. Higher is harder / less restrictive.
@@ -210,6 +284,32 @@ class AlwaysCapture(Toggle):
     option_on = 1
 
 
+class CaptureDamage(Choice):
+    """
+    Sets which damage type(s) will trigger a capture attempt, assuming that you have a capture weapon or 'Always Capture' is enabled.
+    - Physical: Only physical damage originating from a party member (base game rules).
+    - All Direct: Any damage directly caused by a party member (or Aeon if 'Always Capture' is enabled). This includes items, magical damage and overdrives.
+    - All: Any damage caused by a party member (or Aeon if 'Always Capture' is enabled). This includes status effects.
+      - Behaves the same as 'All Direct' when 'Always Capture' is disabled.
+    Default is Physical.
+    """
+    display_name = "Capture Damage"
+    default = 0
+    option_physical = 0
+    option_all_direct = 1
+    option_all = 2
+
+class SkipContestOfAeons(Toggle):
+    """
+    Sets whether to skip Contest of Aeons before fighting Yu Yevon
+    Default is off.
+    """
+    display_name = "Skip Contest Of Aeons"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
 class TrapPercentage(Range):
     """
     Sets the percentage of non-progression items that will be traps.
@@ -237,16 +337,74 @@ class FFXOptions(PerGameCommonOptions):
     required_party_members: RequiredPartyMembers
     required_primers: RequiredPrimers
     ap_multiplier: APMultiplier
-    mini_games: MiniGames
+    mini_game_blitzball: MiniGameBlitzball
+    mini_game_butterflies: MiniGameButterflies
+    mini_game_lightning_dodging: MiniGameLightningDodging
+    mini_game_cactuar_village: MiniGameCactuarVillage
+    mini_game_chocobo_training: MiniGameChocoboTraining
+    mini_game_chocobo_race: MiniGameChocoboRace
     recruit_sanity: RecruitSanity
     capture_sanity: CaptureSanity
     arena_access: MonsterArenaAccess
     creation_rewards: CreationRewards
     arena_bosses: MonsterArenaBosses
     super_bosses: SuperBosses
+    jecht_spheres: JechtSpheres
     trap_percentage: TrapPercentage
     logic_difficulty: LogicDifficulty
     early_party_members: EarlyPartyMembers
     always_sensor: AlwaysSensor
     always_capture: AlwaysCapture
+    capture_damage: CaptureDamage
+    skip_contest_of_aeons: SkipContestOfAeons
     sphere_grid_randomization: SphereGridRandomization
+
+# Ethically inspired by A Hat in Time's world
+def create_option_groups() -> list[OptionGroup]:
+    option_group_list: list[OptionGroup] = []
+    for name, options in ffx_option_groups.items():
+        option_group_list.append(OptionGroup(name=name, options=options))
+
+    return option_group_list
+
+ffx_option_groups: dict[str, list[Any]] = {
+    "Goal Options": [
+        GoalRequirement,
+        RequiredPartyMembers,
+        RequiredPrimers,
+    ],
+
+    "Progression Options": [
+        TrapPercentage,
+        LogicDifficulty,
+        EarlyPartyMembers,
+    ],
+
+    "General Options": [
+        APMultiplier,
+        RecruitSanity,
+        SuperBosses,
+        JechtSpheres,
+        AlwaysSensor,
+        SkipContestOfAeons,
+        SphereGridRandomization,
+    ],
+
+    "Minigame Options": [
+        MiniGameBlitzball,
+        MiniGameButterflies,
+        MiniGameLightningDodging,
+        MiniGameCactuarVillage,
+        MiniGameChocoboTraining,
+        MiniGameChocoboRace,
+    ],
+
+    "Monster Arena Options": [
+        CaptureSanity,
+        MonsterArenaAccess,
+        CreationRewards,
+        MonsterArenaBosses,
+        AlwaysCapture,
+        CaptureDamage,
+    ],
+}

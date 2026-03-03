@@ -67,7 +67,7 @@
     "party_members": [],
     "bosses": [2],
     "overdrives": [],
-    "other": [28],
+    "other": [27],
     "recruits": [],
     "leads_to": [13],
     "rules": []
@@ -79,7 +79,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [29],
+    "other": [32],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -178,7 +178,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [30],
+    "other": [31],
     "recruits": [16],
     "leads_to": [],
     "rules": []
@@ -187,7 +187,7 @@
   {
     "name": "Mi'ihen Highroad 1st visit: Pre-Chocobo Eater",
     "id": 40,
-    "treasures": [311, 309, 310, 38, 44, 313, 312, 317, 318, 45, 316, 314, 315, 46, 423, 97],
+    "treasures": [311, 309, 310, 38, 44, 313, 312, 317, 318, 45, 316, 314, 315, 46, 423, 97, 186],
     "party_members": [],
     "bosses": [],
     "overdrives": [],
@@ -215,7 +215,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [31],
+    "other": [30],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -252,7 +252,7 @@
     "party_members": [],
     "bosses": [45, 46, 47],
     "overdrives": [],
-    "other": [32],
+    "other": [35],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -286,13 +286,13 @@
   {
     "name": "Moonflow 1st visit: Pre-Extractor",
     "id": 70,
-    "treasures": [376, 197, 377, 378, 198, 199],
+    "treasures": [376, 197, 377, 378, 198, 199, 372],
     "party_members": [],
     "bosses": [],
     "overdrives": [],
     "other": [],
     "recruits": [],
-    "leads_to": [71, 1013, 1014],
+    "leads_to": [71, 1013, 1014, 1100],
     "rules": ["Moonflow"]
   },
   {
@@ -314,7 +314,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [33],
+    "other": [29],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -364,7 +364,7 @@
     "party_members": [],
     "bosses": [13],
     "overdrives": [],
-    "other": [34],
+    "other": [28],
     "recruits": [],
     "leads_to": [],
     "rules": []
@@ -385,11 +385,11 @@
   {
     "name": "Macalania Woods 1st visit: Post-Spherimorph",
     "id": 101,
-    "treasures": [],
+    "treasures": [177],
     "party_members": [],
     "bosses": [14],
     "overdrives": [],
-    "other": [27, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
+    "other": [34, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
     "recruits": [],
     "leads_to": [102],
     "rules": ["Spherimorph"]
@@ -629,13 +629,13 @@
   {
     "name": "Calm Lands 1st visit: Pre-Defender X",
     "id": 140,
-    "treasures": [116, 115, 117],
+    "treasures": [116, 115, 117, 187],
     "party_members": [],
     "bosses": [],
     "overdrives": [],
     "other": [23],
     "recruits": [11, 17],
-    "leads_to": [141, 142, 1015],
+    "leads_to": [141, 142, 1015, 1101],
     "rules": ["Calm Lands"]
   },
   {
@@ -647,7 +647,7 @@
     "overdrives": [],
     "other": [24],
     "recruits": [],
-    "leads_to": [],
+    "leads_to": [1100, 1101],
     "rules": []
   },
   {
@@ -705,7 +705,7 @@
   {
     "name": "Monster Arena",
     "id": 200,
-    "treasures": [113, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458],
+    "treasures": [113, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 496],
     "party_members": [],
     "bosses": [49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83],
     "overdrives": [],
@@ -735,7 +735,7 @@
     "party_members": [],
     "bosses": [],
     "overdrives": [],
-    "other": [35],
+    "other": [33],
     "recruits": [],
     "leads_to": [162, 1016, 1017],
     "rules": ["Biran and Yenke"]
@@ -1103,5 +1103,29 @@
     "recruits": [],
     "leads_to": [],
     "rules": []
+  },
+  {
+    "name": "Summoner's Soul",
+    "id": 1100,
+    "treasures": [374],
+    "party_members": [],
+    "bosses": [],
+    "overdrives": [],
+    "other": [],
+    "recruits": [],
+    "leads_to": [],
+    "rules": ["Belgemine"]
+  },
+  {
+    "name": "Aeon's Soul",
+    "id": 1101,
+    "treasures": [371],
+    "party_members": [],
+    "bosses": [],
+    "overdrives": [],
+    "other": [],
+    "recruits": [],
+    "leads_to": [],
+    "rules": ["Belgemine"]
   }
 ]

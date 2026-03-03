@@ -8,6 +8,7 @@ from settings import Group, FilePath
 
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
 from worlds.AutoWorld import WebWorld, World
+from Options import OptionGroup
 from Utils import visualize_regions
 
 from .client import FFXClient
@@ -16,7 +17,7 @@ from .items import create_item_label_to_code_map, item_table, key_items, filler_
     party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items
 from .locations import create_location_label_to_id_map, FFXLocation, allLocations
 from .regions import create_regions
-from .options import FFXOptions
+from .options import FFXOptions, create_option_groups
 from .generate import generate_output, options_validation
 from .rules import set_rules, world_battle_levels
 from .ut import tracker_world, setup_options_from_slot_data
@@ -27,6 +28,7 @@ class FFXWebWorld(WebWorld):
     Webhost info for Final Fantasy X
     """
     theme = "grass"
+    option_groups = create_option_groups()
     setup_en = Tutorial(
         "Multiworld Setup Guide",
         "A guide to playing Final Fantasy X with Archipelago.",
@@ -93,7 +95,10 @@ class FFXWorld(World):
         required_items = []
 
         for item in key_items:
-            required_items.append(item.itemName)
+            if item.itemName == "Progressive Jecht's Sphere":
+                required_items.extend([item.itemName]*10)
+            else:
+                required_items.append(item.itemName)
 
         # Progressive celestial weapons and Brotherhood
         for item in equip_items:
@@ -193,12 +198,18 @@ class FFXWorld(World):
             "required_party_members": self.options.required_party_members.value,
             "required_primers": self.options.required_primers.value,
             "sphere_grid_randomization": self.options.sphere_grid_randomization.value,
-            "mini_games": self.options.mini_games.value,
+            "mini_game_blitzball": self.options.mini_game_blitzball.value,
+            "mini_game_butterflies": self.options.mini_game_butterflies.value,
+            "mini_game_lightning_dodging": self.options.mini_game_lightning_dodging.value,
+            "mini_game_cactuar_village": self.options.mini_game_cactuar_village.value,
+            "mini_game_chocobo_training": self.options.mini_game_chocobo_training.value,
+            "mini_game_chocobo_race": self.options.mini_game_chocobo_race.value,
             "recruit_sanity": self.options.recruit_sanity.value,
             "capture_sanity": self.options.capture_sanity.value,
             "creation_rewards": self.options.creation_rewards.value,
             "arena_bosses": self.options.arena_bosses.value,
             "super_bosses": self.options.super_bosses.value,
+            "jecht_spheres": self.options.jecht_spheres.value,
             "always_capture": self.options.always_capture.value,
             "logic_difficulty": self.options.logic_difficulty.value,            
         }
