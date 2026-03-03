@@ -460,15 +460,15 @@ def set_rules(world: FFXWorld) -> None:
     ]
     for location_id in celestial_weapon_locations:
         add_rule(world.get_location(world.location_id_to_name[location_id | TreasureOffset]),
-                 lambda state: state.has("Celestial Mirror", world.player))
+                 lambda state: state.has("Progressive Mirror", world.player, 2))
 
     # Masamune
     add_rule(world.get_location(world.location_id_to_name[99 | TreasureOffset]),
-             lambda state: state.has_all(["Celestial Mirror", "Rusty Sword"], world.player))
+             lambda state: state.has("Progressive Mirror", world.player, 2) and state.has("Rusty Sword", world.player))
 
     # Celestial Mirror
     add_rule(world.get_location(world.location_id_to_name[111 | TreasureOffset]),
-             lambda state: state.has("Cloudy Mirror", world.player))
+             lambda state: state.has("Progressive Mirror", world.player))
 
     # Mercury Sigil
     add_rule(world.get_location(world.location_id_to_name[279 | TreasureOffset]),
@@ -485,16 +485,16 @@ def set_rules(world: FFXWorld) -> None:
     ]
     for crest_id, weapon_id, celestial in celestial_upgrades:
         add_rule(world.get_location(world.location_id_to_name[crest_id | OtherOffset]),
-                 lambda state, weapon_id=weapon_id, celestial=celestial: state.has_all(["Celestial Mirror",
-                                              world.item_id_to_name[weapon_id | equipItemOffset],
-                                              f"{celestial} Crest",
-                                              ], world.player))
+                 lambda state, weapon_id=weapon_id, celestial=celestial: state.has("Progressive Mirror", world.player, 2) and state.has_all([
+                        world.item_id_to_name[weapon_id | equipItemOffset],
+                        f"{celestial} Crest",
+                        ], world.player))
         add_rule(world.get_location(world.location_id_to_name[crest_id+1 | OtherOffset]),
-                 lambda state, weapon_id=weapon_id, celestial=celestial: state.has_all(["Celestial Mirror",
-                                              world.item_id_to_name[weapon_id | equipItemOffset],
-                                              f"{celestial} Crest",
-                                              f"{celestial} Sigil",
-                                              ], world.player))
+                 lambda state, weapon_id=weapon_id, celestial=celestial: state.has("Progressive Mirror", world.player, 2) and state.has_all([
+                        world.item_id_to_name[weapon_id | equipItemOffset],
+                        f"{celestial} Crest",
+                        f"{celestial} Sigil",
+                        ], world.player))
 
 
     ## Primers
