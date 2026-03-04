@@ -47,7 +47,6 @@
 
 ## Notes
 
-### General Notes
 * Sometimes crashes occur, or autosaves place you into a softlock. Manually save often!
 * Open CSR _after_ opening the game.
 * Blocked all travel directly between Regions. Trying to enter another region will now either lead to the Airship menu or simply turn you around
@@ -55,3 +54,6 @@
 * If you unlock Seymour, he will only be available in battle and not in the party menu.
 * Succeeding the Jecht Shot scene with CSR will crash the game.
 * If you reset a region and go through it again, consider closing and reopening CSR so it will trigger properly.
+
+## Troubleshooting
+<!-- TODO: solutions to common issues people have setting the rando up -->
