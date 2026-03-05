@@ -100,6 +100,8 @@ class FFXWorld(World):
                     required_items.extend([item.itemName]*10)
                 case "Progressive Mirror":
                     required_items.extend([item.itemName]*2)
+                case "Progressive Al Bhed Primer":
+                    required_items.extend([item.itemName]*26)
                 case _:
                     required_items.append(item.itemName)
             
