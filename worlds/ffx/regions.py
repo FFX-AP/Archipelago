@@ -5,7 +5,7 @@ import typing
 from typing import NamedTuple, List
 
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
-    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, FFXRecruitLocations, \
+    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, \
     FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, \
     RecruitOffset, CaptureOffset, OtherOffset
 from .rules import ruleDict, create_min_summon_rule
@@ -288,7 +288,6 @@ def create_regions(world: FFXWorld, player) -> None:
         #     new_region.locations.append(new_location)
         #     all_locations.append(new_location)
 
-        add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
         add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
 
         # add_locations_by_ids(new_region, region_data.captures, FFXCaptureLocations, "Capture")
