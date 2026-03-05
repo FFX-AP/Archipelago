@@ -501,7 +501,7 @@ def set_rules(world: FFXWorld) -> None:
     # ------------------------------ Mars Sigil ------------------------------ #
     conquest_locations = [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(424, 451))]
     location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
-    add_rule(location, lambda state: can_reach_minimum_locations(state, conquest_locations, 10))
+    world.set_rule(location, CanReachMinimumLocationRule(conquest_locations, 10))
 
     # -------------------- Original Creations - Conquests -------------------- #
     original_creation_conquests = [
