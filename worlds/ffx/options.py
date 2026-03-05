@@ -56,7 +56,7 @@ class APMultiplier(Range):
     range_end = 10
 
 
-class MiniGameBlitzball(Toggle):
+class MiniGameBlitzball(Choice):
     """
     Sets whether Blitzball is included.
     If off it will only have filler items.
@@ -68,7 +68,9 @@ class MiniGameBlitzball(Toggle):
     display_name = "Blitzball"
     default = 0
     option_off = 0
-    option_on = 1
+    option_up_to_story = 1
+    option_up_to_celestial = 2
+    option_up_to_sigil = 3
 
 
 class MiniGameButterflies(Toggle):
