@@ -5,7 +5,9 @@ import typing
 from typing import NamedTuple, List
 
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
-    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, RecruitOffset, CaptureOffset, OtherOffset
+    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, \
+    FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, \
+    RecruitOffset, CaptureOffset, OtherOffset
 from .rules import ruleDict, create_min_summon_rule
 from .items import party_member_items, key_items, FFXItem
 from worlds.generic.Rules import add_rule
@@ -454,10 +456,21 @@ def create_regions(world: FFXWorld, player) -> None:
             location_name = world.location_id_to_name[id | TreasureOffset]
             world.options.exclude_locations.value.add(location_name)
 
-    if not world.options.recruit_sanity.value:
+    if not world.options.recruit_sanity.value is world.options.recruit_sanity.option_all:
         recruit_location_ids = []
-        for location in FFXRecruitLocations:
-            recruit_location_ids.append(location.location_id)
+        contracted_ids = [loc.location_id for loc in FFXRecruitLocations[2:37]]
+        free_agent_ids = [loc.location_id for loc in [FFXRecruitLocations[1], *FFXRecruitLocations[38:]]]
+
+        including = world.options.recruit_sanity.value
+        none = world.options.recruit_sanity.option_off
+        free_agents = world.options.recruit_sanity.option_free_agents
+
+        if including is free_agents or none:
+            recruit_location_ids.extend(contracted_ids)
+        
+        if including is none:
+            recruit_location_ids.extend(free_agent_ids)
+
         for id in recruit_location_ids:
             location_name = world.location_id_to_name[id | RecruitOffset]
             world.options.exclude_locations.value.add(location_name)
