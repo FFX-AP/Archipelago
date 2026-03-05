@@ -105,9 +105,10 @@ class GoalRequirementRule(Rule[FFXWorld], game="Final Fantasy X"):
             case world.options.goal_requirement.option_none:
                 return True_().resolve(world)
             case world.options.goal_requirement.option_party_members:
-                return HasFromListUnique(*[character.itemName for character in party_member_items[:8]], min(world.options.required_party_members.value, 8)).resolve(world)
+                print([character.itemName for character in party_member_items[:8]])
+                return HasFromListUnique(*[character.itemName for character in party_member_items[:8]], count=min(world.options.required_party_members.value, 8)).resolve(world)
             case world.options.goal_requirement.option_party_members_and_aeons:
-                return HasFromListUnique(*[character.itemName for character in party_member_items], world.options.required_party_members.value)
+                return HasFromListUnique(*[character.itemName for character in party_member_items], count=world.options.required_party_members.value).resolve(world)
             case world.options.goal_requirement.option_pilgrimage:
                 return (
                     CanReachLocation(world.location_id_to_name[ 8 | PartyMemberOffset]) &   # Valefor
@@ -229,7 +230,7 @@ class RegionAccessRule(Rule[FFXWorld], game="Final Fantasy X"):
             if can_reach_region is not None:
                 return (Has(f"Region: {self.region_name}") & can_reach_region).resolve(world)
             else:
-                return False_.resolve(world)
+                return False_().resolve(world)
 
 
 @dataclass()
@@ -247,9 +248,9 @@ class StatTotalRule(Rule[FFXWorld], game="Final Fantasy X"):
                 totals[character] += value*count
 
         if len([total for total in totals.values() if total > self.stat_total]) >= self.num_party_members:
-            return True_.resolve(world)
+            return True_().resolve(world)
         else:
-            return False_.resolve(world)
+            return False_().resolve(world)
 
 # ---------------------------------------------------------------------------- #
 #                               Rule Dictionaries                              #

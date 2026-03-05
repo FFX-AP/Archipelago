@@ -260,7 +260,7 @@ def create_regions(world: FFXWorld, player) -> None:
                     else:
                         new_rule = regionRule
                 world.set_rule(menu_entrance, new_rule)
-                top_level_regions.append((other_region, menu_entrance))
+            top_level_regions.append((other_region, menu_entrance))
 
 
     # ------------------------------------------------------------------------ #
