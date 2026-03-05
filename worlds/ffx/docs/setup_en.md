@@ -8,7 +8,7 @@
 * 4GB Patch (Reduces Crashing) - https://ntcore.com/4gb-patch/ 
 * _Retrieve the Archipelago Mod and the APWorld from the #releases forum in the Discord server._
 * The latest Archipelago version of the [Cutscene Remover](https://github.com/FFX-AP/FFXCSRRando/releases/latest)
-* Check out the [FFX Archipleago Planner](https://docs.google.com/spreadsheets/d/16Wj5-FODnFhK9ArwV5qoN9yQvnhJhDiAvm3HpZcfOQ0/edit?gid=1447407199#gid=1447407199) for a locations guide and other cool info.
+* Check out the [FFX Poptracker Pack](https://github.com/FFX-AP/FFX-Poptracker/releases) which uses the [Poptracker](https://poptracker.github.io/) software.
 
 <!---APWorld setup instructions unnecessary in archipelago markdown context-->
 
