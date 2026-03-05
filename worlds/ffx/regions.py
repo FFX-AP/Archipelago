@@ -190,7 +190,7 @@ def create_regions(world: FFXWorld, player) -> None:
     79:  "Djose 1st visit",                                                 # Basilisk
     80:  "Calm Lands 1st visit: Pre-Defender X",                            # Anacondaur
     81:  "Captures: Inside Sin & Omega Ruins",                              # Adamantoise
-    82:  "Captures: City of Dying Dreams & Omega Ruins",                    # Varuna
+    82:  "Omega Ruins: Pre-Ultima Weapon",                                  # Varuna
     83:  "Moonflow 1st visit: Pre-Extractor",                               # Ochu
     84:  "Captures: Mt. Gagazet Caves & Zanarkand",                         # Mandragora
     85:  "Captures: Miihen Highroad & MRR",                                 # Bomb
