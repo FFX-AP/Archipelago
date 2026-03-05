@@ -1,7 +1,7 @@
 import typing
 from collections import Counter
 from dataclasses import dataclass
-from typing import Callable, override
+from typing_extensions import override
 
 from BaseClasses import CollectionState, Location
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
