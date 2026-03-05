@@ -323,12 +323,22 @@ def create_regions(world: FFXWorld, player) -> None:
     #            continue
     #        world.multiworld.register_indirect_condition(this_region, menu_entrance)
 
-    if not world.options.mini_game_blitzball:
-        blitzball_location_ids = [
-            497, # "LUCA: Win the Story Blitzball Tournament (Event)", 
-            244, # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
-            93,  # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
-        ]
+    if not world.options.mini_game_blitzball.value is world.options.mini_game_blitzball.option_up_to_sigil:
+        blitzball_location_ids = []
+
+        up_to = world.options.mini_game_blitzball.value
+        up_to_story = world.options.mini_game_blitzball.option_up_to_story
+        up_to_celestial = world.options.mini_game_blitzball.option_up_to_celestial
+        up_to_sigil = world.options.mini_game_blitzball.option_up_to_sigil
+
+        if up_to < up_to_sigil:
+          blitzball_location_ids.append(244) # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
+        
+        if up_to < up_to_celestial:
+          blitzball_location_ids.append(93) # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
+        
+        if up_to < up_to_story:
+          blitzball_location_ids.append(497) # "LUCA: Win the Story Blitzball Tournament (Event)", 
 
         for id in blitzball_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
