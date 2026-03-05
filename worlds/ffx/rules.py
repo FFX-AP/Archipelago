@@ -191,8 +191,7 @@ class PrimerRequirementRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
         if world.options.required_primers.value > 0:
-            return HasFromListUnique(*[primer.itemName for primer in key_items[4:30]], 
-                                     count=world.options.required_primers.value).resolve(world)
+            return Has("Progressive Al Bhed Primer", count=world.options.required_primers.value).resolve(world)
         else:
             return True_().resolve(world)
 
