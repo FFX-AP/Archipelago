@@ -9,6 +9,7 @@ from settings import Group, FilePath
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
 from worlds.AutoWorld import WebWorld, World
 from Options import OptionGroup
+from rule_builder.cached_world import CachedRuleBuilderWorld
 from Utils import visualize_regions
 
 from .client import FFXClient
@@ -50,7 +51,8 @@ class FFXSettings(Group):
     ut_poptracker_path: UTPoptrackerPath | str = UTPoptrackerPath()
 
 
-class FFXWorld(World):
+class FFXWorld(CachedRuleBuilderWorld):
+# class FFXWorld(World):
     """
     Final Fantasy X is a game
     """
