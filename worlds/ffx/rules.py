@@ -596,13 +596,13 @@ def set_rules(world: FFXWorld) -> None:
     ]
     for location_id in celestial_weapon_locations:
         location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-        world.set_rule(location, Has("Celestial Mirror"))
+        world.set_rule(location, Has("Progressive Mirror", count=2))
 
     # Masamune
-    world.set_rule(world.get_location(world.location_id_to_name[99 | TreasureOffset]), HasAll(*["Celestial Mirror", "Rusty Sword"]))
+    world.set_rule(world.get_location(world.location_id_to_name[99 | TreasureOffset]), Has("Progressive Mirror", count=2) & Has("Rusty Sword"))
 
     # Celestial Mirror
-    world.set_rule(world.get_location(world.location_id_to_name[111 | TreasureOffset]), Has("Cloudy Mirror"))
+    world.set_rule(world.get_location(world.location_id_to_name[111 | TreasureOffset]), Has("Progressive Mirror", count=1))
 
     # Mercury Sigil
     world.set_rule(world.get_location(world.location_id_to_name[279 | TreasureOffset]), CanReachRegion("Airship 1st visit: Post-Evrae"))
@@ -619,9 +619,9 @@ def set_rules(world: FFXWorld) -> None:
     ]
     for crest_id, weapon_id, celestial in celestial_upgrades:
         world.set_rule(world.get_location(world.location_id_to_name[crest_id | OtherOffset]),
-                       HasAll(*["Celestial Mirror", world.item_id_to_name[weapon_id | equipItemOffset],f"{celestial} Crest"]))
+                       Has("Progressive Mirror", count=2) & HasAll(*[world.item_id_to_name[weapon_id | equipItemOffset], f"{celestial} Crest"]))
         world.set_rule(world.get_location(world.location_id_to_name[crest_id+1 | OtherOffset]),
-                       HasAll(*["Celestial Mirror", world.item_id_to_name[weapon_id | equipItemOffset], f"{celestial} Crest", f"{celestial} Sigil"]))
+                       Has("Progressive Mirror", count=2) & HasAll(*[world.item_id_to_name[weapon_id | equipItemOffset], f"{celestial} Crest", f"{celestial} Sigil"]))
 
 
     # ------------------------------------------------------------------------ #

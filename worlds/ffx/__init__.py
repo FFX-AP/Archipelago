@@ -97,11 +97,14 @@ class FFXWorld(CachedRuleBuilderWorld):
         required_items = []
 
         for item in key_items:
-            if item.itemName == "Progressive Jecht's Sphere":
-                required_items.extend([item.itemName]*10)
-            else:
-                required_items.append(item.itemName)
-
+            match item.itemName:
+                case "Progressive Jecht's Sphere":
+                    required_items.extend([item.itemName]*10)
+                case "Progressive Mirror":
+                    required_items.extend([item.itemName]*2)
+                case _:
+                    required_items.append(item.itemName)
+            
         # Progressive celestial weapons and Brotherhood
         for item in equip_items:
             if item.progression == ItemClassification.progression:
