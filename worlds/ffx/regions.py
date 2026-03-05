@@ -5,7 +5,9 @@ import typing
 from typing import Callable, NamedTuple, List
 
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
-    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, RecruitOffset, CaptureOffset, OtherOffset
+    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, \
+    FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, \
+    RecruitOffset, CaptureOffset, OtherOffset
 from rule_builder.rules import Rule, Has
 from .rules import regionRuleDict, regionBossRuleDict, staticEncounterRuleDict, GoalRequirementRule, PrimerRequirementRule
 from .items import party_member_items, key_items, FFXItem
@@ -268,12 +270,22 @@ def create_regions(world: FFXWorld, player) -> None:
     # ------------------------------------------------------------------------ #
 
     # ------------------------------- Blitzball ------------------------------ #
-    if not world.options.mini_game_blitzball:
-        blitzball_location_ids = [
-            497, # "LUCA: Win the Story Blitzball Tournament (Event)", 
-            244, # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
-            93,  # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
-        ]
+    if not world.options.mini_game_blitzball.value is world.options.mini_game_blitzball.option_up_to_sigil:
+        blitzball_location_ids = []
+
+        up_to = world.options.mini_game_blitzball.value
+        up_to_story = world.options.mini_game_blitzball.option_up_to_story
+        up_to_celestial = world.options.mini_game_blitzball.option_up_to_celestial
+        up_to_sigil = world.options.mini_game_blitzball.option_up_to_sigil
+
+        if up_to < up_to_sigil:
+          blitzball_location_ids.append(244) # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
+        
+        if up_to < up_to_celestial:
+          blitzball_location_ids.append(93) # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
+        
+        if up_to < up_to_story:
+          blitzball_location_ids.append(497) # "LUCA: Win the Story Blitzball Tournament (Event)", 
 
         for id in blitzball_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
@@ -405,10 +417,21 @@ def create_regions(world: FFXWorld, player) -> None:
             world.options.exclude_locations.value.add(location_name)
 
     # ---------------------------- Recruit Sanity ---------------------------- #
-    if not world.options.recruit_sanity.value:
+    if not world.options.recruit_sanity.value is world.options.recruit_sanity.option_all:
         recruit_location_ids = []
-        for location in FFXRecruitLocations:
-            recruit_location_ids.append(location.location_id)
+        contracted_ids = [loc.location_id for loc in FFXRecruitLocations[2:37]]
+        free_agent_ids = [loc.location_id for loc in [FFXRecruitLocations[1], *FFXRecruitLocations[38:]]]
+
+        including = world.options.recruit_sanity.value
+        none = world.options.recruit_sanity.option_off
+        free_agents = world.options.recruit_sanity.option_free_agents
+
+        if including is free_agents or none:
+            recruit_location_ids.extend(contracted_ids)
+        
+        if including is none:
+            recruit_location_ids.extend(free_agent_ids)
+
         for id in recruit_location_ids:
             location_name = world.location_id_to_name[id | RecruitOffset]
             world.options.exclude_locations.value.add(location_name)
