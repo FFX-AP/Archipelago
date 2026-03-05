@@ -136,16 +136,17 @@ class MiniGameChocoboRace(Toggle):
     option_on = 1
 
 
-class RecruitSanity(Toggle):
+class RecruitSanity(Choice):
     """
     Sets whether Blitzball Free Agents are included or not. If off they will only have filler items.
-    There are 24 Free Agents throughout Spira
+    There are 24 Free Agents throughout Spira. There are 59 total players throughout Spira.
     Default is off.
     """
     display_name = "Recruit Sanity"
     default = 0
     option_off = 0
-    option_on = 1
+    option_free_agents = 1
+    option_all = 2
 
 
 class CaptureSanity(Toggle):
