@@ -499,7 +499,7 @@ def set_rules(world: FFXWorld) -> None:
         world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
 
     # ------------------------------ Mars Sigil ------------------------------ #
-    conquest_locations = list(range(424, 451))
+    conquest_locations = [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(424, 451))]
     location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
     add_rule(location, lambda state: can_reach_minimum_locations(state, conquest_locations, 10))
 
