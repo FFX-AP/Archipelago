@@ -628,8 +628,7 @@ def set_rules(world: FFXWorld) -> None:
     #                                  Primers                                 #
     # ------------------------------------------------------------------------ #
     # Complete Al Bhed Primers
-    al_bhed_primers = [item.itemName for item in key_items[0x4:0x1D+1]]
-    world.set_rule(world.get_location(world.location_id_to_name[405 | TreasureOffset]), HasAll(*al_bhed_primers))
+    world.set_rule(world.get_location(world.location_id_to_name[405 | TreasureOffset]), Has("Progressive Al Bhed Primer", count=26))
 
 
     # TODO: Disabled for now due to multiple bugs related to this location (Ship softlocks + possible Macalania softlock)
