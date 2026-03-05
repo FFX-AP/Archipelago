@@ -498,7 +498,12 @@ def set_rules(world: FFXWorld) -> None:
         world.set_rule(location, fiend_rule)
         world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
 
-    # -------------------- Original Creations - Conquests -------------------- #
+    # ------------------------------ Mars Sigil ------------------------------ #
+    conquest_locations = list(range(424, 451))
+    location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
+    add_rule(location, lambda state: can_reach_minimum_locations(state, conquest_locations, 10))
+
+    # -------------------- Original Creations - Conquests -------------------- #  
     original_creation_conquests = [
         (451, 76, area_conquest,    2), # Earth Eather
         (452, 77, species_conquest, 2), # Greater Sphere
