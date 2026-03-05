@@ -48,11 +48,12 @@ class RequiredPrimers(Range):
 class APMultiplier(Range):
     """
     Sets the AP (Ability Point) multiplier.
+    Setting the multiplier to 0 will disable any AP gain (Effectively NSG - No Sphere Grid)
     Default is 2.
     """
     display_name = "Ability Point Multiplier"
     default = 2
-    range_start = 1
+    range_start = 0
     range_end = 10
 
 
