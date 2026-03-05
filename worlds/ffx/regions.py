@@ -5,7 +5,7 @@ import typing
 from typing import NamedTuple, List
 
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
-    FFXOverdriveLocations, FFXOtherLocations, FFXFreeAgentRecruitLocations, FFXContractedRecruitLocations, \
+    FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, FFXRecruitLocations, \
     FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, \
     RecruitOffset, CaptureOffset, OtherOffset
 from .rules import ruleDict, create_min_summon_rule
@@ -288,8 +288,8 @@ def create_regions(world: FFXWorld, player) -> None:
         #     new_region.locations.append(new_location)
         #     all_locations.append(new_location)
 
-        add_locations_by_ids(new_region, region_data.recruits, FFXFreeAgentRecruitLocations, "Recruit")
-        add_locations_by_ids(new_region, region_data.recruits, FFXContractedRecruitLocations, "Recruit")
+        add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
+        add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
 
         # add_locations_by_ids(new_region, region_data.captures, FFXCaptureLocations, "Capture")
 
@@ -459,16 +459,18 @@ def create_regions(world: FFXWorld, player) -> None:
 
     if not world.options.recruit_sanity.value is world.options.recruit_sanity.option_all:
         recruit_location_ids = []
+        contracted_ids = [loc.location_id for loc in FFXRecruitLocations[2:37]]
+        free_agent_ids = [loc.location_id for loc in [FFXRecruitLocations[1], *FFXRecruitLocations[38:]]]
 
         including = world.options.recruit_sanity.value
         none = world.options.recruit_sanity.option_off
         free_agents = world.options.recruit_sanity.option_free_agents
 
         if including is free_agents or none:
-            recruit_location_ids.extend([loc.location_id for loc in FFXContractedRecruitLocations])
+            recruit_location_ids.extend(contracted_ids)
         
         if including is none:
-            recruit_location_ids.extend([loc.location_id for loc in FFXFreeAgentRecruitLocations ])
+            recruit_location_ids.extend(free_agent_ids)
 
         for id in recruit_location_ids:
             location_name = world.location_id_to_name[id | RecruitOffset]

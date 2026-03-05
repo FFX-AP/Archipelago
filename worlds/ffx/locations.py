@@ -307,34 +307,9 @@ FFXPartyMemberLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+P
     ("REMI: Name the Magus Sisters (Event)",                                     15, False), # Party Member: Magus Sisters
 ]]
 
-FFXFreeAgentRecruitLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+RecruitOffset, *location) for location in [
+FFXRecruitLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+RecruitOffset, *location) for location in [
     ("Recruit: Wakka",        1, False),
-    ("Recruit: Rin",         37, False),
-    ("Recruit: Tatts",       38, False),
-    ("Recruit: Kyou",        39, False),
-    ("Recruit: Shuu",        40, False),
-    ("Recruit: Nedus",       41, False),
-    ("Recruit: Biggs",       42, False),
-    ("Recruit: Wedge",       43, False),
-    ("Recruit: Ropp",        44, False),
-    ("Recruit: Linna",       45, False),
-    ("Recruit: Mep",         46, False),
-    ("Recruit: Zalitz",      47, False),
-    ("Recruit: Naida",       48, False),
-    ("Recruit: Durren",      49, False),
-    ("Recruit: Jumal",       50, False),
-    ("Recruit: Svanda",      51, False),
-    ("Recruit: Vilucha",     52, False),
-    ("Recruit: Shaami",      53, False),
-    ("Recruit: Zev Ronso",   54, False),
-    ("Recruit: Yuma Guado",  55, False),
-    ("Recruit: Kiyuri",      56, False),
-    ("Recruit: Brother",     57, False),
-    ("Recruit: Mifurey",     58, False),
-    ("Recruit: Miyu",        59, False),
-]]
 
-FFXContractedRecruitLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+RecruitOffset, *location) for location in [
     ("Recruit: Datto",        2, False),
     ("Recruit: Letty",        3, False),
     ("Recruit: Jassu",        4, False),
@@ -370,6 +345,30 @@ FFXContractedRecruitLocations: List[FFXLocationData] = [ FFXLocationData(locatio
     ("Recruit: Auda Guado",  34, False),
     ("Recruit: Pah Guado",   35, False),
     ("Recruit: Noy Guado",   36, False),
+
+    ("Recruit: Rin",         37, False),
+    ("Recruit: Tatts",       38, False),
+    ("Recruit: Kyou",        39, False),
+    ("Recruit: Shuu",        40, False),
+    ("Recruit: Nedus",       41, False),
+    ("Recruit: Biggs",       42, False),
+    ("Recruit: Wedge",       43, False),
+    ("Recruit: Ropp",        44, False),
+    ("Recruit: Linna",       45, False),
+    ("Recruit: Mep",         46, False),
+    ("Recruit: Zalitz",      47, False),
+    ("Recruit: Naida",       48, False),
+    ("Recruit: Durren",      49, False),
+    ("Recruit: Jumal",       50, False),
+    ("Recruit: Svanda",      51, False),
+    ("Recruit: Vilucha",     52, False),
+    ("Recruit: Shaami",      53, False),
+    ("Recruit: Zev Ronso",   54, False),
+    ("Recruit: Yuma Guado",  55, False),
+    ("Recruit: Kiyuri",      56, False),
+    ("Recruit: Brother",     57, False),
+    ("Recruit: Mifurey",     58, False),
+    ("Recruit: Miyu",        59, False),
 ]]
 
 FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+TreasureOffset, *location) for location in [
@@ -1002,8 +1001,7 @@ allLocations = list(chain(FFXTreasureLocations,
                           FFXOverdriveLocations,
                           FFXOverdriveModeLocations,
                           FFXOtherLocations,
-                          FFXFreeAgentRecruitLocations,
-                          FFXContractedRecruitLocations,
+                          FFXRecruitLocations,
                           FFXCaptureLocations,
                           *FFXSphereGridLocations))
 
