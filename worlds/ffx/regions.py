@@ -2,7 +2,6 @@ from BaseClasses import Entrance, ItemClassification, Region, Location, Location
 import json
 import pkgutil
 import typing
-from typing import Callable, NamedTuple, List
 
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
     FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, \
