@@ -82,14 +82,14 @@ class AbilityRule(Rule[FFXWorld], game="Final Fantasy X"):
 
 @dataclass()
 class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
-    locations: list
+    locations: list[Location]
     locations_required: int
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
         sum = 0
         for location in self.locations:
-            if CanReachLocation(location) is not None:
+            if CanReachLocation(location.name) is not None:
                 sum += 1
                 if sum >= self.locations_required:
                     return True_().resolve(world)
