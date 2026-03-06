@@ -104,8 +104,7 @@ def create_regions(world: FFXWorld, player) -> None:
     
     def primer_requirement_rule(state):
         if world.options.required_primers.value > 0:
-            return state.has_from_list_unique(
-                [primer.itemName for primer in key_items[4:30]], world.player, world.options.required_primers.value) 
+            return state.has("Progressive Al Bhed Primer", world.player, world.options.required_primers.value)
         else:
             return True
         
@@ -536,6 +535,11 @@ def create_regions(world: FFXWorld, player) -> None:
         for id in arena_reward_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
             world.options.exclude_locations.value.add(location_name)
+
+    # ------------------------------ Mars Sigil ------------------------------ #
+    if world.options.creation_rewards.value < world.options.creation_rewards.option_area:
+        location_name = world.location_id_to_name[276 | TreasureOffset]
+        world.options.exclude_locations.value.add(location_name)
     
     if not world.options.arena_bosses.value == world.options.arena_bosses.option_original:
         arena_boss_location_ids = [
