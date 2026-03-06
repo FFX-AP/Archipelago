@@ -125,7 +125,7 @@ class FFXWorld(World):
         #     required_items.extend([item.itemName for _ in range(1)])
 
         # -------------------------- Starting Region ------------------------- #
-        possible_starting_regions = [f"Region: {region}" for region, level in world_battle_levels.items() 
+        possible_starting_regions = [f"Region: {region}" for region, level in world_battle_levels.items()
                                      if 0 < level <= min(self.options.logic_difficulty.value, 3)]
         starting_region = self.random.choice(possible_starting_regions)
 
@@ -154,14 +154,14 @@ class FFXWorld(World):
         
         if self.options.early_party_members.value > 0:
             partyMembers = party_member_items[1:8]
-            shuffle(partyMembers)
+            self.random.shuffle(partyMembers)
             for i in range(self.options.early_party_members.value):
                 self.multiworld.early_items[self.player][partyMembers.pop(0).itemName] = 1
-        
+
         # ---------------------------- Overdrives ---------------------------- #
         for overdrive in overdrive_items:
             required_items.append(overdrive.itemName)
-        
+
         if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_early:
             overdrive = choice(overdrive_items[:4])
             self.multiworld.early_items[self.player][overdrive.itemName] = 1
