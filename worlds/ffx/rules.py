@@ -500,6 +500,9 @@ def set_rules(world: FFXWorld) -> None:
 
     # ------------------------------ Mars Sigil ------------------------------ #
     conquest_locations = [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(424, 451))]
+    if world.options.creation_rewards.value == world.options.creation_rewards.option_area:
+        for location in [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(437, 451))]:
+            conquest_locations.remove(location)
     location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
     world.set_rule(location, CanReachMinimumLocationRule(conquest_locations, 10))
 
