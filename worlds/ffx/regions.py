@@ -511,8 +511,8 @@ def create_regions(world: FFXWorld, player) -> None:
 
     # ------------------------------ Mars Sigil ------------------------------ #
     if world.options.creation_rewards.value < world.options.creation_rewards.option_area:
-        location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
-        world.options.exclude_locations.value.add(location)
+        location_name = world.location_id_to_name[276 | TreasureOffset]
+        world.options.exclude_locations.value.add(location_name)
     
     # ----------------------------- Arena Bosses ----------------------------- #
     if not world.options.arena_bosses.value == world.options.arena_bosses.option_original:
