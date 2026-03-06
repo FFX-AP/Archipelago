@@ -3,7 +3,6 @@ Archipelago World definition for Final Fantasy X
 """
 
 from typing import ClassVar, Any, Optional
-from random import Random, shuffle
 from settings import Group, FilePath
 
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
@@ -148,7 +147,7 @@ class FFXWorld(World):
         
         if self.options.early_party_members.value > 0:
             partyMembers = party_member_items[1:8]
-            shuffle(partyMembers)
+            self.random.shuffle(partyMembers)
             for i in range(self.options.early_party_members.value):
                 self.multiworld.early_items[self.player][partyMembers.pop(0).itemName] = 1
 
