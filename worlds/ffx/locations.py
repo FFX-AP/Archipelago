@@ -1,4 +1,4 @@
-from typing import Dict, Optional, List, Tuple, NamedTuple
+from typing import Optional, NamedTuple
 from itertools import chain
 
 from BaseClasses import Location, Region
@@ -29,7 +29,7 @@ RecruitOffset: int = 0x7000
 SphereGridOffset: int = 0x8000
 CaptureOffset: int = 0x9000
 
-location_types: Dict[int, str] = {
+location_types: dict[int, str] = {
     TreasureOffset: "Treasure",
     BossOffset: "Boss",
     PartyMemberOffset: "PartyMember",
@@ -97,7 +97,7 @@ encounter_to_id = {
 }
 
 
-FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffset, *location) for location in [
+FFXBossLocations: list[FFXLocationData] = [ FFXLocationData(location[1]+BossOffset, *location) for location in [
     ("BAAJ: Defeat Klikk (Boss)",                      0, False),
     ("ALBS: Defeat Tros (Boss)",                       1, False),
     ("BSIL: Defeat Dark Valefor (Superboss)",          2, False),
@@ -184,7 +184,7 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
     ("MOAR: Defeat Nemesis (Superboss)",              83, False),
 ]]
 
-FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveOffset, *location) for location in [
+FFXOverdriveLocations: list[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveOffset, *location) for location in [
     ("Slice and Dice",  1, False),
     ("Energy Rain",     2, False),
     ("Blitz Ace",       3, False),
@@ -208,7 +208,7 @@ FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Ove
     ("BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)",   21, False), #Energy Blast
 ]]
 
-FFXOverdriveModeLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveModeOffset, *location) for location in [
+FFXOverdriveModeLocations: list[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveModeOffset, *location) for location in [
     ("Stoic",      0, False),
     ("Warrior",    1, False),
     ("Comrade",    2, False),
@@ -229,7 +229,7 @@ FFXOverdriveModeLocations: List[FFXLocationData] = [ FFXLocationData(location[1]
 ]]
 
 # Brotherhood, Al Bhed Primers, Jecht Spheres
-FFXOtherLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OtherOffset, *location) for location in [
+FFXOtherLocations: list[FFXLocationData] = [ FFXLocationData(location[1]+OtherOffset, *location) for location in [
     ("Brotherhood",                      0, False),
 
     ("ALBS: Deck & BIKA: Oasis (Primer)",                                         1, False), # Al Bhed Primer I
@@ -288,7 +288,7 @@ FFXOtherLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OtherOf
     ("MCWO: Upgrade Godhand Twice (Event)",                                      51, False), # Godhand Sigil Upgrade
 ]] #
 
-FFXPartyMemberLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+PartyMemberOffset, *location) for location in [
+FFXPartyMemberLocations: list[FFXLocationData] = [ FFXLocationData(location[1]+PartyMemberOffset, *location) for location in [
     # ("Party Member: Tidus",                                      0, False), 
     ("BSIL: Waterfall Way - Summon Tutorial (Event)",                             1, False), # Party Member: Yuna
     ("LUCA: Post-Blitzball Tournament (Event)",                                   2, False), # Party Member: Auron
@@ -307,7 +307,7 @@ FFXPartyMemberLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+P
     ("REMI: Name the Magus Sisters (Event)",                                     15, False), # Party Member: Magus Sisters
 ]]
 
-FFXRecruitLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+RecruitOffset, *location) for location in [
+FFXRecruitLocations: list[FFXLocationData] = [ FFXLocationData(location[1]+RecruitOffset, *location) for location in [
     ("Recruit: Wakka",        1, False),
 
     ("Recruit: Datto",        2, False),
@@ -371,7 +371,7 @@ FFXRecruitLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Recru
     ("Recruit: Miyu",        59, False),
 ]]
 
-FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+TreasureOffset, *location) for location in [
+FFXTreasureLocations: list[FFXLocationData] = [ FFXLocationData(location[1]+TreasureOffset, *location) for location in [
     ("BAAJ: Submerged Ruins - Northeast Structure (Chest)",                                           0, False),  # Gil: 200 [02h]
     ("BAAJ: Submerged Ruins - Northwest Structure (Chest)",                                           1, False),  # Item: 2x Potion [2000h]
     ("BAAJ: Stairs - Flowers in Sconce on Right Wall, North End (Event)",                             2, False),  # Key Item: Withered Bouquet [A000h]
@@ -872,7 +872,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("LUCA: Win the Story Blitzball Tournament (Event)",                                            497, False),  # Item: 1x Strength Sphere [2057h]
 ]]
 
-FFXCaptureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+CaptureOffset, *location) for location in [
+FFXCaptureLocations: list[FFXLocationData] = [ FFXLocationData(location[1]+CaptureOffset, *location) for location in [
     ("Fiend Capture: Raldo",             0, False),
     ("Fiend Capture: Bunyip",            1, False),
     ("Fiend Capture: Murussu",           2, False),
@@ -989,7 +989,7 @@ character_names = [
     "Rikku"
 ]
 
-FFXSphereGridLocations: List[List[FFXLocationData]] = [
+FFXSphereGridLocations: list[list[FFXLocationData]] = [
     [FFXLocationData(location[1]+SphereGridOffset, *location) for location in [(f"{name}: Sphere Grid Node {i}", i + character*100, False) for i in range(100)]]
     for character, name in enumerate(character_names)
 ]
@@ -1005,11 +1005,11 @@ allLocations = list(chain(FFXTreasureLocations,
                           FFXCaptureLocations,
                           *FFXSphereGridLocations))
 
-def create_location_label_to_id_map() -> Dict[str, int]:
+def create_location_label_to_id_map() -> dict[str, int]:
     """
     Creates a map from location labels to their AP location id (address)
     """
-    label_to_id_map: Dict[str, int] = {}
+    label_to_id_map: dict[str, int] = {}
     for location in allLocations:
         label_to_id_map[location.name] = location.rom_address
 
