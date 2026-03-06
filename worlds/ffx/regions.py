@@ -402,15 +402,34 @@ def create_regions(world: FFXWorld, player) -> None:
             world.options.exclude_locations.value.add(location_name)
     
     # ----------------------------- Chocobo Race ----------------------------- #
-    if not world.options.mini_game_chocobo_race:
-        chocobo_race_location_ids = [
-            176, # "REMI: Win Chocobo Race (Event)" (Cloudy Mirror)
-            417, # "REMI: 1st Chest in Chocobo Race",
-            418, # "REMI: 2nd Chest in Chocobo Race",
-            419, # "REMI: 3rd Chest in Chocobo Race",
-            420, # "REMI: 4th Chest in Chocobo Race",
-            421, # "REMI: 5th Chest in Chocobo Race",
-        ]
+    if not world.options.mini_game_chocobo_race == world.options.mini_game_chocobo_race.option_up_to_5:
+        chocobo_race_location_ids = []
+
+        up_to               = world.options.mini_game_chocobo_race
+        up_to_cloudy_mirror = world.options.mini_game_chocobo_race.option_up_to_cloudy_mirror
+        up_to_1             = world.options.mini_game_chocobo_race.option_up_to_1
+        up_to_2             = world.options.mini_game_chocobo_race.option_up_to_2
+        up_to_3             = world.options.mini_game_chocobo_race.option_up_to_3
+        up_to_4             = world.options.mini_game_chocobo_race.option_up_to_4
+        up_to_5             = world.options.mini_game_chocobo_race.option_up_to_5
+
+        if up_to < up_to_5:
+            chocobo_race_location_ids.append(421)   # REMI: Win the Chocobo Race With 5 Chests (Event)
+
+        if up_to < up_to_4:
+            chocobo_race_location_ids.append(420)   # REMI: Win the Chocobo Race With 4 Chests (Event)
+
+        if up_to < up_to_3:
+            chocobo_race_location_ids.append(419)   # REMI: Win the Chocobo Race With 3 Chests (Event)
+
+        if up_to < up_to_2:
+            chocobo_race_location_ids.append(418)   # REMI: Win the Chocobo Race With 2 Chests (Event)
+
+        if up_to < up_to_1:
+            chocobo_race_location_ids.append(417)   # REMI: Win the Chocobo Race With 1 Chest (Event)
+
+        if up_to < up_to_cloudy_mirror:
+            chocobo_race_location_ids.append(176)   # REMI: Win the Chocobo Race (Event)
 
         for id in chocobo_race_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]

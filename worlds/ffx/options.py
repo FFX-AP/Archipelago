@@ -127,7 +127,7 @@ class MiniGameChocoboTraining(Choice):
     option_up_to_sigil = 5
 
 
-class MiniGameChocoboRace(Toggle):
+class MiniGameChocoboRace(Choice):
     """
     Sets whether the Remiem Temple Chocobo Race minigames are included.
     If off they will only have filler items.
@@ -135,7 +135,12 @@ class MiniGameChocoboRace(Toggle):
     display_name = "Remiem Chocobo Race"
     default = 0
     option_off = 0
-    option_on = 1
+    option_up_to_cloudy_mirror = 1
+    option_up_to_1 = 2
+    option_up_to_2 = 3
+    option_up_to_3 = 4
+    option_up_to_4 = 5
+    option_up_to_5 = 6
 
 
 class RecruitSanity(Choice):
