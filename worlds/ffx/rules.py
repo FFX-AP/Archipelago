@@ -1,5 +1,5 @@
-import typing
 from collections import Counter
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 from typing_extensions import override
 
@@ -12,7 +12,7 @@ from .items import character_names, stat_abilities, item_to_stat_value, aeon_nam
 from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset, OverdriveOffset
 from .options import CustomizationRecipes
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from .__init__ import FFXWorld
 else:
     FFXWorld = object
@@ -93,9 +93,9 @@ class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return self.Resolved(tuple([location.name for location in self.locations]), 
+        return self.Resolved(tuple([location.name for location in self.locations]),
                              self.locations_required, player=world.player)
-    
+
     class Resolved(Rule.Resolved):
         locations: tuple[str, ...]
         locations_required: int
@@ -149,7 +149,7 @@ class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
         return self.Resolved(tuple(self.regions), self.regions_required, player=world.player)
-    
+
     class Resolved(Rule.Resolved):
         regions: tuple[str, ...]
         regions_required: int
@@ -233,12 +233,12 @@ class LogicDifficultyRule(Rule[FFXWorld], game="Final Fantasy X"):
                 can_reach_region |= CanReachRegion(region_to_first_visit[other_region])
             else:
                 can_reach_region = CanReachRegion(region_to_first_visit[other_region])
-        
+
         if can_reach_region is not None:
             return can_reach_region.resolve(world)
         else:
             return False_().resolve(world)
-    
+
 
 @dataclass()
 class MinPartyRule(Rule[FFXWorld], game="Final Fantasy X"):
@@ -246,9 +246,9 @@ class MinPartyRule(Rule[FFXWorld], game="Final Fantasy X"):
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return HasFromListUnique(*[f"Party Member: {name}" for name in character_names], 
+        return HasFromListUnique(*[f"Party Member: {name}" for name in character_names],
                                  count=self.num_characters).resolve(world)
-    
+
 
 @dataclass()
 class MinSummonRule(Rule[FFXWorld], game="Final Fantasy X"):
@@ -261,17 +261,17 @@ class MinSummonRule(Rule[FFXWorld], game="Final Fantasy X"):
             self.exceptions = []
         return (HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names if name not in self.exceptions], count=self.num_aeons) &
                 Has("Party Member: Yuna")).resolve(world)
-                
+
 
 @dataclass()
 class MinSwimmerRule(Rule[FFXWorld], game="Final Fantasy X"):
     num_characters: int
-    
+
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return HasFromListUnique(*[f"Party Member: {name}" for name in ["Tidus", "Wakka", "Rikku"]], 
+        return HasFromListUnique(*[f"Party Member: {name}" for name in ["Tidus", "Wakka", "Rikku"]],
                                  count=self.num_characters).resolve(world)
-        
+
 
 @dataclass()
 class NotRule(Rule[FFXWorld], game="Final Fantasy X"):
@@ -313,11 +313,11 @@ class PrimerRequirementRule(Rule[FFXWorld], game="Final Fantasy X"):
 
 
 @dataclass()
-class RangedRule(Rule[FFXWorld], game="Final Fantasy X"):    
-    
+class RangedRule(Rule[FFXWorld], game="Final Fantasy X"):
+
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return (HasFromListUnique(*[f"Party Member: {name}" for name in ["Wakka", "Lulu", "Seymour"]], count=1) | 
+        return (HasFromListUnique(*[f"Party Member: {name}" for name in ["Wakka", "Lulu", "Seymour"]], count=1) |
                     (Has("Party Member: Yuna") & HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names[:6]], count=1))).resolve(world)
 
 
@@ -332,7 +332,7 @@ class RegionAccessRule(Rule[FFXWorld], game="Final Fantasy X"):
             return Has(f"Region: {self.region_name}").resolve(world)
         else:
             appropriate_level_regions = [other_region for other_region, other_level in world_battle_levels.items()
-                                        if  other_region != self.region_name 
+                                        if  other_region != self.region_name
                                         and region_level > other_level >= region_level - world.options.logic_difficulty.value
                                         ]
             can_reach_region: Rule = None
@@ -341,7 +341,7 @@ class RegionAccessRule(Rule[FFXWorld], game="Final Fantasy X"):
                     can_reach_region |= CanReachRegion(region_to_first_visit[other_region])
                 else:
                     can_reach_region = CanReachRegion(region_to_first_visit[other_region])
-                
+
             if can_reach_region is not None:
                 return (Has(f"Region: {self.region_name}") & can_reach_region).resolve(world)
             else:
@@ -636,7 +636,7 @@ def set_rules(world: FFXWorld) -> None:
 
     # --------------------------------- Aeons -------------------------------- #
     # Anima
-    world.set_rule(world.get_location(world.location_id_to_name[13 | PartyMemberOffset]), 
+    world.set_rule(world.get_location(world.location_id_to_name[13 | PartyMemberOffset]),
                    CanReachLocation(world.location_id_to_name[ 15 | TreasureOffset]) &  # Besaid
                    CanReachLocation(world.location_id_to_name[ 19 | TreasureOffset]) &  # Kilika
                    CanReachLocation(world.location_id_to_name[484 | TreasureOffset]) &  # Djose
@@ -686,7 +686,7 @@ def set_rules(world: FFXWorld) -> None:
                     fiend_rule &= CanReachLocation(fiend.name)
                 else:
                     fiend_rule = CanReachLocation(fiend.name)
-            
+
             if world.location_id_to_name[location_id | TreasureOffset] not in world.skip_locations:
                 location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
                 world.set_rule(location, fiend_rule)
@@ -792,7 +792,7 @@ def set_rules(world: FFXWorld) -> None:
             if world.location_id_to_name[location_id | TreasureOffset] not in world.skip_locations:
                 location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
                 world.set_rule(location, capture_region_rule)
-            
+
             if world.location_id_to_name[boss_id | BossOffset] not in world.skip_locations:
                 if boss_id == 83:
                     nemesis_rule &= capture_region_rule & arenaBossRuleDict[boss_id]
@@ -848,7 +848,7 @@ def set_rules(world: FFXWorld) -> None:
     # ------------------------------------------------------------------------ #
     #                                Celestials                                #
     # ------------------------------------------------------------------------ #
-    
+
     # --------------------------- Celestial Weapons -------------------------- #
     celestial_weapon_locations = [
         5,
