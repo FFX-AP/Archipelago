@@ -1,6 +1,5 @@
-import typing
 from collections import Counter
-from typing import Callable
+from typing import Callable, TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, CollectionRule
@@ -8,7 +7,7 @@ from . import key_items
 from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, region_unlock_items, equipItemOffset
 from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from .__init__ import FFXWorld
 else:
     FFXWorld = object
