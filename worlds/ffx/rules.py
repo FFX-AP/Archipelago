@@ -402,11 +402,11 @@ def set_rules(world: FFXWorld) -> None:
 
     # ------------------------------- Belgemine ------------------------------ #
     # Mi'ihen fight
-    world.set_rule(world.get_location(world.location_id_to_name[186 | TreasureOffset]), MinSummonRule(2))
+    world.set_rule(world.get_location(world.location_id_to_name[186 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ifrit"))))
     # Moonflow fight
-    world.set_rule(world.get_location(world.location_id_to_name[372 | TreasureOffset]), MinSummonRule(2))
+    world.set_rule(world.get_location(world.location_id_to_name[372 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ixion"))))
     # Calm Lands fight
-    world.set_rule(world.get_location(world.location_id_to_name[187 | TreasureOffset]), MinSummonRule(2))
+    world.set_rule(world.get_location(world.location_id_to_name[187 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Shiva"))))
 
     # --------------------------------- Aeons -------------------------------- #
     # Anima
