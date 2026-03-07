@@ -1,7 +1,7 @@
 """
 Archipelago World definition for Final Fantasy X
 """
-
+import math
 from typing import ClassVar, Any
 from settings import Group, FilePath
 
@@ -12,8 +12,8 @@ from .client import FFXClient
 from .equipment import gear_name_data, PlySaveId, GearType, generate_equipment, generate_and_verify, Gear
 
 from .items import create_item_label_to_code_map, item_table, key_items, filler_items, AllItems, FFXItem, \
-    party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items, \
-    overdrive_items, other_items
+    party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items, normal_items, \
+    overdrive_items, generated_normal_items, other_items
 from .locations import create_location_label_to_id_map, FFXLocation, allLocations
 from .regions import create_regions
 from .options import FFXOptions, create_option_groups
@@ -196,10 +196,13 @@ class FFXWorld(World):
 
         # ------------------------ Set up Useful Items ----------------------- #
         useful_items = []
+        generated_normal_item_names = set(item.itemName for item in generated_normal_items)
         for item in AllItems:
             if item in equip_items:
                 continue
             if item.progression == ItemClassification.useful:
+                if item.itemName in generated_normal_item_names:
+                    continue
                 useful_items += [item.itemName]
 
         for i in range(8):
@@ -213,6 +216,12 @@ class FFXWorld(World):
 
         for item in gear_name_data:
             self.generated_equipment[item.itemID] = generate_and_verify(self, item)
+
+        for itemName, classification, _, min_amount, max_amount, weight in normal_items:
+            if classification == ItemClassification.useful:
+                quantity = min(max_amount, math.floor(self.random.triangular(min_amount, max_amount+1, weight)))
+                #quantity = self.random.randint(1, 99)
+                useful_items.append(f"{itemName} x {quantity}" if quantity > 1 else itemName)
 
         self.random.shuffle(useful_items)
 
