@@ -61,7 +61,7 @@ def create_regions(world: FFXWorld, player) -> None:
             location = [x for x in FFXTreasureLocations if x.location_id == treasure_id][0]
             new_location = FFXLocation(player, location.name, location.rom_address, region)
             if location.missable:
-                new_location.progress_type = LocationProgressType.EXCLUDED
+                world.options.exclude_locations.value.add(location.name)
             region.locations.append(new_location)
         return region
 
@@ -74,7 +74,7 @@ def create_regions(world: FFXWorld, player) -> None:
             location = locations[0]
             new_location = FFXLocation(player, location.name, location.rom_address, region)
             if location.missable:
-                new_location.progress_type = LocationProgressType.EXCLUDED
+                world.options.exclude_locations.value.add(location.name)
             region.locations.append(new_location)
             all_locations.append(new_location)
 
