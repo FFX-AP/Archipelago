@@ -684,7 +684,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("MIHN: South End - Blue & White Man, Looping North to South (NPC)",                            309, False),  # Gear: buki_get #66 [42h] { Kimahri [03h], Weapon {Piercing [800Bh], Sensor [8000h], Strength +10% [8064h]} }
     ("MIHN: South End - Red Skirt Girl, Pacing Between Maechen and Ruins (NPC)",                    310, False),  # Item: 2x Antidote [200Ah]
     ("MIHN: South End - Yellow Man, Looping South to North (NPC)",                                  311, False),  # Item: 1x Hi-Potion [2001h]
-    ("MIHN: South - Boy Before Kicking the Blitzball (NPC)",                                        312, False),  # Item: 3x Soft [200Bh]
+    ("MIHN: South - Boy Before Kicking the Blitzball (NPC)",                                        312, True ),  # Item: 3x Soft [200Bh]
     ("MIHN: South - Crusader Running East then West (NPC)",                                         313, False),  # Gear: buki_get #67 [43h] { Yuna [01h], Armor {HP +10% [8073h], Fire Ward [801Fh]} }
     ("MIHN: Central - Purple Crusader Freaking Out, West Side (NPC)",                               314, False),  # Item: 1x Ether [2004h]
     ("MIHN: Central - Woman on North End, West Side (NPC)",                                         315, False),  # Item: 1x Hi-Potion [2001h]
