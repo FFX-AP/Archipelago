@@ -3,13 +3,13 @@ from collections import Counter
 from dataclasses import dataclass
 from typing_extensions import override
 
-from BaseClasses import CollectionState, Location
+from BaseClasses import CollectionState, Location, Region
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
 # from rule_builder import set
 from worlds.generic.Rules import CollectionRule
 from . import key_items
 from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, party_member_items, region_unlock_items, equipItemOffset
-from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset
+from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset, OverdriveOffset
 
 if typing.TYPE_CHECKING:
     from .__init__ import FFXWorld
@@ -86,6 +86,7 @@ class AbilityRule(Rule[FFXWorld], game="Final Fantasy X"):
 
 @dataclass()
 class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
+    """A rule that checks if a required number of locations are reachable from a given list of locations"""
     locations: list[Location]
     locations_required: int
 
@@ -96,6 +97,23 @@ class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
             if CanReachLocation(location.name) is not None:
                 sum += 1
                 if sum >= self.locations_required:
+                    return True_().resolve(world)
+        return False_().resolve(world)
+
+
+@dataclass()
+class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
+    """A rule that checks if a required number of regions are reachable from a given list of regions"""
+    regions: list[Region]
+    regions_required: int
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        sum = 0
+        for region in self.regions:
+            if CanReachRegion(region.name) is not None:
+                sum += 1
+                if sum >= self.regions_required:
                     return True_().resolve(world)
         return False_().resolve(world)
 
@@ -638,6 +656,53 @@ def set_rules(world: FFXWorld) -> None:
     # Complete Al Bhed Primers
     world.set_rule(world.get_location(world.location_id_to_name[405 | TreasureOffset]), Has("Progressive Al Bhed Primer", count=26))
 
+
+    # ---------------------------------------------------------------------------- #
+    #                                  Overdrives                                  #
+    # ---------------------------------------------------------------------------- #
+
+    # ----------------------------------- Tidus ---------------------------------- #
+    combat_regions: list[str] = [
+        "Besaid Island 1st visit",
+        "Kilika 1st visit: Pre-Geneaux",
+        "Mi'ihen Highroad 1st visit: Pre-Chocobo Eater",
+        "Mushroom Rock Road 1st visit: Pre-Sinspawn Gui",
+        "Djose 1st visit",
+        "Moonflow 1st visit: Pre-Extractor",
+        "Thunder Plains 1st visit",
+        "Macalania Woods 1st visit: Pre-Spherimorph",
+        "Bikanel 1st visit: Post-Zu",
+        "Airship 1st visit: Pre-Evrae",
+        "Bevelle 1st visit: Pre-Isaaru",
+        "Calm Lands 1st visit: Pre-Defender X",
+        "Cavern of the Stolen Fayth 1st visit",
+        "Mt. Gagazet 1st visit: Post-Biran and Yenke",
+        "Zanarkand Ruins 1st visit: Pre-Spectral Keeper",
+        "Sin: Pre-Seymour Omnis",
+        "Omega Ruins: Pre-Ultima Weapon"
+    ]
+    overdrive_regions = [world.get_region(region_name) for region_name in combat_regions]
+    
+    slice_and_dice  = world.get_location(world.location_id_to_name[1 | OverdriveOffset])
+    energy_rain     = world.get_location(world.location_id_to_name[2 | OverdriveOffset])
+    blitz_ace       = world.get_location(world.location_id_to_name[3 | OverdriveOffset])
+
+    world.set_rule(slice_and_dice, CanReachMinimumRegionRule(overdrive_regions, 2))
+    world.set_rule(energy_rain,    CanReachMinimumRegionRule(overdrive_regions, 4))
+    world.set_rule(blitz_ace,      CanReachMinimumRegionRule(overdrive_regions, 8))
+
+    # ----------------------------------- Auron ---------------------------------- #
+    shooting_star   = world.get_location(world.location_id_to_name[4 | OverdriveOffset])
+    banishing_blade = world.get_location(world.location_id_to_name[6 | OverdriveOffset])
+    tornado         = world.get_location(world.location_id_to_name[7 | OverdriveOffset])
+
+    world.set_rule(shooting_star,   Has("Progressive Jecht's Sphere", count=1))
+    world.set_rule(banishing_blade, Has("Progressive Jecht's Sphere", count=3))
+    world.set_rule(tornado,         Has("Progressive Jecht's Sphere", count=10))
+
+    # ---------------------------------------------------------------------------- #
+    #                                     Todo                                     #
+    # ---------------------------------------------------------------------------- #
 
     # TODO: Disabled for now due to multiple bugs related to this location (Ship softlocks + possible Macalania softlock)
     # Clasko S.S. Liki second visit (Talk to Clasko before Crawler and make sure to have him become a Chocobo Breeder)

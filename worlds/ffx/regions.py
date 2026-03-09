@@ -202,7 +202,6 @@ def create_regions(world: FFXWorld, player) -> None:
     all_locations = []
 
     # ------------------------ Add Locations by Region ----------------------- #
-
     for region_data in region_data_list:
         new_region = Region(region_data.name, player, world.multiworld)
         region_dict[region_data.id] = new_region
@@ -226,8 +225,11 @@ def create_regions(world: FFXWorld, player) -> None:
     for location_id, region_name in captureDict.items():
         add_locations_by_ids(world.get_region(region_name), [location_id], FFXCaptureLocations, "Capture")
 
+    for location_data in FFXOverdriveLocations[:6]:
+        overdrive_location = FFXLocation(player, location_data.name, location_data.rom_address, menu_region)
+        menu_region.locations.append(overdrive_location)
+
     # ---------------------------- Entrance Rules ---------------------------- #
-    
     for region_data in region_data_list:
         curr_region = region_dict[region_data.id]
         for region_id in region_data.leads_to:
@@ -676,9 +678,7 @@ def create_regions(world: FFXWorld, player) -> None:
     # ------------------------------------------------------------------------ #
     #                             Victory Condition                            #
     # ------------------------------------------------------------------------ #
-
-    
-    
+   
     final_region = world.get_region("Sin: Braska's Final Aeon")
     final_region.add_event("Sin: Braska's Final Aeon", "Victory", location_type=FFXLocation, item_type=FFXItem)
     final_aeon = world.get_location("Sin: Braska's Final Aeon")

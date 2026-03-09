@@ -187,8 +187,8 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
 FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveOffset, *location) for location in [
   # ("Overdrive: Spiral Cut",                                                                                    0,  False),
     ("Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)",                                               1,  False),
-    ("Overdrive: Use Tidus's Overdrive 30 Times (Energy Rain)",                                                  2,  False),
-    ("Overdrive: Use Tidus's Overdrive 80 Times (Blitz Ace)",                                                    3,  False),
+    ("Overdrive: Use Tidus's Overdrive 20 Times (Energy Rain)",                                                  2,  False),
+    ("Overdrive: Use Tidus's Overdrive 40 Times (Blitz Ace)",                                                    3,  False),
     ("Overdrive: Collect 1 Progressive Jecht Sphere (Shooting Star)",                                            4,  False),
   # ("Overdrive: Dragon Fang",                                                                                   5,  False),
     ("Overdrive: Collect 3 Progressive Jecht Spheres (Banishing Blade)",                                         6,  False),
