@@ -64,6 +64,7 @@ class MiniGameBlitzball(Choice):
     This includes:
     - Luca Story Blitzball win
     - World Champion
+    - Wakka's Overdrives
     - Jupiter Sigil
     """
     display_name = "Blitzball"
@@ -71,7 +72,8 @@ class MiniGameBlitzball(Choice):
     option_off = 0
     option_up_to_story = 1
     option_up_to_celestial = 2
-    option_up_to_sigil = 3
+    option_up_to_overdrives = 3
+    option_up_to_sigil = 4
 
 
 class MiniGameButterflies(Toggle):
@@ -247,6 +249,20 @@ class JechtSpheres(Toggle):
     option_on = 1
 
 
+class Overdrives(Toggle):
+    """
+    Sets whether Overdrive locations are included or not. If off they will only have filler items.
+    Includes Overdrives for Tidus, Auron, Kimahri & Wakka.
+    Auron's locations will be excluded if Jecht Sphere locations are disabled
+    Wakka's locations will be excluded if Minigame Blitzball is not set to at least 'Up to Overdrives'
+    Default is off.
+    """
+    display_name = "Overdrives"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
 class LogicDifficulty(Range):
     """
     Sets how strict the logic is for region access. Higher is harder / less restrictive.
@@ -359,6 +375,7 @@ class FFXOptions(PerGameCommonOptions):
     arena_bosses: MonsterArenaBosses
     super_bosses: SuperBosses
     jecht_spheres: JechtSpheres
+    overdrives: Overdrives
     trap_percentage: TrapPercentage
     logic_difficulty: LogicDifficulty
     early_party_members: EarlyPartyMembers
@@ -394,6 +411,7 @@ ffx_option_groups: dict[str, list[Any]] = {
         RecruitSanity,
         SuperBosses,
         JechtSpheres,
+        Overdrives,
         AlwaysSensor,
         SkipContestOfAeons,
         SphereGridRandomization,

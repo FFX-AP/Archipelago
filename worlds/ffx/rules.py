@@ -71,11 +71,15 @@ region_to_first_visit: dict[str, str] = {
 @dataclass()
 class AbilityRule(Rule[FFXWorld], game="Final Fantasy X"):
     ability_name: str
+    character_name: str | None
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        if world.options.sphere_grid_randomization.value == world.options.sphere_grid_randomization.option_on:
-            return HasAny(HasAll([f"{name} Ability: {self.ability_name}", f"Party Member: {name}"]) for name in character_names).resolve(world)
+        if world.options.sphere_grid_randomization.value:
+            if self.character_name is not None:
+                return Has(f"{self.character_name} Ability: {self.ability_name}").resolve(world)
+            else:
+                return HasAny(HasAll([f"{name} Ability: {self.ability_name}", f"Party Member: {name}"]) for name in character_names).resolve(world)
         else:
             return True_().resolve(world)
 
@@ -297,7 +301,7 @@ regionBossRuleDict: dict[str, Rule] = {
     "Evrae Altana":        LogicDifficultyRule(12) & MinSwimmerRule(3),
     "Seymour Natus":       LogicDifficultyRule(12) & MinPartyRule  (3),
     "Defender X":          LogicDifficultyRule(13) & MinPartyRule  (3),
-    "Biran and Yenke":     LogicDifficultyRule(14) & MinPartyRule  (3),
+    "Biran and Yenke":     LogicDifficultyRule(14) & Has("Party Member: Kimahri"),
     "Seymour Flux":        LogicDifficultyRule(14) & MinPartyRule  (3),
     "Sanctuary Keeper":    LogicDifficultyRule(14) & MinPartyRule  (3),
     "Spectral Keeper":     LogicDifficultyRule(15) & MinPartyRule  (3),
@@ -309,10 +313,12 @@ regionBossRuleDict: dict[str, Rule] = {
     "Braska's Final Aeon": LogicDifficultyRule(16) & MinPartyRule  (3),
     "Ultima Weapon":       LogicDifficultyRule(17) & MinPartyRule  (3),
     "Omega Weapon":        LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Nemesis":             LogicDifficultyRule(18) & MinPartyRule  (3),
 }
 
 staticEncounterRuleDict: dict[str, Rule] = {
-    "Belgemine":    MinSummonRule(2)
+    "Belgemine":    MinSummonRule(2),
+    "Ronso Rage":   Has("Party Member: Kimahri")
 }
 
 arenaBossRuleDict: dict[int, Rule] = {

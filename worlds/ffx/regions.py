@@ -7,7 +7,7 @@ from typing import Callable, NamedTuple, List
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
     FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, \
     FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, \
-    RecruitOffset, CaptureOffset, OtherOffset
+    RecruitOffset, CaptureOffset, OtherOffset, OverdriveOffset
 from rule_builder.rules import Rule, Has
 from .rules import regionRuleDict, regionBossRuleDict, staticEncounterRuleDict, GoalRequirementRule, PrimerRequirementRule
 from .items import party_member_items, key_items, FFXItem
@@ -217,7 +217,7 @@ def create_regions(world: FFXWorld, player) -> None:
         add_locations_by_ids(new_region, region_data.bosses, FFXBossLocations, "Boss")
 
         # TODO: Implement in client
-        # add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
+        add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
 
         add_locations_by_ids(new_region, region_data.other, FFXOtherLocations, "Other")
 
@@ -271,24 +271,34 @@ def create_regions(world: FFXWorld, player) -> None:
 
     # ------------------------------- Blitzball ------------------------------ #
     if not world.options.mini_game_blitzball.value is world.options.mini_game_blitzball.option_up_to_sigil:
-        blitzball_location_ids = []
+        blitzball_treasure_location_ids  = []
+        blitzball_overdrive_location_ids = []
 
         up_to = world.options.mini_game_blitzball.value
         up_to_story = world.options.mini_game_blitzball.option_up_to_story
         up_to_celestial = world.options.mini_game_blitzball.option_up_to_celestial
+        up_to_overdrives = world.options.mini_game_blitzball.option_up_to_overdrives
         up_to_sigil = world.options.mini_game_blitzball.option_up_to_sigil
 
         if up_to < up_to_sigil:
-          blitzball_location_ids.append(244) # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
+            blitzball_treasure_location_ids.append(244) # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
         
+        if up_to < up_to_overdrives:
+            blitzball_overdrive_location_ids.append(21) # Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)
+            blitzball_overdrive_location_ids.append(22) # Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)
+            blitzball_overdrive_location_ids.append(23) # Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)
+
         if up_to < up_to_celestial:
-          blitzball_location_ids.append(93) # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
+            blitzball_treasure_location_ids.append(93) # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
         
         if up_to < up_to_story:
-          blitzball_location_ids.append(497) # "LUCA: Win the Story Blitzball Tournament (Event)", 
+            blitzball_treasure_location_ids.append(497) # "LUCA: Win the Story Blitzball Tournament (Event)", 
 
-        for id in blitzball_location_ids:
+        for id in blitzball_treasure_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
+            world.options.exclude_locations.value.add(location_name)
+        for id in blitzball_overdrive_location_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
             world.options.exclude_locations.value.add(location_name)
     
     # ------------------------------ Butterflies ----------------------------- #
@@ -579,10 +589,14 @@ def create_regions(world: FFXWorld, player) -> None:
             44, # "Omega Ruins: Omega Weapon"
         ]
         super_boss_treasure_ids = [
-            332, # Omega Ruins - Behind Omega Weapon Chest
+            332, # OMGR: Omega Boss Arena (Chest)
+            496, # MOAR: Become 'The One Who Conquered All' (Event)
         ]
         super_boss_other_ids = [
             27, # Jecht Sphere 2 - Requires Dark Valefor
+        ]
+        super_boss_overdrive_ids = [
+            19, # Ronso Rage: Use Lancet to Learn Nova
         ]
         for id in super_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]
@@ -590,10 +604,12 @@ def create_regions(world: FFXWorld, player) -> None:
         for id in super_boss_treasure_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
             world.options.exclude_locations.value.add(location_name)
-        if world.options.jecht_spheres.value:
-            for id in super_boss_other_ids:
-                location_name = world.location_id_to_name[id | OtherOffset]
-                world.options.exclude_locations.value.add(location_name)    
+        for id in super_boss_other_ids:
+            location_name = world.location_id_to_name[id | OtherOffset]
+            world.options.exclude_locations.value.add(location_name)   
+        for id in super_boss_overdrive_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
+            world.options.exclude_locations.value.add(location_name) 
     
     # ---------------------------- Jecht's Spheres --------------------------- #
     if not world.options.jecht_spheres.value:
@@ -608,12 +624,54 @@ def create_regions(world: FFXWorld, player) -> None:
             34, # Jecht Sphere 8
             35, # Braska Sphere
         ]
+        jecht_sphere_overdrive_ids = [
+            4, # Overdrive: Collect 1 Progressive Jecht Sphere (Shooting Star)
+            6, # Overdrive: Collect 3 Progressive Jecht Spheres (Banishing Blade)
+            7, # Overdrive: Collect 10 Progressive Jecht Spheres (Tornado)
+        ]
         for id in jecht_sphere_location_ids:
             location_name = world.location_id_to_name[id | OtherOffset]
             world.options.exclude_locations.value.add(location_name) 
         location_name = world.location_id_to_name[177 | TreasureOffset]
         world.options.exclude_locations.value.add(location_name)
-    
+
+        for id in jecht_sphere_overdrive_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
+            world.options.exclude_locations.value.add(location_name) 
+
+    # ------------------------------ Overdrives ------------------------------ #
+    if not world.options.overdrives.value:
+        overdrive_locations_ids = [
+          # 0,  # Overdrive: Spiral Cut
+            1,  # Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)
+            2,  # Overdrive: Use Tidus's Overdrive 30 Times (Energy Rain)
+            3,  # Overdrive: Use Tidus's Overdrive 80 Times (Blitz Ace)
+            4,  # Overdrive: Collect 1 Progressive Jecht Sphere (Shooting Star)
+          # 5,  # Overdrive: Dragon Fang
+            6,  # Overdrive: Collect 3 Progressive Jecht Spheres (Banishing Blade)
+            7,  # Overdrive: Collect 10 Progressive Jecht Spheres (Tornado)
+          # 8,  # Ronso Rage: Jump
+            9,  # Ronso Rage: Use Lancet to Learn Fire Breath
+            10, # Ronso Rage: Use Lancet to Learn Seed Cannon
+            11, # Ronso Rage: Use Lancet to Learn Self Destruct
+            12, # Ronso Rage: Use Lancet to Learn Thrust Kick
+            13, # Ronso Rage: Use Lancet to Learn Stone Breath
+            14, # Ronso Rage: Use Lancet to Learn Aqua Breath
+            15, # Ronso Rage: Use Lancet to Learn Doom
+            16, # Ronso Rage: Use Lancet to Learn White Wind
+            17, # Ronso Rage: Use Lancet to Learn Bad Breath
+            18, # Ronso Rage: Use Lancet to Learn Mighty Guard
+            19, # Ronso Rage: Use Lancet to Learn Nova
+          # 20, # Overdrive: Element Reels
+            21, # Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)
+            22, # Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)
+            23, # Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)
+            24, # BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)
+        ]
+        for id in overdrive_locations_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
+            world.options.exclude_locations.value.add(location_name) 
+                
 
     # ------------------------------------------------------------------------ #
     #                             Victory Condition                            #
