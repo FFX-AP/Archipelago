@@ -60,7 +60,7 @@ def create_regions(world: FFXWorld, player) -> None:
             location = [x for x in FFXTreasureLocations if x.location_id == treasure_id][0]
             new_location = FFXLocation(player, location.name, location.rom_address, region)
             if location.missable:
-                new_location.progress_type = LocationProgressType.EXCLUDED
+                world.options.exclude_locations.value.add(location.name)
             region.locations.append(new_location)
         return region
 
@@ -73,7 +73,7 @@ def create_regions(world: FFXWorld, player) -> None:
             location = locations[0]
             new_location = FFXLocation(player, location.name, location.rom_address, region)
             if location.missable:
-                new_location.progress_type = LocationProgressType.EXCLUDED
+                world.options.exclude_locations.value.add(location.name)
             region.locations.append(new_location)
             all_locations.append(new_location)
     
@@ -438,17 +438,15 @@ def create_regions(world: FFXWorld, player) -> None:
     # ---------------------------- Recruit Sanity ---------------------------- #
     if not world.options.recruit_sanity.value is world.options.recruit_sanity.option_all:
         recruit_location_ids = []
-        contracted_ids = [loc.location_id for loc in FFXRecruitLocations[2:37]]
-        free_agent_ids = [loc.location_id for loc in [FFXRecruitLocations[1], *FFXRecruitLocations[38:]]]
+        contracted_ids = [loc.location_id for loc in FFXRecruitLocations[1:36]]
+        free_agent_ids = [loc.location_id for loc in [FFXRecruitLocations[0], *FFXRecruitLocations[36:]]]
 
         including = world.options.recruit_sanity.value
-        none = world.options.recruit_sanity.option_off
-        free_agents = world.options.recruit_sanity.option_free_agents
 
-        if including is free_agents or none:
+        if including < world.options.recruit_sanity.option_all:
             recruit_location_ids.extend(contracted_ids)
         
-        if including is none:
+        if including == world.options.recruit_sanity.option_off:
             recruit_location_ids.extend(free_agent_ids)
 
         for id in recruit_location_ids:

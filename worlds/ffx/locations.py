@@ -684,7 +684,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("MIHN: South End - Blue & White Man, Looping North to South (NPC)",                            309, False),  # Gear: buki_get #66 [42h] { Kimahri [03h], Weapon {Piercing [800Bh], Sensor [8000h], Strength +10% [8064h]} }
     ("MIHN: South End - Red Skirt Girl, Pacing Between Maechen and Ruins (NPC)",                    310, False),  # Item: 2x Antidote [200Ah]
     ("MIHN: South End - Yellow Man, Looping South to North (NPC)",                                  311, False),  # Item: 1x Hi-Potion [2001h]
-    ("MIHN: South - Boy Before Kicking the Blitzball (NPC)",                                        312, False),  # Item: 3x Soft [200Bh]
+    ("MIHN: South - Boy Before Kicking the Blitzball (NPC)",                                        312, True ),  # Item: 3x Soft [200Bh]
     ("MIHN: South - Crusader Running East then West (NPC)",                                         313, False),  # Gear: buki_get #67 [43h] { Yuna [01h], Armor {HP +10% [8073h], Fire Ward [801Fh]} }
     ("MIHN: Central - Purple Crusader Freaking Out, West Side (NPC)",                               314, False),  # Item: 1x Ether [2004h]
     ("MIHN: Central - Woman on North End, West Side (NPC)",                                         315, False),  # Item: 1x Hi-Potion [2001h]
@@ -791,9 +791,9 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     #("Treasure 416 (Trashed)",                                                                     416, False),  # Item: 1x Potion [2000h]
     ("REMI: Win the Chocobo Race With 1 Chest (Event)",                                             417, False),  # Item: 1x Elixir [2008h]
     ("REMI: Win the Chocobo Race With 2 Chests (Event)",                                            418, False),  # Item: 1x Megalixir [2009h]
-    ("REMI: Win the Chocobo Race With 3 Chests (Event)",                                            419, False),  # Item: 60x Three Stars [2045h]
+    ("REMI: Win the Chocobo Race With 5 Chests (Event)",                                            419, False),  # Item: 30x Wings to Discovery [206Ch]
     ("REMI: Win the Chocobo Race With 4 Chests (Event)",                                            420, False),  # Item: 30x Pendulum [2069h]
-    ("REMI: Win the Chocobo Race With 5 Chests (Event)",                                            421, False),  # Item: 30x Wings to Discovery [206Ch]
+    ("REMI: Win the Chocobo Race With 3 Chests (Event)",                                            421, False),  # Item: 60x Three Stars [2045h]
     #("Treasure 422",                                                                               422, False),  # Item: 1x Potion [2000h]
     ("MIHN: Agency - Green NPC After Resting (Event)",                                              423, False),  # Item: 1x Lv. 1 Key Sphere [2051h]
     ("MOAR: Area Conquest - Capture 1 of Each Besaid Fiend (NPC)",                                  424, False),  # Item: 99x Stamina Tonic [2043h]
