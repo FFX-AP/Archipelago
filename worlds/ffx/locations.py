@@ -189,10 +189,10 @@ FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Ove
     ("Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)",                                               1,  False),
     ("Overdrive: Use Tidus's Overdrive 20 Times (Energy Rain)",                                                  2,  False),
     ("Overdrive: Use Tidus's Overdrive 40 Times (Blitz Ace)",                                                    3,  False),
-    ("Overdrive: Collect 1 Progressive Jecht Sphere (Shooting Star)",                                            4,  False),
+    ("Overdrive: Collect 1 Progressive Jecht's Sphere (Shooting Star)",                                          4,  False),
   # ("Overdrive: Dragon Fang",                                                                                   5,  False),
-    ("Overdrive: Collect 3 Progressive Jecht Spheres (Banishing Blade)",                                         6,  False),
-    ("Overdrive: Collect 10 Progressive Jecht Spheres (Tornado)",                                                7,  False),
+    ("Overdrive: Collect 3 Progressive Jecht's Spheres (Banishing Blade)",                                       6,  False),
+    ("Overdrive: Collect 10 Progressive Jecht's Spheres (Tornado)",                                              7,  False),
   # ("Ronso Rage: Jump",                                                                                         8,  False),
     ("Ronso Rage: Use Lancet to Learn Fire Breath",                                                              9,  False), #Dual Horn, Valaha, Grendel, Yenke Ronso (m055, m056, m057, m135)
     ("Ronso Rage: Use Lancet to Learn Seed Cannon",                                                              10, False), #Ragora, Grat, Sandragora, Ragora (m039, m040, m221, m234)

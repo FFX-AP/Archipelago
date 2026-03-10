@@ -42,7 +42,7 @@
     "treasures": [268, 9, 283, 285, 284, 282, 90, 91, 92, 13, 14, 215, 216, 15, 459, 290, 288, 287, 289, 286],
     "party_members": [1, 4, 5, 8],
     "bosses": [],
-    "overdrives": [],
+    "overdrives": [24],
     "other": [0, 2],
     "recruits": [52],
     "leads_to": [11],
