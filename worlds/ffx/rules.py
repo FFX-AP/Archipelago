@@ -584,6 +584,15 @@ def set_rules(world: FFXWorld) -> None:
 
     
     # ------------------------------------------------------------------------ #
+    #                              Jecht's Spheres                             #
+    # ------------------------------------------------------------------------ #
+    # Besaid
+    besaid_jecht_sphere = world.get_location(world.location_id_to_name[27 | OtherOffset])
+    dark_valefor = world.get_location(world.location_id_to_name[2 | BossOffset])
+    world.set_rule(besaid_jecht_sphere, CanReachLocation(dark_valefor.name))
+
+
+    # ------------------------------------------------------------------------ #
     #                                Celestials                                #
     # ------------------------------------------------------------------------ #
     
