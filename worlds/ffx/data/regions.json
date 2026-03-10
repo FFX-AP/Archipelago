@@ -499,7 +499,7 @@
     "overdrives": [],
     "other": [19, 21, 20],
     "recruits": [],
-    "leads_to": [113, 1115],
+    "leads_to": [113, 1110, 1115],
     "rules": []
   },
   {
@@ -524,7 +524,7 @@
     "overdrives": [],
     "other": [],
     "recruits": [1, 19, 20, 21, 22, 23, 24, 37, 57],
-    "leads_to": [121],
+    "leads_to": [121, 1110],
     "rules": ["Airship"]
   },
   {

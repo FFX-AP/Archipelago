@@ -402,6 +402,7 @@ overdrive_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | overdriveItemOffs
     ("Overdrive: Attack Reels",     ItemClassification.progression, 0x0015),
     ("Overdrive: Status Reels",     ItemClassification.progression, 0x0016),
     ("Overdrive: Aurochs Reels",    ItemClassification.progression, 0x0017),
+    ("Overdrive: Requiem",          ItemClassification.progression, 0x0018),
 ]]
 
 abilities_per_character: list[ItemData] = [ ItemData(f"{character_names[character]} {ability[0]}", ItemClassification.progression, ability[1] | abilityItemOffset | character << 8) for character in range(7) for ability in [
