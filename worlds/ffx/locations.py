@@ -548,7 +548,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("SINS: City of Dying Dreams - Lift Up in Center of First Area, Just Before Lift Down (Chest)", 173, False),  # Item: 1x Defense Sphere [2058h]
     ("SINS: City of Dying Dreams - First Open Area, Glyph in Northwest Corner (Chest)",             174, False),  # Item: 1x Megalixir [2009h]
     ("SINS: City of Dying Dreams - Secret Slide South of Rising Block Area (Chest)",                175, False),  # Gear: buki_get #54 [36h] { Yuna [01h], Weapon {SOS Overdrive [8010h]} }
-    ("REMI: Win the Chocobo Race (Event)",                                                          176, False),  # Key Item: Cloudy Mirror [A002h]
+    ("REMI: Win Chocobo Race (Event)",                                                              176, False),  # Key Item: Cloudy Mirror [A002h]
     ("MCWO: After Spherimorph (Jecht's Sphere)",                                                    177, False),  # Key Item: Jecht's Sphere [A020h]
     ("THPL: South - West Side, South of Save Sphere (Chest)",                                       178, False),  # Item: 2x Phoenix Down [2006h]
     ("THPL: South - West Side, North of Save Sphere (Chest)",                                       179, False),  # Item: 2x Hi-Potion [2001h]
