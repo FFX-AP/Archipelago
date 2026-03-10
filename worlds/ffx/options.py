@@ -251,15 +251,23 @@ class JechtSpheres(Toggle):
     option_on = 1
 
 
-class Overdrives(Toggle):
+class TidusOverdrives(Toggle):
     """
-    Sets whether Overdrive locations are included or not. If off they will only have filler items.
-    Includes Overdrives for Tidus, Auron, Kimahri & Wakka.
-    Auron's locations will be excluded if Jecht Sphere locations are disabled
-    Wakka's locations will be excluded if Minigame Blitzball is not set to at least 'Up to Overdrives'
+    Sets whether Tidus's Overdrive locations are included or not. If off they will only have filler items.
     Default is off.
     """
-    display_name = "Overdrives"
+    display_name = "Tidus's Overdrives"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
+class KimahriRonsoRages(Toggle):
+    """
+    Sets whether Kimahri's Ronso Rage locations are included or not. If off they will only have filler items.
+    Default is off.
+    """
+    display_name = "Kimahri's Ronso Rages"
     default = 0
     option_off = 0
     option_on = 1
@@ -377,7 +385,8 @@ class FFXOptions(PerGameCommonOptions):
     arena_bosses: MonsterArenaBosses
     super_bosses: SuperBosses
     jecht_spheres: JechtSpheres
-    overdrives: Overdrives
+    tidus_overdrives: TidusOverdrives
+    kimahri_ronso_rages: KimahriRonsoRages
     trap_percentage: TrapPercentage
     logic_difficulty: LogicDifficulty
     early_party_members: EarlyPartyMembers
@@ -413,7 +422,8 @@ ffx_option_groups: dict[str, list[Any]] = {
         RecruitSanity,
         SuperBosses,
         JechtSpheres,
-        Overdrives,
+        TidusOverdrives,
+        KimahriRonsoRages,
         AlwaysSensor,
         SkipContestOfAeons,
         SphereGridRandomization,

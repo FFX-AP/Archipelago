@@ -632,32 +632,28 @@ def create_regions(world: FFXWorld, player) -> None:
             34, # Jecht Sphere 8
             35, # Braska Sphere
         ]
-        jecht_sphere_overdrive_ids = [
-            4, # Overdrive: Collect 1 Progressive Jecht Sphere (Shooting Star)
-            6, # Overdrive: Collect 3 Progressive Jecht Spheres (Banishing Blade)
-            7, # Overdrive: Collect 10 Progressive Jecht Spheres (Tornado)
-        ]
         for id in jecht_sphere_location_ids:
             location_name = world.location_id_to_name[id | OtherOffset]
             world.options.exclude_locations.value.add(location_name) 
         location_name = world.location_id_to_name[177 | TreasureOffset]
         world.options.exclude_locations.value.add(location_name)
 
-        for id in jecht_sphere_overdrive_ids:
-            location_name = world.location_id_to_name[id | OverdriveOffset]
-            world.options.exclude_locations.value.add(location_name) 
-
     # ------------------------------ Overdrives ------------------------------ #
-    if not world.options.overdrives.value:
+    # Tidus
+    if not world.options.tidus_overdrives.value:
         overdrive_locations_ids = [
           # 0,  # Overdrive: Spiral Cut
             1,  # Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)
             2,  # Overdrive: Use Tidus's Overdrive 30 Times (Energy Rain)
             3,  # Overdrive: Use Tidus's Overdrive 80 Times (Blitz Ace)
-            4,  # Overdrive: Collect 1 Progressive Jecht Sphere (Shooting Star)
-          # 5,  # Overdrive: Dragon Fang
-            6,  # Overdrive: Collect 3 Progressive Jecht Spheres (Banishing Blade)
-            7,  # Overdrive: Collect 10 Progressive Jecht Spheres (Tornado)
+        ]
+        for id in overdrive_locations_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
+            world.options.exclude_locations.value.add(location_name) 
+    
+    # Kimahri
+    if not world.options.kimahri_ronso_rages.value:
+        overdrive_locations_ids = [
           # 8,  # Ronso Rage: Jump
             9,  # Ronso Rage: Use Lancet to Learn Fire Breath
             10, # Ronso Rage: Use Lancet to Learn Seed Cannon
@@ -670,11 +666,6 @@ def create_regions(world: FFXWorld, player) -> None:
             17, # Ronso Rage: Use Lancet to Learn Bad Breath
             18, # Ronso Rage: Use Lancet to Learn Mighty Guard
             19, # Ronso Rage: Use Lancet to Learn Nova
-          # 20, # Overdrive: Element Reels
-            21, # Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)
-            22, # Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)
-            23, # Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)
-            24, # BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)
         ]
         for id in overdrive_locations_ids:
             location_name = world.location_id_to_name[id | OverdriveOffset]
