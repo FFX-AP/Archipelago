@@ -276,21 +276,27 @@ def create_regions(world: FFXWorld, player) -> None:
         blitzball_treasure_location_ids  = []
         blitzball_overdrive_location_ids = []
 
-        up_to = world.options.mini_game_blitzball.value
-        up_to_story = world.options.mini_game_blitzball.option_up_to_story
-        up_to_celestial = world.options.mini_game_blitzball.option_up_to_celestial
-        up_to_overdrives = world.options.mini_game_blitzball.option_up_to_overdrives
-        up_to_sigil = world.options.mini_game_blitzball.option_up_to_sigil
+        up_to                = world.options.mini_game_blitzball.value
+        up_to_story          = world.options.mini_game_blitzball.option_up_to_story
+        up_to_world_champion = world.options.mini_game_blitzball.option_up_to_world_champion
+        up_to_attack_reels   = world.options.mini_game_blitzball.option_up_to_attack_reels
+        up_to_status_reels   = world.options.mini_game_blitzball.option_up_to_status_reels
+        up_to_aurochs_reels  = world.options.mini_game_blitzball.option_up_to_aurochs_reels
+        up_to_sigil          = world.options.mini_game_blitzball.option_up_to_sigil
 
         if up_to < up_to_sigil:
             blitzball_treasure_location_ids.append(244) # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
         
-        if up_to < up_to_overdrives:
-            blitzball_overdrive_location_ids.append(21) # Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)
-            blitzball_overdrive_location_ids.append(22) # Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)
+        if up_to < up_to_aurochs_reels:
             blitzball_overdrive_location_ids.append(23) # Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)
+        
+        if up_to < up_to_status_reels:
+            blitzball_overdrive_location_ids.append(22) # Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)
+        
+        if up_to < up_to_attack_reels:
+            blitzball_overdrive_location_ids.append(21) # Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)
 
-        if up_to < up_to_celestial:
+        if up_to < up_to_world_champion:
             blitzball_treasure_location_ids.append(93) # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
         
         if up_to < up_to_story:

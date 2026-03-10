@@ -700,6 +700,13 @@ def set_rules(world: FFXWorld) -> None:
     world.set_rule(banishing_blade, Has("Progressive Jecht's Sphere", count=3))
     world.set_rule(tornado,         Has("Progressive Jecht's Sphere", count=10))
 
+    # ----------------------------------- Wakka ---------------------------------- #
+    status_reels    = world.get_location(world.location_id_to_name[22 | OverdriveOffset])
+    aurochs_reels   = world.get_location(world.location_id_to_name[23 | OverdriveOffset])
+
+    world.set_rule(status_reels,  Has("Overdrive: Attack Reels"))
+    world.set_rule(aurochs_reels, Has("Overdrive: Status Reels"))
+
     # ---------------------------------------------------------------------------- #
     #                                     Todo                                     #
     # ---------------------------------------------------------------------------- #

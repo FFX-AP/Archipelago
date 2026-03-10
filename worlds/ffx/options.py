@@ -70,10 +70,12 @@ class MiniGameBlitzball(Choice):
     display_name = "Blitzball"
     default = 0
     option_off = 0
-    option_up_to_story = 1
-    option_up_to_celestial = 2
-    option_up_to_overdrives = 3
-    option_up_to_sigil = 4
+    option_up_to_story          = 1
+    option_up_to_world_champion = 2
+    option_up_to_attack_reels   = 3
+    option_up_to_status_reels   = 4
+    option_up_to_aurochs_reels  = 5
+    option_up_to_sigil          = 6
 
 
 class MiniGameButterflies(Toggle):
