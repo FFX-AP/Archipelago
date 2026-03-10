@@ -701,7 +701,7 @@ def set_rules(world: FFXWorld) -> None:
     world.set_rule(blitz_ace,      CanReachMinimumRegionRule(overdrive_regions, 8))
 
     # ----------------------------------- Auron ---------------------------------- #
-    shooting_star   = world.get_location(world.location_id_to_name[4 | OverdriveOffset])
+    shooting_star   = world.get_location(world.location_id_to_name[5 | OverdriveOffset])
     banishing_blade = world.get_location(world.location_id_to_name[6 | OverdriveOffset])
     tornado         = world.get_location(world.location_id_to_name[7 | OverdriveOffset])
 
