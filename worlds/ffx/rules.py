@@ -3,7 +3,7 @@ from collections import Counter
 from dataclasses import dataclass
 from typing_extensions import override
 
-from BaseClasses import CollectionState, Location
+from BaseClasses import CollectionState, Location, Region
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
 # from rule_builder import set
 from worlds.generic.Rules import CollectionRule
@@ -82,6 +82,7 @@ class AbilityRule(Rule[FFXWorld], game="Final Fantasy X"):
 
 @dataclass()
 class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
+    """A rule that checks if a required number of locations are reachable from a given list of locations"""
     locations: list[Location]
     locations_required: int
 
@@ -92,6 +93,23 @@ class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
             if CanReachLocation(location.name) is not None:
                 sum += 1
                 if sum >= self.locations_required:
+                    return True_().resolve(world)
+        return False_().resolve(world)
+    
+
+@dataclass()
+class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
+    """A rule that checks if a required number of regions are reachable from a given list of regions"""
+    regions: list[Region]
+    regions_required: int
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        sum = 0
+        for region in self.regions:
+            if CanReachRegion(region.name) is not None:
+                sum += 1
+                if sum >= self.regions_required:
                     return True_().resolve(world)
         return False_().resolve(world)
 

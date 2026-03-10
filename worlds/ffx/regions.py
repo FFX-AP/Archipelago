@@ -580,6 +580,7 @@ def create_regions(world: FFXWorld, player) -> None:
         ]
         super_boss_treasure_ids = [
             332, # Omega Ruins - Behind Omega Weapon Chest
+            496, # MOAR: Become 'The One Who Conquered All' (Event)
         ]
         super_boss_other_ids = [
             27, # Jecht Sphere 2 - Requires Dark Valefor
@@ -590,10 +591,9 @@ def create_regions(world: FFXWorld, player) -> None:
         for id in super_boss_treasure_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
             world.options.exclude_locations.value.add(location_name)
-        if world.options.jecht_spheres.value:
-            for id in super_boss_other_ids:
-                location_name = world.location_id_to_name[id | OtherOffset]
-                world.options.exclude_locations.value.add(location_name)    
+        for id in super_boss_other_ids:
+            location_name = world.location_id_to_name[id | OtherOffset]
+            world.options.exclude_locations.value.add(location_name)    
     
     # ---------------------------- Jecht's Spheres --------------------------- #
     if not world.options.jecht_spheres.value:
