@@ -151,7 +151,7 @@ class LogicDifficultyRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
         appropriate_level_regions = [other_region for other_region, other_level in world_battle_levels.items() if
-                                    self.difficulty > other_level >= self.difficulty - world.options.logic_difficulty.value]
+                                    self.difficulty >= other_level >= self.difficulty - world.options.logic_difficulty.value]
         can_reach_region: Rule = None
         for other_region in appropriate_level_regions:
             if can_reach_region is not None:
