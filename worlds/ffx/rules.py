@@ -100,7 +100,7 @@ class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
                     return True_().resolve(world)
         return False_().resolve(world)
 
-
+      
 @dataclass()
 class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
     """A rule that checks if a required number of regions are reachable from a given list of regions"""
