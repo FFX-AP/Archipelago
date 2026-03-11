@@ -1,12 +1,15 @@
 import typing
 from collections import Counter
-from typing import Callable
+from dataclasses import dataclass
+from typing_extensions import override
 
-from BaseClasses import CollectionState
-from worlds.generic.Rules import add_rule, CollectionRule
+from BaseClasses import CollectionState, Location, Region
+from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
+# from rule_builder import set
+from worlds.generic.Rules import CollectionRule
 from . import key_items
-from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, region_unlock_items, equipItemOffset
-from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset
+from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, party_member_items, region_unlock_items, equipItemOffset
+from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset, OverdriveOffset
 
 if typing.TYPE_CHECKING:
     from .__init__ import FFXWorld
@@ -61,261 +64,401 @@ region_to_first_visit: dict[str, str] = {
 "Omega Ruins":                "Omega Ruins: Pre-Ultima Weapon",
 }
 
+# ---------------------------------------------------------------------------- #
+#                                 Custom Rules                                 #
+# ---------------------------------------------------------------------------- #
+
+@dataclass()
+class AbilityRule(Rule[FFXWorld], game="Final Fantasy X"):
+    ability_name: str
+    character_name: str | None
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        if world.options.sphere_grid_randomization.value:
+            if self.character_name is not None:
+                return Has(f"{self.character_name} Ability: {self.ability_name}").resolve(world)
+            else:
+                return HasAny(HasAll([f"{name} Ability: {self.ability_name}", f"Party Member: {name}"]) for name in character_names).resolve(world)
+        else:
+            return True_().resolve(world)
 
 
+@dataclass()
+class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
+    """A rule that checks if a required number of locations are reachable from a given list of locations"""
+    locations: list[Location]
+    locations_required: int
 
-def create_region_access_rule(world: FFXWorld, region_name: str):
-    region_level = world_battle_levels[region_name]
-    if region_level < 5:
-        return lambda state: state.has(f"Region: {region_name}", world.player)
-    else:
-        appropriate_level_regions = [other_region for other_region, other_level in world_battle_levels.items()
-                                     if  other_region != region_name 
-                                     and region_level > other_level >= region_level - world.options.logic_difficulty.value
-                                    ]
-
-        return lambda state: state.has(f"Region: {region_name}", world.player) and any([state.can_reach_region(region_to_first_visit[other_region], world.player) for other_region in appropriate_level_regions])
-
-def create_level_rule(world: FFXWorld, level: int):
-    appropriate_level_regions = [other_region for other_region, other_level in world_battle_levels.items() if
-                                 level > other_level >= level - world.options.logic_difficulty.value]
-
-    return lambda state: any([state.can_reach_region(region_to_first_visit[other_region], world.player) for other_region in appropriate_level_regions])
-
-def create_ability_rule(world: FFXWorld, ability_name: str):
-    #return lambda state: state.has_any([f"{name} Ability: {ability_name}" for name in character_names], world.player)
-    #return lambda state: True;               "       Ability: Fire"
-    #temp = [(f"{name} Ability: {ability_name}", f"Party Member: {name}") for name in character_names]
-    #for ability, character in temp:
-    #    print(world.item_name_to_id[ability])
-    #    print(world.item_name_to_id[character])
-    #print(temp)
-    if world.options.sphere_grid_randomization.value == world.options.sphere_grid_randomization.option_on:
-        return lambda state: any([state.has_all([f"{name} Ability: {ability_name}", f"Party Member: {name}"], world.player) for name in character_names])
-    else:
-        return lambda state: True
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        sum = 0
+        for location in self.locations:
+            if CanReachLocation(location.name) is not None:
+                sum += 1
+                if sum >= self.locations_required:
+                    return True_().resolve(world)
+        return False_().resolve(world)
 
 
-#def create_stat_rule(world: World, stat_total: int):
-#    return lambda state: state.has
-def create_stat_total_rule(world: FFXWorld, num_party_members: int, stat_total: int) -> CollectionRule:
-    def has_stat_total(state: CollectionState) -> bool:
-        player_prog_items = state.prog_items[world.player]
+@dataclass()
+class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
+    """A rule that checks if a required number of regions are reachable from a given list of regions"""
+    regions: list[Region]
+    regions_required: int
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        sum = 0
+        for region in self.regions:
+            if CanReachRegion(region.name) is not None:
+                sum += 1
+                if sum >= self.regions_required:
+                    return True_().resolve(world)
+        return False_().resolve(world)
+
+
+@dataclass()
+class GoalRequirementRule(Rule[FFXWorld], game="Final Fantasy X"):
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        match world.options.goal_requirement.value:
+            case world.options.goal_requirement.option_none:
+                return True_().resolve(world)
+            case world.options.goal_requirement.option_party_members:
+                print([character.itemName for character in party_member_items[:8]])
+                return HasFromListUnique(*[character.itemName for character in party_member_items[:8]], count=min(world.options.required_party_members.value, 8)).resolve(world)
+            case world.options.goal_requirement.option_party_members_and_aeons:
+                return HasFromListUnique(*[character.itemName for character in party_member_items], count=world.options.required_party_members.value).resolve(world)
+            case world.options.goal_requirement.option_pilgrimage:
+                return (
+                    CanReachLocation(world.location_id_to_name[ 8 | PartyMemberOffset]) &   # Valefor
+                    CanReachLocation(world.location_id_to_name[ 9 | PartyMemberOffset]) &   # Ifrit
+                    CanReachLocation(world.location_id_to_name[10 | PartyMemberOffset]) &   # Ixion
+                    CanReachLocation(world.location_id_to_name[11 | PartyMemberOffset]) &   # Shiva
+                    CanReachLocation(world.location_id_to_name[12 | PartyMemberOffset]) &   # Bahamut
+                    CanReachLocation(world.location_id_to_name[37 | BossOffset       ])     # Yunalesca
+                ).resolve(world)
+            case world.options.goal_requirement.option_nemesis:
+                return CanReachLocation(world.location_id_to_name[83 | BossOffset]).resolve(world)  # Nemesis
+
+
+@dataclass()
+class LogicDifficultyRule(Rule[FFXWorld], game="Final Fantasy X"):
+    difficulty: int
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        appropriate_level_regions = [other_region for other_region, other_level in world_battle_levels.items() if
+                                    self.difficulty >= other_level >= self.difficulty - world.options.logic_difficulty.value]
+        can_reach_region: Rule = None
+        for other_region in appropriate_level_regions:
+            if can_reach_region is not None:
+                can_reach_region |= CanReachRegion(region_to_first_visit[other_region])
+            else:
+                can_reach_region = CanReachRegion(region_to_first_visit[other_region])
+        
+        if can_reach_region is not None:
+            return can_reach_region.resolve(world)
+        else:
+            return False_().resolve(world)
+    
+
+@dataclass()
+class MinPartyRule(Rule[FFXWorld], game="Final Fantasy X"):
+    num_characters: int
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        return HasFromListUnique(*[f"Party Member: {name}" for name in character_names], 
+                                 count=self.num_characters).resolve(world)
+    
+
+@dataclass()
+class MinSummonRule(Rule[FFXWorld], game="Final Fantasy X"):
+    num_aeons: int
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        return (HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names], count=self.num_aeons) &
+                Has(f"Party Member: Yuna")).resolve(world)
+                
+
+@dataclass()
+class MinSwimmerRule(Rule[FFXWorld], game="Final Fantasy X"):
+    num_characters: int
+    
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        return HasFromListUnique(*[f"Party Member: {name}" for name in ["Tidus", "Wakka", "Rikku"]], 
+                                 count=self.num_characters).resolve(world)
+        
+
+@dataclass()
+class NotRule(Rule[FFXWorld], game="Final Fantasy X"):
+    rule: Rule
+    
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        if self.rule.resolve(world):
+            return False_().resolve(world)
+        else:
+            return True_().resolve(world)
+
+
+@dataclass()
+class PrimerRequirementRule(Rule[FFXWorld], game="Final Fantasy X"):
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        if world.options.required_primers.value > 0:
+            return Has("Progressive Al Bhed Primer", count=world.options.required_primers.value).resolve(world)
+        else:
+            return True_().resolve(world)
+
+
+@dataclass()
+class RangedRule(Rule[FFXWorld], game="Final Fantasy X"):    
+    
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        return (HasFromListUnique(*[f"Party Member: {name}" for name in ["Wakka", "Lulu"]], count=1) | 
+                    (Has("Party Member: Yuna") & HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names[:6]], count=1))).resolve(world)
+
+
+@dataclass()
+class RegionAccessRule(Rule[FFXWorld], game="Final Fantasy X"):
+    region_name: str
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        region_level: int = world_battle_levels[self.region_name]
+        if region_level < 5:
+            return Has(f"Region: {self.region_name}").resolve(world)
+        else:
+            appropriate_level_regions = [other_region for other_region, other_level in world_battle_levels.items()
+                                        if  other_region != self.region_name 
+                                        and region_level > other_level >= region_level - world.options.logic_difficulty.value
+                                        ]
+            can_reach_region: Rule = None
+            for other_region in appropriate_level_regions:
+                if can_reach_region is not None:
+                    can_reach_region |= CanReachRegion(region_to_first_visit[other_region])
+                else:
+                    can_reach_region = CanReachRegion(region_to_first_visit[other_region])
+                
+            if can_reach_region is not None:
+                return (Has(f"Region: {self.region_name}") & can_reach_region).resolve(world)
+            else:
+                return False_().resolve(world)
+
+
+@dataclass()
+class StatTotalRule(Rule[FFXWorld], game="Final Fantasy X"):
+    num_party_members: int
+    stat_total: int
+
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        player_prog_items = world.multiworld.state.prog_items[world.player]
         totals = Counter()
         for item, count in player_prog_items.items():
             if item in stat_abilities:
                 character, value = item_to_stat_value[item]
                 totals[character] += value*count
 
-        return len([total for total in totals.values() if total > stat_total]) >= num_party_members
-        #for total in totals.values():
-        #    if total > stat_total:
-        #        return True
-        #return False
-    return has_stat_total
+        if len([total for total in totals.values() if total > self.stat_total]) >= self.num_party_members:
+            return True_().resolve(world)
+        else:
+            return False_().resolve(world)
 
-def create_min_party_rule(world: FFXWorld, num_characters: int) -> CollectionRule:
-    return lambda state: state.has_from_list_unique([f"Party Member: {name}" for name in character_names], world.player, num_characters)
+# ---------------------------------------------------------------------------- #
+#                               Rule Dictionaries                              #
+# ---------------------------------------------------------------------------- #
 
-def create_min_swimmers_rule(world: FFXWorld, num_characters: int) -> CollectionRule:
-    return lambda state: state.has_from_list_unique([f"Party Member: {name}" for name in ["Tidus", "Wakka", "Rikku"]], world.player, num_characters)
+regionRuleDict: dict[str, Rule] = {
+    "Baaj Temple":                RegionAccessRule("Baaj Temple"),
+    "Besaid":                     RegionAccessRule("Besaid"),
+    "Kilika":                     RegionAccessRule("Kilika"),
+    "Luca":                       RegionAccessRule("Luca"),
+    "Mi'ihen Highroad":           RegionAccessRule("Mi'ihen Highroad"),
+    "Mushroom Rock Road":         RegionAccessRule("Mushroom Rock Road"),
+    "Djose":                      RegionAccessRule("Djose"),
+    "Moonflow":                   RegionAccessRule("Moonflow"),
+    "Guadosalam":                 RegionAccessRule("Guadosalam"),
+    "Thunder Plains":             RegionAccessRule("Thunder Plains"),
+    "Macalania":                  RegionAccessRule("Macalania"),
+    "Bikanel":                    RegionAccessRule("Bikanel"),
+    "Bevelle":                    RegionAccessRule("Bevelle"),
+    "Calm Lands":                 RegionAccessRule("Calm Lands"),
+    "Monster Arena":              RegionAccessRule("Monster Arena"),
+    "Cavern of the Stolen Fayth": RegionAccessRule("Cavern of the Stolen Fayth"),
+    "Mt. Gagazet":                RegionAccessRule("Mt. Gagazet"),
+    "Zanarkand Ruins":            RegionAccessRule("Zanarkand Ruins"),
+    "Sin":                        RegionAccessRule("Sin"),
+    "Airship":                    RegionAccessRule("Airship"),
+    "Omega Ruins":                RegionAccessRule("Omega Ruins"),
+}
 
-def create_min_summon_rule(world: FFXWorld, num_aeons: int) -> CollectionRule:
-    return lambda state: state.has(f"Party Member: Yuna", world.player) and state.has_from_list_unique([f"Party Member: {name}" for name in aeon_names], world.player, num_aeons)
+regionBossRuleDict: dict[str, Rule] = {
+    "Sin Fin":             LogicDifficultyRule( 2) & MinPartyRule  (3) & RangedRule(),
+    "Sinspawn Echuilles":  LogicDifficultyRule( 2) & MinSwimmerRule(2),
+    "Sinspawn Geneaux":    LogicDifficultyRule( 3) & MinPartyRule  (3),
+    "Oblitzerator":        LogicDifficultyRule( 4) & MinPartyRule  (3),
+    "Chocobo Eater":       LogicDifficultyRule( 5) & MinPartyRule  (3),
+    "Sinspawn Gui":        LogicDifficultyRule( 6) & MinPartyRule  (3),
+    "Extractor":           LogicDifficultyRule( 8) & MinSwimmerRule(2),
+    "Spherimorph":         LogicDifficultyRule(10) & MinPartyRule  (3),
+    "Crawler":             LogicDifficultyRule(10) & MinPartyRule  (3),
+    "Seymour/Anima":       LogicDifficultyRule(10) & MinPartyRule  (3),
+    "Wendigo":             LogicDifficultyRule(10) & MinPartyRule  (3),
+    "Zu":                  LogicDifficultyRule(11) & MinPartyRule  (3),
+    "Evrae":               LogicDifficultyRule(12) & MinPartyRule  (3),
+    "Isaaru":              LogicDifficultyRule(12) & MinSummonRule (2),
+    "Evrae Altana":        LogicDifficultyRule(12) & MinSwimmerRule(3),
+    "Seymour Natus":       LogicDifficultyRule(12) & MinPartyRule  (3),
+    "Defender X":          LogicDifficultyRule(13) & MinPartyRule  (3),
+    "Biran and Yenke":     LogicDifficultyRule(14) & Has("Party Member: Kimahri"),
+    "Seymour Flux":        LogicDifficultyRule(14) & MinPartyRule  (3),
+    "Sanctuary Keeper":    LogicDifficultyRule(14) & MinPartyRule  (3),
+    "Spectral Keeper":     LogicDifficultyRule(15) & MinPartyRule  (3),
+    "Yunalesca":           LogicDifficultyRule(15) & MinPartyRule  (3),
+    "Geosgaeno":           LogicDifficultyRule(15) & MinSwimmerRule(3),
+    "Airship Sin":         LogicDifficultyRule(16) & MinPartyRule  (3),
+    "Overdrive Sin":       LogicDifficultyRule(16) & MinPartyRule  (3),
+    "Seymour Omnis":       LogicDifficultyRule(16) & MinPartyRule  (3),
+    "Braska's Final Aeon": LogicDifficultyRule(16) & MinPartyRule  (3),
+    "Ultima Weapon":       LogicDifficultyRule(17) & MinPartyRule  (3),
+    "Omega Weapon":        LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Nemesis":             LogicDifficultyRule(18) & MinPartyRule  (3),
+}
 
-def create_ranged_rule(world: FFXWorld) -> CollectionRule:
-    return lambda state: (state.has_from_list_unique([f"Party Member: {name}" for name in ["Wakka", "Lulu"]], world.player, 1) or 
-                            (state.has(f"Party Member: Yuna", world.player) and state.has_from_list_unique([f"Party Member: {name}" for name in aeon_names[:6]], world.player, 1))
-                         )
+staticEncounterRuleDict: dict[str, Rule] = {
+    "Belgemine":    MinSummonRule(2),
+    "Ronso Rage":   Has("Party Member: Kimahri")
+}
 
-ruleDict: dict[str, Callable[[FFXWorld], CollectionRule]] = {
-    "Sin Fin":             lambda world: lambda state: create_level_rule(world,  2)(state) and create_min_party_rule   (world, 3)(state) and create_ranged_rule(world)(state),
-    "Sinspawn Echuilles":  lambda world: lambda state: create_level_rule(world,  2)(state) and create_min_swimmers_rule(world, 2)(state),
-    "Sinspawn Geneaux":    lambda world: lambda state: create_level_rule(world,  3)(state) and create_min_party_rule   (world, 3)(state),
-    "Oblitzerator":        lambda world: lambda state: create_level_rule(world,  4)(state) and create_min_party_rule   (world, 3)(state),
-    "Chocobo Eater":       lambda world: lambda state: create_level_rule(world,  5)(state) and create_min_party_rule   (world, 3)(state),
-    "Sinspawn Gui":        lambda world: lambda state: create_level_rule(world,  6)(state) and create_min_party_rule   (world, 3)(state),
-    "Extractor":           lambda world: lambda state: create_level_rule(world,  8)(state) and create_min_swimmers_rule(world, 2)(state), # At least 2 swimmers
-    "Spherimorph":         lambda world: lambda state: create_level_rule(world, 10)(state) and create_min_party_rule   (world, 3)(state),
-    "Crawler":             lambda world: lambda state: create_level_rule(world, 10)(state) and create_min_party_rule   (world, 3)(state),
-    "Seymour/Anima":       lambda world: lambda state: create_level_rule(world, 10)(state) and create_min_party_rule   (world, 3)(state),
-    "Wendigo":             lambda world: lambda state: create_level_rule(world, 10)(state) and create_min_party_rule   (world, 3)(state),
-    "Zu":                  lambda world: lambda state: create_level_rule(world, 11)(state) and create_min_party_rule   (world, 3)(state),
-    "Evrae":               lambda world: lambda state: create_level_rule(world, 12)(state) and create_min_party_rule   (world, 3)(state),
-    "Airship Sin":         lambda world: lambda state: create_level_rule(world, 16)(state) and create_min_party_rule   (world, 3)(state),
-    "Overdrive Sin":       lambda world: lambda state: create_level_rule(world, 16)(state) and create_min_party_rule   (world, 3)(state),
-    "Penance":             lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "Isaaru":              lambda world: lambda state: create_level_rule(world, 12)(state) and create_min_summon_rule  (world, 2)(state),    # Yuna + 2 summons
-    "Evrae Altana":        lambda world: lambda state: create_level_rule(world, 12)(state) and create_min_swimmers_rule(world, 3)(state), # All swimmers
-    "Seymour Natus":       lambda world: lambda state: create_level_rule(world, 12)(state) and create_min_party_rule   (world, 3)(state),
-    "Defender X":          lambda world: lambda state: create_level_rule(world, 13)(state) and create_min_party_rule   (world, 3)(state),
-    "Biran and Yenke":     lambda world: lambda state: create_level_rule(world, 14)(state) and create_min_party_rule   (world, 3)(state),
-    "Seymour Flux":        lambda world: lambda state: create_level_rule(world, 14)(state) and create_min_party_rule   (world, 3)(state),
-    "Sanctuary Keeper":    lambda world: lambda state: create_level_rule(world, 14)(state) and create_min_party_rule   (world, 3)(state),
-    "Spectral Keeper":     lambda world: lambda state: create_level_rule(world, 15)(state) and create_min_party_rule   (world, 3)(state),
-    "Yunalesca":           lambda world: lambda state: create_level_rule(world, 15)(state) and create_min_party_rule   (world, 3)(state),
-    "Seymour Omnis":       lambda world: lambda state: create_level_rule(world, 16)(state) and create_min_party_rule   (world, 3)(state),
-    "Braska's Final Aeon": lambda world: lambda state: create_level_rule(world, 16)(state) and create_min_party_rule   (world, 3)(state),
-    "Ultima Weapon":       lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "Omega Weapon":        lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "Geosgaeno":           lambda world: lambda state: create_level_rule(world, 15)(state) and create_min_swimmers_rule(world, 3)(state),
+arenaBossRuleDict: dict[int, Rule] = {
+    49: LogicDifficultyRule(17) & MinPartyRule  (3), # Stratoavis
+    50: LogicDifficultyRule(17) & MinPartyRule  (3), # Malboro Menace
+    51: LogicDifficultyRule(17) & MinPartyRule  (3), # Kottos
+    52: LogicDifficultyRule(17) & MinPartyRule  (3), # Coeurlregina
+    53: LogicDifficultyRule(17) & MinPartyRule  (3), # Jormungand
+    54: LogicDifficultyRule(17) & MinPartyRule  (3), # Cactuar King
+    55: LogicDifficultyRule(17) & MinPartyRule  (3), # Espada
+    56: LogicDifficultyRule(17) & MinPartyRule  (3), # Abyss Worm
+    57: LogicDifficultyRule(17) & MinPartyRule  (3), # Chimerageist
+    58: LogicDifficultyRule(17) & MinPartyRule  (3), # Don Tonberry
+    59: LogicDifficultyRule(17) & MinPartyRule  (3), # Catoblepas
+    60: LogicDifficultyRule(17) & MinPartyRule  (3), # Abaddon
+    61: LogicDifficultyRule(17) & MinPartyRule  (3), # Vorban
 
-    "Belgemine":           lambda world: lambda state: create_min_summon_rule(world, 2)(state),
-
-    "BSIL: Defeat Dark Valefor (Superboss)":       lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state) and state.has("Party Member: Yuna", world.player),
-    "BIKA: Defeat Dark Ifrit (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "THPL: Defeat Dark Ixion (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state) and state.has("Party Member: Yuna", world.player),
-    "MCLA: Defeat Dark Shiva (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "ZNKD: Defeat Dark Bahamut (Superboss)":       lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MTGS: Defeat Dark Anima (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "COSF: Defeat Dark Yojimbo (Superboss)":       lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MUSH: Defeat Dark Mindy (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MUSH: Defeat Dark Sandy (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MUSH: Defeat Dark Cindy (Superboss)":         lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-
-    "MOAR: Defeat Stratoavis (Arena Boss)":        lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Malboro Menace (Arena Boss)":    lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Kottos (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Coeurlregina (Arena Boss)":      lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Jormungand (Arena Boss)":        lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Cactuar King (Arena Boss)":      lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Espada (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Abyss Worm (Arena Boss)":        lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Chimerageist (Arena Boss)":      lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Don Tonberry (Arena Boss)":      lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Catoblepas (Arena Boss)":        lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Abaddon (Arena Boss)":           lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Vorban (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-
-    "MOAR: Defeat Fenrir (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Ornitholestes (Arena Boss)":     lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Pteryx (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Hornet (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Vidatu (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat One-Eye (Arena Boss)":           lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Jumbo Flan (Arena Boss)":        lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Nega Elemental (Arena Boss)":    lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Tanket (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Fafnir (Arena Boss)":            lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Sleep Sprout (Arena Boss)":      lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Bomb King (Arena Boss)":         lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Juggernaut (Arena Boss)":        lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Ironclad (Arena Boss)":          lambda world: lambda state: create_level_rule(world, 17)(state) and create_min_party_rule   (world, 3)(state),
+    62: LogicDifficultyRule(17) & MinPartyRule  (3), # Fenrir
+    63: LogicDifficultyRule(17) & MinPartyRule  (3), # Ornitholestes
+    64: LogicDifficultyRule(17) & MinPartyRule  (3), # Pteryx
+    65: LogicDifficultyRule(17) & MinPartyRule  (3), # Hornet
+    66: LogicDifficultyRule(17) & MinPartyRule  (3), # Vidatu
+    67: LogicDifficultyRule(17) & MinPartyRule  (3), # One-Eye
+    68: LogicDifficultyRule(17) & MinPartyRule  (3), # Jumbo Flan
+    69: LogicDifficultyRule(17) & MinPartyRule  (3), # Nega Elemental
+    70: LogicDifficultyRule(17) & MinPartyRule  (3), # Tanket
+    71: LogicDifficultyRule(17) & MinPartyRule  (3), # Fafnir
+    72: LogicDifficultyRule(17) & MinPartyRule  (3), # Sleep Sprout
+    73: LogicDifficultyRule(17) & MinPartyRule  (3), # Bomb King
+    74: LogicDifficultyRule(17) & MinPartyRule  (3), # Juggernaut
+    75: LogicDifficultyRule(17) & MinPartyRule  (3), # Ironclad
     
-    "MOAR: Defeat Earth Eater (Superboss)":        lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Greater Sphere (Superboss)":     lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Catastrophe (Superboss)":        lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Th'uban (Superboss)":            lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Neslug (Superboss)":             lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Ultima Buster (Superboss)":      lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
-    "MOAR: Defeat Shinryu (Superboss)":            lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_swimmers_rule(world, 3)(state),
-    "MOAR: Defeat Nemesis (Superboss)":            lambda world: lambda state: create_level_rule(world, 18)(state) and create_min_party_rule   (world, 3)(state),
+    76: LogicDifficultyRule(18) & MinPartyRule  (3), # Earth Eater
+    77: LogicDifficultyRule(18) & MinPartyRule  (3), # Greater Sphere
+    78: LogicDifficultyRule(18) & MinPartyRule  (3), # Catastrophe
+    79: LogicDifficultyRule(18) & MinPartyRule  (3), # Th'uban
+    80: LogicDifficultyRule(18) & MinPartyRule  (3), # Neslug
+    81: LogicDifficultyRule(18) & MinPartyRule  (3), # Ultima Buster
+    82: LogicDifficultyRule(18) & MinSwimmerRule(3), # Shinryu
+    83: LogicDifficultyRule(18) & MinPartyRule  (3), # Nemesis
+}
 
-    "Baaj Temple":                lambda world: create_region_access_rule(world, "Baaj Temple"), # lambda state: state.has("Region: Baaj Temple", world.player),
-    "Besaid":                     lambda world: create_region_access_rule(world, "Besaid"),
-    "Kilika":                     lambda world: create_region_access_rule(world, "Kilika"),
-    "Luca":                       lambda world: create_region_access_rule(world, "Luca"),
-    "Mi'ihen Highroad":           lambda world: create_region_access_rule(world, "Mi'ihen Highroad"),
-    "Mushroom Rock Road":         lambda world: create_region_access_rule(world, "Mushroom Rock Road"),
-    "Djose":                      lambda world: create_region_access_rule(world, "Djose"),
-    "Moonflow":                   lambda world: create_region_access_rule(world, "Moonflow"),
-    "Guadosalam":                 lambda world: create_region_access_rule(world, "Guadosalam"),
-    "Thunder Plains":             lambda world: create_region_access_rule(world, "Thunder Plains"),
-    "Macalania":                  lambda world: create_region_access_rule(world, "Macalania"),
-    "Bikanel":                    lambda world: create_region_access_rule(world, "Bikanel"),
-    "Bevelle":                    lambda world: create_region_access_rule(world, "Bevelle"),
-    "Calm Lands":                 lambda world: create_region_access_rule(world, "Calm Lands"),
-    "Monster Arena":              lambda world: create_region_access_rule(world, "Monster Arena"),
-    "Cavern of the Stolen Fayth": lambda world: create_region_access_rule(world, "Cavern of the Stolen Fayth"),
-    "Mt. Gagazet":                lambda world: create_region_access_rule(world, "Mt. Gagazet"),
-    "Zanarkand Ruins":            lambda world: create_region_access_rule(world, "Zanarkand Ruins"),
-    "Sin":                        lambda world: create_region_access_rule(world, "Sin"),
-    "Airship":                    lambda world: create_region_access_rule(world, "Airship"),
-    "Omega Ruins":                lambda world: create_region_access_rule(world, "Omega Ruins"),
+superBossRuleDict: dict[int, Rule] = {
+    44: LogicDifficultyRule(18) & MinPartyRule(3),                             # Omega Weapon
+     2: LogicDifficultyRule(18) & MinPartyRule(3) & Has("Party Member: Yuna"), # Dark Valefor
+    19: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Ifrit
+    13: LogicDifficultyRule(18) & MinPartyRule(3) & Has("Party Member: Yuna"), # Dark Ixion
+    18: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Shiva
+    38: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Bahamut
+    34: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Anima
+    31: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Yojimbo
+    45: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Mindy
+    46: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Sandy
+    47: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Cindy
+  # 25: LogicDifficultyRule(18) & MinPartyRule(3),                             # Penance
 }
 
 
+# ---------------------------------------------------------------------------- #
+#                                   Set Rules                                  #
+# ---------------------------------------------------------------------------- #
+
 def set_rules(world: FFXWorld) -> None:
-    def can_reach_minimum_locations(state: CollectionState, locations: list, locations_required: int) -> bool:
-        sum = 0
-        for location in locations:
-            if location.can_reach(state):
-                sum += 1
-                if sum >= locations_required:
-                    return True
-        return False
+    # ------------------------------------------------------------------------ #
+    #                          Aeon Related Locations                          #
+    # ------------------------------------------------------------------------ #
     
-    ## Remiem
+    # -------------------------------- Remiem -------------------------------- #
     # Valefor fight
-    add_rule(world.get_location(world.location_id_to_name[379 | TreasureOffset]), create_min_summon_rule(world, 2))
+    world.set_rule(world.get_location(world.location_id_to_name[379 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Valefor"))))
     # Ifrit fight
-    add_rule(world.get_location(world.location_id_to_name[381 | TreasureOffset]), create_min_summon_rule(world, 2))
+    world.set_rule(world.get_location(world.location_id_to_name[381 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ifrit"))))
     # Ixion fight
-    add_rule(world.get_location(world.location_id_to_name[383 | TreasureOffset]), create_min_summon_rule(world, 2))
+    world.set_rule(world.get_location(world.location_id_to_name[383 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ixion"))))
     # Shiva fight
-    add_rule(world.get_location(world.location_id_to_name[385 | TreasureOffset]), create_min_summon_rule(world, 2))
+    world.set_rule(world.get_location(world.location_id_to_name[385 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Shiva"))))
     # Bahamut fight
-    add_rule(world.get_location(world.location_id_to_name[334 | TreasureOffset]), create_min_summon_rule(world, 2))
+    world.set_rule(world.get_location(world.location_id_to_name[334 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Bahamut"))))
     # Yojimbo fight
-    add_rule(world.get_location(world.location_id_to_name[388 | TreasureOffset]), lambda state: create_min_summon_rule(world, 2)(state) and state.has(f"Party Member: Yojimbo", world.player))
+    world.set_rule(world.get_location(world.location_id_to_name[388 | TreasureOffset]), MinSummonRule(2) & Has(f"Party Member: Yojimbo"))
     # Anima fight
-    add_rule(world.get_location(world.location_id_to_name[390 | TreasureOffset]), lambda state: state.has(f"Party Member: Yuna", world.player) and state.has_all([f"Party Member: {name}" for name in ["Yojimbo", "Anima"]], world.player))
+    world.set_rule(world.get_location(world.location_id_to_name[390 | TreasureOffset]), MinSummonRule(2) & HasAll(*[f"Party Member: {name}" for name in ["Yojimbo", "Anima"]]))
     # Magus Sisters fight
-    add_rule(world.get_location(world.location_id_to_name[392 | TreasureOffset]), lambda state: state.has(f"Party Member: Yuna", world.player) and state.has_all([f"Party Member: {name}" for name in ["Yojimbo", "Anima", "Magus Sisters"]], world.player))
+    world.set_rule(world.get_location(world.location_id_to_name[392 | TreasureOffset]), MinSummonRule(2) & HasAll(*[f"Party Member: {name}" for name in ["Yojimbo", "Anima", "Magus Sisters"]]))
     # Send Belgemine? (Moon sigil)
-    add_rule(world.get_location(world.location_id_to_name[275 | TreasureOffset]), lambda state: state.has(f"Party Member: Yuna", world.player) and state.has_all([f"Party Member: {name}" for name in ["Yojimbo", "Anima", "Magus Sisters"]], world.player))
+    world.set_rule(world.get_location(world.location_id_to_name[275 | TreasureOffset]), MinSummonRule(2) & HasAll(*[f"Party Member: {name}" for name in ["Yojimbo", "Anima", "Magus Sisters"]]))
 
-    ## Belgemine
+    # ------------------------------- Belgemine ------------------------------ #
     # Mi'ihen fight
-    add_rule(world.get_location(world.location_id_to_name[186 | TreasureOffset]), create_min_summon_rule(world, 2))
+    world.set_rule(world.get_location(world.location_id_to_name[186 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ifrit"))))
     # Moonflow fight
-    add_rule(world.get_location(world.location_id_to_name[372 | TreasureOffset]), create_min_summon_rule(world, 2))
+    world.set_rule(world.get_location(world.location_id_to_name[372 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ixion"))))
     # Calm Lands fight
-    add_rule(world.get_location(world.location_id_to_name[187 | TreasureOffset]), create_min_summon_rule(world, 2))
+    world.set_rule(world.get_location(world.location_id_to_name[187 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Shiva"))))
 
-    ## Dark Aeons
-    dark_aeons = [
-         2,  # "Besaid: Dark Valefor
-        13,  # "Thunder Plains: Dark Ixion
-        18,  # "Lake Macalania: Dark Shiva
-        19,  # "Bikanel: Dark Ifrit
-        31,  # "Cavern of the Stolen Fayth: Dark Yojimbo
-        34,  # "Gagazet (Outside): Dark Anima
-        38,  # "Zanarkand: Dark Bahamut
-        45,  # "Mushroom Rock Road: Dark Mindy
-        46,  # "Mushroom Rock Road: Dark Sandy
-        47,  # "Mushroom Rock Road: Dark Cindy
-    ]
-    for boss_id in dark_aeons:
-        boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-        add_rule(boss, ruleDict[boss.name](world))
-
-    ## Aeons
+    # --------------------------------- Aeons -------------------------------- #
     # Anima
-    add_rule(world.get_location(world.location_id_to_name[13 | PartyMemberOffset]), lambda state: all((
-        state.can_reach_location(world.location_id_to_name[ 15 | TreasureOffset], world.player),  # Besaid
-        state.can_reach_location(world.location_id_to_name[ 19 | TreasureOffset], world.player),  # Kilika
-        state.can_reach_location(world.location_id_to_name[484 | TreasureOffset], world.player),  # Djose
-        state.can_reach_location(world.location_id_to_name[485 | TreasureOffset], world.player),  # Macalania
-        state.can_reach_location(world.location_id_to_name[217 | TreasureOffset], world.player),  # Bevelle
-        state.can_reach_location(world.location_id_to_name[209 | TreasureOffset], world.player),  # Zanarkand
-    )))
+    world.set_rule(world.get_location(world.location_id_to_name[13 | PartyMemberOffset]), 
+                   CanReachLocation(world.location_id_to_name[ 15 | TreasureOffset]) &  # Besaid
+                   CanReachLocation(world.location_id_to_name[ 19 | TreasureOffset]) &  # Kilika
+                   CanReachLocation(world.location_id_to_name[484 | TreasureOffset]) &  # Djose
+                   CanReachLocation(world.location_id_to_name[485 | TreasureOffset]) &  # Macalania
+                   CanReachLocation(world.location_id_to_name[217 | TreasureOffset]) &  # Bevelle
+                   CanReachLocation(world.location_id_to_name[209 | TreasureOffset])    # Zanarkand
+                   )
     # Magus Sisters
-    add_rule(world.get_location(world.location_id_to_name[15 | PartyMemberOffset]), lambda state: state.has_all(["Flower Scepter", "Blossom Crown"], world.player))
+    world.set_rule(world.get_location(world.location_id_to_name[15 | PartyMemberOffset]), HasAll(*["Flower Scepter", "Blossom Crown"]))
 
 
-    ## Captures
+    # ------------------------------------------------------------------------ #
+    #                                 Captures                                 #
+    # ------------------------------------------------------------------------ #
 
-    # Fiend Captures
+    # ---------------------------- Fiend Captures ---------------------------- #
     # If AlwaysCapture, Arena region not required for Fiend Capture checks, only rewards & bosses
-    for location_id in range(104):
-        if (not location_id == 43 and not location_id == 59 and not world.options.always_capture.value):
-            location = world.get_location(world.location_id_to_name[location_id | CaptureOffset])
-            add_rule(location, lambda state: state.can_reach_region("Monster Arena", world.player))
+    if not world.options.always_capture.value:
+        for location_id in range(104):
+            if (not location_id == 43 and not location_id == 59):
+                location = world.get_location(world.location_id_to_name[location_id | CaptureOffset])
+                world.set_rule(location, CanReachRegion("Monster Arena"))
 
-
-    ## Capture Rewards
-    # Area Conquest
+    # ----------------------------- Area Conquest ---------------------------- #
     area_conquest = [
         (424, 49, (8, 15, 27,                                     )),  # Stratoavis
         (425, 50, (21, 30, 38, 61,                                )),  # Malboro Menace
@@ -335,14 +478,18 @@ def set_rules(world: FFXWorld) -> None:
         location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
         boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
         
+        fiend_rule: Rule = None
         for fiend_id in fiend_ids:
             fiend = world.get_location(world.location_id_to_name[fiend_id | CaptureOffset])
-            add_rule(location, lambda state, fiend=fiend: state.can_reach_location(fiend.name, world.player))
-        add_rule(boss, lambda state, location=location: state.can_reach_location(location.name, world.player))
-        add_rule(boss, ruleDict[boss.name](world))
+            if fiend_rule is not None:
+                fiend_rule &= CanReachLocation(fiend.name)
+            else:
+                fiend_rule = CanReachLocation(fiend.name)
+        
+        world.set_rule(location, fiend_rule)
+        world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
 
-
-    # Species Conquest
+    # --------------------------- Species Conquest --------------------------- #
     species_conquest = [
         (437, 62, (8, 9, 10, 11, 12, 13, 14,   )), # Fenrir
         (438, 63, (21, 22, 23, 24, 25, 26, 100,)), # Ornitholestes
@@ -359,25 +506,30 @@ def set_rules(world: FFXWorld) -> None:
         (449, 74, (47, 48, 49,                 )), # Juggernaut
         (450, 75, (76, 77, 78,                 )), # Ironclad
     ]
-    for location_id, boss_id, captures in species_conquest:
+    for location_id, boss_id, fiend_ids in species_conquest:
         location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
         boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
         
-        for capture_id in captures:
-            capture = world.get_location(world.location_id_to_name[capture_id | CaptureOffset])
-            add_rule(location, lambda state, capture=capture: state.can_reach_location(capture.name, world.player))
-        add_rule(boss, lambda state, location=location: state.can_reach_location(location.name, world.player))
-        add_rule(boss, ruleDict[boss.name](world))
+        fiend_rule: Rule = None
+        for fiend_id in fiend_ids:
+            fiend = world.get_location(world.location_id_to_name[fiend_id | CaptureOffset])
+            if fiend_rule is not None:
+                fiend_rule &= CanReachLocation(fiend.name)
+            else:
+                fiend_rule = CanReachLocation(fiend.name)
+        
+        world.set_rule(location, fiend_rule)
+        world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
 
-    # Mars Sigil
+    # ------------------------------ Mars Sigil ------------------------------ #
     conquest_locations = [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(424, 451))]
     if world.options.creation_rewards.value == world.options.creation_rewards.option_area:
         for location in [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(437, 451))]:
             conquest_locations.remove(location)
     location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
-    add_rule(location, lambda state: can_reach_minimum_locations(state, conquest_locations, 10))
+    world.set_rule(location, CanReachMinimumLocationRule(conquest_locations, 10))
 
-    # Original Creations    
+    # -------------------- Original Creations - Conquests -------------------- #
     original_creation_conquests = [
         (451, 76, area_conquest,    2), # Earth Eather
         (452, 77, species_conquest, 2), # Greater Sphere
@@ -389,12 +541,10 @@ def set_rules(world: FFXWorld) -> None:
         boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
         capture_locations = [world.get_location(world.location_id_to_name[arena_id | TreasureOffset]) for arena_id, _, _ in arena_type]
         
-        add_rule(location, lambda state, capture_locations=capture_locations, creations_required=creations_required: 
-                can_reach_minimum_locations(state, capture_locations, creations_required))
-        add_rule(boss, lambda state, location=location: state.can_reach_location(location.name, world.player))
-        add_rule(boss, ruleDict[boss.name](world))
+        world.set_rule(location, CanReachMinimumLocationRule(capture_locations, creations_required))
+        world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
     
-
+    # --------------------- Original Creations - Captures -------------------- #
     original_creation_captures = [
         (455, 80), # Neslug (1x Capture)
         (456, 81), # Ultima Buster (5x Captures)
@@ -416,46 +566,60 @@ def set_rules(world: FFXWorld) -> None:
         "Sin: Post-Seymour Omnis",
         "Omega Ruins: Pre-Ultima Weapon"
     ]
-    # capture_regions = []
-    # for location_id in range(104):
-    #     if (not location_id == 43 and not location_id == 59):
-    #         location = world.get_location(world.location_id_to_name[location_id | CaptureOffset])
-    #         if location.parent_region not in capture_regions:
-    #             capture_regions.append(location.parent_region)
-
     for location_id, boss_id in original_creation_captures:
         location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
         boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+        capture_region_rule: Rule = None
         for region in capture_regions:
-            add_rule(location, lambda state, region=region: state.can_reach_region(region, world.player))
-        add_rule(boss, lambda state, location=location: state.can_reach_location(location.name, world.player))
-        add_rule(boss, ruleDict[boss.name](world))
+            if capture_region_rule is not None:
+                capture_region_rule &= CanReachRegion(region)
+            else:
+                capture_region_rule = CanReachRegion(region)
 
+        world.set_rule(location, capture_region_rule)
+        world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
 
-    # Shinryu (Underwater Captures in Gagazet)
+    # --------------- Shinryu (Underwater Captures in Gagazet) --------------- #
     location = world.get_location(world.location_id_to_name[457 | TreasureOffset])
     boss = world.get_location(world.location_id_to_name[82 | BossOffset])
-    add_rule(location, lambda state: state.can_reach_region("Mt. Gagazet 1st visit: Post-Seymour Flux", world.player))
-    add_rule(boss, lambda state: state.can_reach_location(location.name, world.player))
-    add_rule(boss, ruleDict[boss.name](world))
+    
+    world.set_rule(location, CanReachRegion("Mt. Gagazet 1st visit: Post-Seymour Flux"))
+    world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[82])
 
-
-    # Nemesis requires killing all other creations
-    creation_bosses = [
-    49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,     # Area Conquest
-    62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, # Species Conquest
-    76, 77, 78, 79, 80, 81, 82                              # Original Creations
-    ]
+    # ------------- Nemesis requires killing all other creations ------------- #
     nemesis = world.get_location(world.location_id_to_name[83 | BossOffset])
-    # creation_bosses = [world.get_location(world.location_id_to_name[boss_id | BossOffset]) for boss_id in range(49, 83)]
-    for creation_id in creation_bosses:
-        creation_name = world.location_id_to_name[creation_id | BossOffset]
-        add_rule(nemesis, lambda state, creation_name=creation_name: state.can_reach_location(creation_name, world.player))
-    add_rule(nemesis, ruleDict[nemesis.name](world))
-    add_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), lambda state: state.can_reach_location(nemesis.name, world.player))
+    creation_bosses_rule: Rule = None
+    for _, rule in arenaBossRuleDict.items():
+        if creation_bosses_rule is not None:
+            creation_bosses_rule &= rule
+        else:
+            creation_bosses_rule = rule
+    world.set_rule(nemesis, creation_bosses_rule)
+    world.set_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), CanReachLocation(nemesis.name))
 
 
-    ## Celestials
+    # ------------------------------------------------------------------------ #
+    #                               Super Bosses                               #
+    # ------------------------------------------------------------------------ #
+    for boss_id, rule in superBossRuleDict.items():
+        boss: Location = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+        world.set_rule(boss, rule)
+
+    
+    # ------------------------------------------------------------------------ #
+    #                              Jecht's Spheres                             #
+    # ------------------------------------------------------------------------ #
+    # Besaid
+    besaid_jecht_sphere = world.get_location(world.location_id_to_name[27 | OtherOffset])
+    dark_valefor = world.get_location(world.location_id_to_name[2 | BossOffset])
+    world.set_rule(besaid_jecht_sphere, CanReachLocation(dark_valefor.name))
+
+
+    # ------------------------------------------------------------------------ #
+    #                                Celestials                                #
+    # ------------------------------------------------------------------------ #
+    
+    # --------------------------- Celestial Weapons -------------------------- #
     celestial_weapon_locations = [
         5,
         93,
@@ -466,21 +630,19 @@ def set_rules(world: FFXWorld) -> None:
         #214, # Airship password location
     ]
     for location_id in celestial_weapon_locations:
-        add_rule(world.get_location(world.location_id_to_name[location_id | TreasureOffset]),
-                 lambda state: state.has("Progressive Mirror", world.player, 2))
+        location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+        world.set_rule(location, Has("Progressive Mirror", count=2))
 
     # Masamune
-    add_rule(world.get_location(world.location_id_to_name[99 | TreasureOffset]),
-             lambda state: state.has("Progressive Mirror", world.player, 2) and state.has("Rusty Sword", world.player))
+    world.set_rule(world.get_location(world.location_id_to_name[99 | TreasureOffset]), Has("Progressive Mirror", count=2) & Has("Rusty Sword"))
 
     # Celestial Mirror
-    add_rule(world.get_location(world.location_id_to_name[111 | TreasureOffset]),
-             lambda state: state.has("Progressive Mirror", world.player))
+    world.set_rule(world.get_location(world.location_id_to_name[111 | TreasureOffset]), Has("Progressive Mirror", count=1))
 
     # Mercury Sigil
-    add_rule(world.get_location(world.location_id_to_name[279 | TreasureOffset]),
-             lambda state: state.can_reach_region("Airship 1st visit: Post-Evrae", world.player))
+    world.set_rule(world.get_location(world.location_id_to_name[279 | TreasureOffset]), CanReachRegion("Airship 1st visit: Post-Evrae"))
 
+    # -------------------------- Celestial Upgrades -------------------------- #
     celestial_upgrades = [
         (38, 0x25, "Sun"),
         (40, 0x24, "Moon"),
@@ -491,23 +653,72 @@ def set_rules(world: FFXWorld) -> None:
         (50, 0x3d, "Mercury"),
     ]
     for crest_id, weapon_id, celestial in celestial_upgrades:
-        add_rule(world.get_location(world.location_id_to_name[crest_id | OtherOffset]),
-                 lambda state, weapon_id=weapon_id, celestial=celestial: state.has("Progressive Mirror", world.player, 2) and state.has_all([
-                        world.item_id_to_name[weapon_id | equipItemOffset],
-                        f"{celestial} Crest",
-                        ], world.player))
-        add_rule(world.get_location(world.location_id_to_name[crest_id+1 | OtherOffset]),
-                 lambda state, weapon_id=weapon_id, celestial=celestial: state.has("Progressive Mirror", world.player, 2) and state.has_all([
-                        world.item_id_to_name[weapon_id | equipItemOffset],
-                        f"{celestial} Crest",
-                        f"{celestial} Sigil",
-                        ], world.player))
+        world.set_rule(world.get_location(world.location_id_to_name[crest_id | OtherOffset]),
+                       Has("Progressive Mirror", count=2) & HasAll(*[world.item_id_to_name[weapon_id | equipItemOffset], f"{celestial} Crest"]))
+        world.set_rule(world.get_location(world.location_id_to_name[crest_id+1 | OtherOffset]),
+                       Has("Progressive Mirror", count=2) & HasAll(*[world.item_id_to_name[weapon_id | equipItemOffset], f"{celestial} Crest", f"{celestial} Sigil"]))
 
 
-    ## Primers
+    # ------------------------------------------------------------------------ #
+    #                                  Primers                                 #
+    # ------------------------------------------------------------------------ #
     # Complete Al Bhed Primers
-    add_rule(world.get_location(world.location_id_to_name[405 | TreasureOffset]),
-             lambda state: state.has("Progressive Al Bhed Primer", world.player, count=26))
+    world.set_rule(world.get_location(world.location_id_to_name[405 | TreasureOffset]), Has("Progressive Al Bhed Primer", count=26))
+
+
+    # ---------------------------------------------------------------------------- #
+    #                                  Overdrives                                  #
+    # ---------------------------------------------------------------------------- #
+
+    # ----------------------------------- Tidus ---------------------------------- #
+    combat_regions: list[str] = [
+        "Besaid Island 1st visit",
+        "Kilika 1st visit: Pre-Geneaux",
+        "Mi'ihen Highroad 1st visit: Pre-Chocobo Eater",
+        "Mushroom Rock Road 1st visit: Pre-Sinspawn Gui",
+        "Djose 1st visit",
+        "Moonflow 1st visit: Pre-Extractor",
+        "Thunder Plains 1st visit",
+        "Macalania Woods 1st visit: Pre-Spherimorph",
+        "Bikanel 1st visit: Post-Zu",
+        "Airship 1st visit: Pre-Evrae",
+        "Bevelle 1st visit: Pre-Isaaru",
+        "Calm Lands 1st visit: Pre-Defender X",
+        "Cavern of the Stolen Fayth 1st visit",
+        "Mt. Gagazet 1st visit: Post-Biran and Yenke",
+        "Zanarkand Ruins 1st visit: Pre-Spectral Keeper",
+        "Sin: Pre-Seymour Omnis",
+        "Omega Ruins: Pre-Ultima Weapon"
+    ]
+    overdrive_regions = [world.get_region(region_name) for region_name in combat_regions]
+    
+    slice_and_dice  = world.get_location(world.location_id_to_name[1 | OverdriveOffset])
+    energy_rain     = world.get_location(world.location_id_to_name[2 | OverdriveOffset])
+    blitz_ace       = world.get_location(world.location_id_to_name[3 | OverdriveOffset])
+
+    world.set_rule(slice_and_dice, CanReachMinimumRegionRule(overdrive_regions, 2))
+    world.set_rule(energy_rain,    CanReachMinimumRegionRule(overdrive_regions, 4))
+    world.set_rule(blitz_ace,      CanReachMinimumRegionRule(overdrive_regions, 8))
+
+    # ----------------------------------- Auron ---------------------------------- #
+    shooting_star   = world.get_location(world.location_id_to_name[5 | OverdriveOffset])
+    banishing_blade = world.get_location(world.location_id_to_name[6 | OverdriveOffset])
+    tornado         = world.get_location(world.location_id_to_name[7 | OverdriveOffset])
+
+    world.set_rule(shooting_star,   Has("Progressive Jecht's Sphere", count=1))
+    world.set_rule(banishing_blade, Has("Progressive Jecht's Sphere", count=3))
+    world.set_rule(tornado,         Has("Progressive Jecht's Sphere", count=10))
+
+    # ----------------------------------- Wakka ---------------------------------- #
+    status_reels    = world.get_location(world.location_id_to_name[22 | OverdriveOffset])
+    aurochs_reels   = world.get_location(world.location_id_to_name[23 | OverdriveOffset])
+
+    world.set_rule(status_reels,  Has("Overdrive: Attack Reels"))
+    world.set_rule(aurochs_reels, Has("Overdrive: Status Reels"))
+
+    # ---------------------------------------------------------------------------- #
+    #                                     Todo                                     #
+    # ---------------------------------------------------------------------------- #
 
     # TODO: Disabled for now due to multiple bugs related to this location (Ship softlocks + possible Macalania softlock)
     # Clasko S.S. Liki second visit (Talk to Clasko before Crawler and make sure to have him become a Chocobo Breeder)

@@ -64,14 +64,18 @@ class MiniGameBlitzball(Choice):
     This includes:
     - Luca Story Blitzball win
     - World Champion
+    - Wakka's Overdrives
     - Jupiter Sigil
     """
     display_name = "Blitzball"
     default = 0
     option_off = 0
-    option_up_to_story = 1
-    option_up_to_celestial = 2
-    option_up_to_sigil = 3
+    option_up_to_story          = 1
+    option_up_to_world_champion = 2
+    option_up_to_attack_reels   = 3
+    option_up_to_status_reels   = 4
+    option_up_to_aurochs_reels  = 5
+    option_up_to_sigil          = 6
 
 
 class MiniGameButterflies(Toggle):
@@ -247,6 +251,28 @@ class JechtSpheres(Toggle):
     option_on = 1
 
 
+class TidusOverdrives(Toggle):
+    """
+    Sets whether Tidus's Overdrive locations are included or not. If off they will only have filler items.
+    Default is off.
+    """
+    display_name = "Tidus's Overdrives"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
+class KimahriRonsoRages(Toggle):
+    """
+    Sets whether Kimahri's Ronso Rage locations are included or not. If off they will only have filler items.
+    Default is off.
+    """
+    display_name = "Kimahri's Ronso Rages"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
 class LogicDifficulty(Range):
     """
     Sets how strict the logic is for region access. Higher is harder / less restrictive.
@@ -359,6 +385,8 @@ class FFXOptions(PerGameCommonOptions):
     arena_bosses: MonsterArenaBosses
     super_bosses: SuperBosses
     jecht_spheres: JechtSpheres
+    tidus_overdrives: TidusOverdrives
+    kimahri_ronso_rages: KimahriRonsoRages
     trap_percentage: TrapPercentage
     logic_difficulty: LogicDifficulty
     early_party_members: EarlyPartyMembers
@@ -394,6 +422,8 @@ ffx_option_groups: dict[str, list[Any]] = {
         RecruitSanity,
         SuperBosses,
         JechtSpheres,
+        TidusOverdrives,
+        KimahriRonsoRages,
         AlwaysSensor,
         SkipContestOfAeons,
         SphereGridRandomization,
