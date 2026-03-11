@@ -123,7 +123,7 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
     ("AIRS: Defeat Sin Right Fin (Boss)",             22, False),
     ("AIRS: Defeat Sin Core (Boss)",                  23, False),
     ("AIRS: Defeat Overdrive Sin (Boss)",             24, False),
-    # ("AIRS: Defeat Penance (Superboss)",            25, False),
+  # ("AIRS: Defeat Penance (Superboss)",              25, False),
     ("BEVL: Defeat Isaaru (Boss)",                    26, False),
     ("BEVL: Defeat Evrae Altana (Boss)",              27, False),
     ("BEVL: Defeat Seymour Natus (Boss)",             28, False),
@@ -141,8 +141,8 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
     #("SINS: Defeat Braska's Final Aeon (Boss)",      40, False),
     #("SINS: Defeat Yuna's Aeons (Boss)",             41, False),
     #("SINS: Defeat Yu Yevon (Boss)",                 42, False),
-    ("OMGR: Defeat Ultima (Boss)",                    43, False),
-    ("OMGR: Defeat Omega (Superboss)",                44, False),
+    ("OMGR: Defeat Ultima Weapon (Boss)",             43, False),
+    ("OMGR: Defeat Omega Weapon (Superboss)",         44, False),
     ("MUSH: Defeat Dark Mindy (Superboss)",           45, False),
     ("MUSH: Defeat Dark Sandy (Superboss)",           46, False),
     ("MUSH: Defeat Dark Cindy (Superboss)",           47, False),
@@ -548,7 +548,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("SINS: City of Dying Dreams - Lift Up in Center of First Area, Just Before Lift Down (Chest)", 173, False),  # Item: 1x Defense Sphere [2058h]
     ("SINS: City of Dying Dreams - First Open Area, Glyph in Northwest Corner (Chest)",             174, False),  # Item: 1x Megalixir [2009h]
     ("SINS: City of Dying Dreams - Secret Slide South of Rising Block Area (Chest)",                175, False),  # Gear: buki_get #54 [36h] { Yuna [01h], Weapon {SOS Overdrive [8010h]} }
-    ("REMI: Win the Chocobo Race (Event)",                                                          176, False),  # Key Item: Cloudy Mirror [A002h]
+    ("REMI: Win Chocobo Race (Event)",                                                              176, False),  # Key Item: Cloudy Mirror [A002h]
     ("MCWO: After Spherimorph (Jecht's Sphere)",                                                    177, False),  # Key Item: Jecht's Sphere [A020h]
     ("THPL: South - West Side, South of Save Sphere (Chest)",                                       178, False),  # Item: 2x Phoenix Down [2006h]
     ("THPL: South - West Side, North of Save Sphere (Chest)",                                       179, False),  # Item: 2x Hi-Potion [2001h]
