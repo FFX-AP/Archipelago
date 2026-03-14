@@ -8,7 +8,7 @@ from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasA
 # from rule_builder import set
 from worlds.generic.Rules import CollectionRule
 from . import key_items
-from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, party_member_items, region_unlock_items, equipItemOffset
+from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, overdrive_names, party_member_items, region_unlock_items, equipItemOffset
 from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset, OverdriveOffset
 
 if typing.TYPE_CHECKING:
@@ -695,13 +695,15 @@ def set_rules(world: FFXWorld) -> None:
     slice_and_dice  = world.get_location(world.location_id_to_name[1 | OverdriveOffset])
     energy_rain     = world.get_location(world.location_id_to_name[2 | OverdriveOffset])
     blitz_ace       = world.get_location(world.location_id_to_name[3 | OverdriveOffset])
-
-    world.set_rule(slice_and_dice, CanReachMinimumRegionRule(overdrive_regions, 2))
-    world.set_rule(energy_rain,    CanReachMinimumRegionRule(overdrive_regions, 4))
-    world.set_rule(blitz_ace,      CanReachMinimumRegionRule(overdrive_regions, 8))
+    
+    has_overdrive   = HasFromListUnique(*[f"Overdrive: {overdrive}" for overdrive in overdrive_names[:4]], count=1)
+    
+    world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(overdrive_regions, 2))
+    world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(overdrive_regions, 4))
+    world.set_rule(blitz_ace,      has_overdrive & CanReachMinimumRegionRule(overdrive_regions, 8))
 
     # ----------------------------------- Auron ---------------------------------- #
-    shooting_star   = world.get_location(world.location_id_to_name[5 | OverdriveOffset])
+    shooting_star   = world.get_location(world.location_id_to_name[4 | OverdriveOffset])
     banishing_blade = world.get_location(world.location_id_to_name[6 | OverdriveOffset])
     tornado         = world.get_location(world.location_id_to_name[7 | OverdriveOffset])
 

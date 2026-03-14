@@ -262,6 +262,22 @@ class TidusOverdrives(Toggle):
     option_on = 1
 
 
+class TidusEarlyOverdriveAccess(Choice):
+    """
+    This option can provide earlier access to a random one of Tidus's overdrives, to allow for earlier logical access to his overdrive locations.
+    Tidus requires at least one of his overdrives to be able to begind grinding towards his others.
+    - Off: Tidus begins with zero overdrives, and his overdrive locations will only be in logic once he has access to at least one, as well as an appropriate number of combat regions.
+    - Early: A random one of Tidus's overdrives will be placed globally in sphere 1. Otherwise, the same as 'Off'.
+    - Start With: Tidus will start with one random overdrive. His overdrive locations will be in logic immediately depending on the number of combat regions available.
+    Default is off.
+    """
+    display_name = "Tidus's Early Overdrive Access"
+    default = 0
+    option_off = 0
+    option_early = 1
+    option_start_with = 2
+
+
 class KimahriRonsoRages(Toggle):
     """
     Sets whether Kimahri's Ronso Rage locations are included or not. If off they will only have filler items.
@@ -386,6 +402,7 @@ class FFXOptions(PerGameCommonOptions):
     super_bosses: SuperBosses
     jecht_spheres: JechtSpheres
     tidus_overdrives: TidusOverdrives
+    tidus_early_overdrive_access: TidusEarlyOverdriveAccess
     kimahri_ronso_rages: KimahriRonsoRages
     trap_percentage: TrapPercentage
     logic_difficulty: LogicDifficulty
@@ -422,8 +439,6 @@ ffx_option_groups: dict[str, list[Any]] = {
         RecruitSanity,
         SuperBosses,
         JechtSpheres,
-        TidusOverdrives,
-        KimahriRonsoRages,
         AlwaysSensor,
         SkipContestOfAeons,
         SphereGridRandomization,
@@ -436,6 +451,12 @@ ffx_option_groups: dict[str, list[Any]] = {
         MiniGameCactuarVillage,
         MiniGameChocoboTraining,
         MiniGameChocoboRace,
+    ],
+
+    "Overdrive Options": [
+        TidusOverdrives,
+        TidusEarlyOverdriveAccess,
+        KimahriRonsoRages,
     ],
 
     "Monster Arena Options": [

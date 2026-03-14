@@ -185,31 +185,31 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
 ]]
 
 FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveOffset, *location) for location in [
-  # ("Overdrive: Spiral Cut",                                                                                    0,  False),
-    ("Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)",                                               1,  False),
-    ("Overdrive: Use Tidus's Overdrive 20 Times (Energy Rain)",                                                  2,  False),
-    ("Overdrive: Use Tidus's Overdrive 40 Times (Blitz Ace)",                                                    3,  False),
-  # ("Overdrive: Dragon Fang",                                                                                   4,  False),
-    ("Overdrive: Collect 1 Progressive Jecht's Sphere (Shooting Star)",                                          5,  False),
-    ("Overdrive: Collect 3 Progressive Jecht's Spheres (Banishing Blade)",                                       6,  False),
-    ("Overdrive: Collect 10 Progressive Jecht's Spheres (Tornado)",                                              7,  False),
-  # ("Ronso Rage: Jump",                                                                                         8,  False),
-    ("Ronso Rage: Use Lancet to Learn Fire Breath",                                                              9,  False), #Dual Horn, Valaha, Grendel, Yenke Ronso (m055, m056, m057, m135)
-    ("Ronso Rage: Use Lancet to Learn Seed Cannon",                                                              10, False), #Ragora, Grat, Sandragora, Ragora (m039, m040, m221, m234)
-    ("Ronso Rage: Use Lancet to Learn Self Destruct",                                                            11, False), #Bomb, Grenade, Puroboros, Biran Ronso (, m134)
-    ("Ronso Rage: Use Lancet to Learn Thrust Kick",                                                              12, False), #YKT-63, YKT-11, Biran Ronso (m195, m196, m134)
-    ("Ronso Rage: Use Lancet to Learn Stone Breath",                                                             13, False), #Basilisk, Anacondaur, Demonolith(?), Yenke Ronso, (m185, m186, m095, m135)
-    ("Ronso Rage: Use Lancet to Learn Aqua Breath",                                                              14, False), #Chimera, Chimera Brain, Chimera, Yenke Ronso (m087, m088, m227, m135)
-    ("Ronso Rage: Use Lancet to Learn Doom",                                                                     15, False), #Ghost, Wraith, Biran Ronso (m050, m220, m134)
-    ("Ronso Rage: Use Lancet to Learn White Wind",                                                               16, False), #Dark Flan, Spirit, Yenke Ronso (m021, m219, m135)
-    ("Ronso Rage: Use Lancet to Learn Bad Breath",                                                               17, False), #Malboro, Great Malboro (m064, m065)
-    ("Ronso Rage: Use Lancet to Learn Mighty Guard",                                                             18, False), #Behemoth, Behemoth King, Biran Ronso (m085, m086, m134)
-    ("Ronso Rage: Use Lancet to Learn Nova",                                                                     19, False), #Omega Weapon, Nemesis (m100, m276)
-  # ("Overdrive: Element Reels",                                                                                 20, False),
-    ("Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)",                                             21, False),
-    ("Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)",                    22, False),
-    ("Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)", 23, False),
-    ("BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)",                                     24, False), #Energy Blast
+  # ("Overdrive: Spiral Cut",                                                                                    0,   False),
+    ("Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)",                                               1,   False),
+    ("Overdrive: Use Tidus's Overdrive 20 Times (Energy Rain)",                                                  2,   False),
+    ("Overdrive: Use Tidus's Overdrive 40 Times (Blitz Ace)",                                                    3,   False),
+    ("Overdrive: Collect 1 Progressive Jecht's Sphere (Shooting Star)",                                          4,   False),
+  # ("Overdrive: Dragon Fang",                                                                                   5,   False),
+    ("Overdrive: Collect 3 Progressive Jecht's Spheres (Banishing Blade)",                                       6,   False),
+    ("Overdrive: Collect 10 Progressive Jecht's Spheres (Tornado)",                                              7,   False),
+  # ("Ronso Rage: Jump",                                                                                         8,   False),
+    ("Ronso Rage: Use Lancet to Learn Fire Breath",                                                              9,   False), #Dual Horn, Valaha, Grendel, Yenke Ronso (m055, m056, m057, m135)
+    ("Ronso Rage: Use Lancet to Learn Seed Cannon",                                                              10,  False), #Ragora, Grat, Sandragora, Ragora (m039, m040, m221, m234)
+    ("Ronso Rage: Use Lancet to Learn Self Destruct",                                                            11,  False), #Bomb, Grenade, Puroboros, Biran Ronso (, m134)
+    ("Ronso Rage: Use Lancet to Learn Thrust Kick",                                                              12,  False), #YKT-63, YKT-11, Biran Ronso (m195, m196, m134)
+    ("Ronso Rage: Use Lancet to Learn Stone Breath",                                                             13,  False), #Basilisk, Anacondaur, Demonolith(?), Yenke Ronso, (m185, m186, m095, m135)
+    ("Ronso Rage: Use Lancet to Learn Aqua Breath",                                                              14,  False), #Chimera, Chimera Brain, Chimera, Yenke Ronso (m087, m088, m227, m135)
+    ("Ronso Rage: Use Lancet to Learn Doom",                                                                     15,  False), #Ghost, Wraith, Biran Ronso (m050, m220, m134)
+    ("Ronso Rage: Use Lancet to Learn White Wind",                                                               16,  False), #Dark Flan, Spirit, Yenke Ronso (m021, m219, m135)
+    ("Ronso Rage: Use Lancet to Learn Bad Breath",                                                               17,  False), #Malboro, Great Malboro (m064, m065)
+    ("Ronso Rage: Use Lancet to Learn Mighty Guard",                                                             18,  False), #Behemoth, Behemoth King, Biran Ronso (m085, m086, m134)
+    ("Ronso Rage: Use Lancet to Learn Nova",                                                                     19,  False), #Omega Weapon, Nemesis (m100, m276)
+  # ("Overdrive: Element Reels",                                                                                 20,  False),
+    ("Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)",                                             21,  False),
+    ("Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)",                    22,  False),
+    ("Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)", 23,  False),
+    ("BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)",                                     109, False), #Energy Blast
 ]]
 
 FFXOverdriveModeLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveModeOffset, *location) for location in [

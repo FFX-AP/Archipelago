@@ -377,13 +377,41 @@ aeon_names = [
     "Magus Sisters",
 ]
 
+overdrive_names = [
+    "Spiral Cut",
+    "Slice and Dice",
+    "Energy Rain",
+    "Blitz Ace",
+    "Dragon Fang",
+    "Shooting Star",
+    "Banishing Blade",
+    "Tornado",
+    "Jump",
+    "Fire Breath",
+    "Seed Cannon",
+    "Self Destruct",
+    "Thrust Kick",
+    "Stone Breath",
+    "Aqua Breath",
+    "Doom",
+    "White Wind",
+    "Bad Breath",
+    "Mighty Guard",
+    "Nova",
+    "Element Reels",
+    "Attack Reels",
+    "Status Reels",
+    "Aurochs Reels",
+    "Requiem",
+]
+
 overdrive_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | overdriveItemOffset) for x in [
     ("Overdrive: Spiral Cut",       ItemClassification.progression, 0x0000),
     ("Overdrive: Slice and Dice",   ItemClassification.progression, 0x0001),
     ("Overdrive: Energy Rain",      ItemClassification.progression, 0x0002),
     ("Overdrive: Blitz Ace",        ItemClassification.progression, 0x0003),
-    ("Overdrive: Dragon Fang",      ItemClassification.progression, 0x0004),
-    ("Overdrive: Shooting Star",    ItemClassification.progression, 0x0005),
+    ("Overdrive: Shooting Star",    ItemClassification.progression, 0x0004),
+    ("Overdrive: Dragon Fang",      ItemClassification.progression, 0x0005),
     ("Overdrive: Banishing Blade",  ItemClassification.progression, 0x0006),
     ("Overdrive: Tornado",          ItemClassification.progression, 0x0007),
     ("Ronso Rage: Jump",            ItemClassification.progression, 0x0008),
@@ -402,7 +430,7 @@ overdrive_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | overdriveItemOffs
     ("Overdrive: Attack Reels",     ItemClassification.progression, 0x0015),
     ("Overdrive: Status Reels",     ItemClassification.progression, 0x0016),
     ("Overdrive: Aurochs Reels",    ItemClassification.progression, 0x0017),
-    ("Overdrive: Requiem",          ItemClassification.progression, 0x0018),
+    ("Overdrive: Requiem",          ItemClassification.progression, 0x0083),
 ]]
 
 abilities_per_character: list[ItemData] = [ ItemData(f"{character_names[character]} {ability[0]}", ItemClassification.progression, ability[1] | abilityItemOffset | character << 8) for character in range(7) for ability in [

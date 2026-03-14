@@ -3,7 +3,7 @@ Archipelago World definition for Final Fantasy X
 """
 
 from typing import ClassVar, Any, Optional
-from random import Random, shuffle
+from random import choice, Random, shuffle
 from settings import Group, FilePath
 
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
@@ -163,6 +163,14 @@ class FFXWorld(CachedRuleBuilderWorld):
         # ---------------------------- Overdrives ---------------------------- #
         for overdrive in overdrive_items:
             required_items.append(overdrive.itemName)
+        
+        if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_early:
+            overdrive = choice(overdrive_items[:4])
+            self.multiworld.early_items[self.player][overdrive.itemName] = 1
+        if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_start_with:
+            overdrive = choice(overdrive_items[:4])
+            self.multiworld.push_precollected(self.create_item(overdrive.itemName))
+            required_items.remove(overdrive.itemName)
 
         # ------------------------ Unfilled Locations ------------------------ #
         unfilled_locations = len(self.multiworld.get_unfilled_locations(self.player))
