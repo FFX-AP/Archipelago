@@ -463,13 +463,13 @@ def create_regions(world: FFXWorld, player) -> None:
         up_to_5             = world.options.mini_game_chocobo_race.option_up_to_5
 
         if up_to < up_to_5:
-            chocobo_race_location_ids.append(421)   # REMI: Win the Chocobo Race With 5 Chests (Event)
+            chocobo_race_location_ids.append(419)   # REMI: Win the Chocobo Race With 5 Chests (Event)
 
         if up_to < up_to_4:
             chocobo_race_location_ids.append(420)   # REMI: Win the Chocobo Race With 4 Chests (Event)
 
         if up_to < up_to_3:
-            chocobo_race_location_ids.append(419)   # REMI: Win the Chocobo Race With 3 Chests (Event)
+            chocobo_race_location_ids.append(421)   # REMI: Win the Chocobo Race With 3 Chests (Event)
 
         if up_to < up_to_2:
             chocobo_race_location_ids.append(418)   # REMI: Win the Chocobo Race With 2 Chests (Event)
