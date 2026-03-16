@@ -642,6 +642,9 @@ def set_rules(world: FFXWorld) -> None:
     # Mercury Sigil
     world.set_rule(world.get_location(world.location_id_to_name[279 | TreasureOffset]), CanReachRegion("Airship 1st visit: Post-Evrae"))
 
+    # Jupiter Sigil
+    world.set_rule(world.get_location(world.location_id_to_name[244 | TreasureOffset]), HasAll(*["Overdrive: Attack Reels", "Overdrive: Status Reels", "Overdrive: Aurochs Reels"]))
+
     # -------------------------- Celestial Upgrades -------------------------- #
     celestial_upgrades = [
         (38, 0x25, "Sun"),
