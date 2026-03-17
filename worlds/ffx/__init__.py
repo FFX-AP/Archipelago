@@ -234,6 +234,8 @@ class FFXWorld(CachedRuleBuilderWorld):
             "mini_game_cactuar_village": self.options.mini_game_cactuar_village.value,
             "mini_game_chocobo_training": self.options.mini_game_chocobo_training.value,
             "mini_game_chocobo_race": self.options.mini_game_chocobo_race.value,
+            "tidus_overdrive": self.options.tidus_overdrives.value,
+            "kimahri_ronso_rage": self.options.kimahri_ronso_rages.value,
             "recruit_sanity": self.options.recruit_sanity.value,
             "capture_sanity": self.options.capture_sanity.value,
             "creation_rewards": self.options.creation_rewards.value,

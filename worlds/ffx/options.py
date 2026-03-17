@@ -264,8 +264,8 @@ class TidusOverdrives(Toggle):
 
 class TidusEarlyOverdriveAccess(Choice):
     """
-    This option can provide earlier access to a random one of Tidus's overdrives, to allow for earlier logical access to his overdrive locations.
-    Tidus requires at least one of his overdrives to be able to begind grinding towards his others.
+    This option can provide early access to a random one of Tidus's overdrives, to allow for earlier logical access to his overdrive locations.
+    Tidus requires at least one of his overdrives to be able to begin grinding towards his others.
     - Off: Tidus begins with zero overdrives, and his overdrive locations will only be in logic once he has access to at least one, as well as an appropriate number of combat regions.
     - Early: A random one of Tidus's overdrives will be placed globally in sphere 1. Otherwise, the same as 'Off'.
     - Start With: Tidus will start with one random overdrive. His overdrive locations will be in logic immediately depending on the number of combat regions available.
