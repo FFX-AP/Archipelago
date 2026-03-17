@@ -22,7 +22,7 @@ class FFXItem(Item):
 
 gilItemOffset           = 0x1000
 normalItemOffset        = 0x2000
-overdriveItemOffset     = 0x4000
+overdriveItemOffset     = 0x3000
 equipItemOffset         = 0x5000
 trapItemOffset          = 0x9000
 keyItemOffset           = 0xA000
@@ -406,32 +406,32 @@ overdrive_names = [
 ]
 
 overdrive_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | overdriveItemOffset) for x in [
-    ("Overdrive: Spiral Cut",       ItemClassification.progression, 0x0000),
-    ("Overdrive: Slice and Dice",   ItemClassification.progression, 0x0001),
-    ("Overdrive: Energy Rain",      ItemClassification.progression, 0x0002),
-    ("Overdrive: Blitz Ace",        ItemClassification.progression, 0x0003),
-    ("Overdrive: Shooting Star",    ItemClassification.progression, 0x0004),
-    ("Overdrive: Dragon Fang",      ItemClassification.progression, 0x0005),
-    ("Overdrive: Banishing Blade",  ItemClassification.progression, 0x0006),
-    ("Overdrive: Tornado",          ItemClassification.progression, 0x0007),
-    ("Ronso Rage: Jump",            ItemClassification.progression, 0x0008),
-    ("Ronso Rage: Fire Breath",     ItemClassification.progression, 0x0009),
-    ("Ronso Rage: Seed Cannon",     ItemClassification.progression, 0x000A),
-    ("Ronso Rage: Self Destruct",   ItemClassification.progression, 0x000B),
-    ("Ronso Rage: Thrust Kick",     ItemClassification.progression, 0x000C),
-    ("Ronso Rage: Stone Breath",    ItemClassification.progression, 0x000D),
-    ("Ronso Rage: Aqua Breath",     ItemClassification.progression, 0x000E),
-    ("Ronso Rage: Doom",            ItemClassification.progression, 0x000F),
-    ("Ronso Rage: White Wind",      ItemClassification.progression, 0x0010),
-    ("Ronso Rage: Bad Breath",      ItemClassification.progression, 0x0011),
-    ("Ronso Rage: Mighty Guard",    ItemClassification.progression, 0x0012),
-    ("Ronso Rage: Nova",            ItemClassification.progression, 0x0013),
-    ("Overdrive: Element Reels",    ItemClassification.progression, 0x0014),
-    ("Overdrive: Attack Reels",     ItemClassification.progression, 0x0015),
-    ("Overdrive: Status Reels",     ItemClassification.progression, 0x0016),
-    ("Overdrive: Aurochs Reels",    ItemClassification.progression, 0x0017),
-    ("Overdrive: Requiem",          ItemClassification.progression, 0x0083),
+    ("Overdrive: Spiral Cut",       ItemClassification.progression, 0x0060),
+    ("Overdrive: Slice and Dice",   ItemClassification.progression, 0x0061),
+    ("Overdrive: Energy Rain",      ItemClassification.progression, 0x0062),
+    ("Overdrive: Blitz Ace",        ItemClassification.progression, 0x0063),
+    ("Overdrive: Shooting Star",    ItemClassification.progression, 0x0064),
+    ("Overdrive: Dragon Fang",      ItemClassification.progression, 0x0065),
+    ("Overdrive: Banishing Blade",  ItemClassification.progression, 0x0066),
+    ("Overdrive: Tornado",          ItemClassification.progression, 0x0067),
+    ("Ronso Rage: Jump",            ItemClassification.progression, 0x0068),
+    ("Ronso Rage: Fire Breath",     ItemClassification.progression, 0x0069),
+    ("Ronso Rage: Seed Cannon",     ItemClassification.progression, 0x006A),
+    ("Ronso Rage: Self Destruct",   ItemClassification.progression, 0x006B),
+    ("Ronso Rage: Thrust Kick",     ItemClassification.progression, 0x006C),
+    ("Ronso Rage: Stone Breath",    ItemClassification.progression, 0x006D),
+    ("Ronso Rage: Aqua Breath",     ItemClassification.progression, 0x006E),
+    ("Ronso Rage: Doom",            ItemClassification.progression, 0x006F),
+    ("Ronso Rage: White Wind",      ItemClassification.progression, 0x0070),
+    ("Ronso Rage: Bad Breath",      ItemClassification.progression, 0x0071),
+    ("Ronso Rage: Mighty Guard",    ItemClassification.progression, 0x0072),
+    ("Ronso Rage: Nova",            ItemClassification.progression, 0x0073),
+    ("Overdrive: Element Reels",    ItemClassification.progression, 0x0074),
+    ("Overdrive: Attack Reels",     ItemClassification.progression, 0x0075),
+    ("Overdrive: Status Reels",     ItemClassification.progression, 0x0076),
+    ("Overdrive: Aurochs Reels",    ItemClassification.progression, 0x0077),
     ("Overdrive: Energy Blast",     ItemClassification.progression, 0x00CD),
+    ("Overdrive: Requiem",          ItemClassification.progression, 0x00E3),
 ]]
 
 abilities_per_character: list[ItemData] = [ ItemData(f"{character_names[character]} {ability[0]}", ItemClassification.progression, ability[1] | abilityItemOffset | character << 8) for character in range(7) for ability in [

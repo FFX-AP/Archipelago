@@ -21,13 +21,13 @@ class FFXLocationData(NamedTuple):
 
 TreasureOffset: int = 0x1000
 BossOffset: int = 0x2000
-PartyMemberOffset: int = 0x3000
-OverdriveOffset: int = 0x4000
+OverdriveOffset: int = 0x3000
 OverdriveModeOffset: int = 0x5000
 OtherOffset: int = 0x6000
 RecruitOffset: int = 0x7000
 SphereGridOffset: int = 0x8000
 CaptureOffset: int = 0x9000
+PartyMemberOffset: int = 0xF000
 
 location_types: Dict[int, str] = {
     TreasureOffset: "Treasure",
