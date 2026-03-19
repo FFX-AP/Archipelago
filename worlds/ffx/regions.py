@@ -640,20 +640,30 @@ def create_regions(world: FFXWorld, player) -> None:
 
     # ------------------------------ Overdrives ------------------------------ #
     # Tidus
-    if not world.options.tidus_overdrives.value:
-        overdrive_locations_ids = [
-          # 0,  # Overdrive: Spiral Cut
-            1,  # Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)
-            2,  # Overdrive: Use Tidus's Overdrive 30 Times (Energy Rain)
-            3,  # Overdrive: Use Tidus's Overdrive 80 Times (Blitz Ace)
-        ]
-        for id in overdrive_locations_ids:
+    if not world.options.tidus_overdrives.value == world.options.tidus_overdrives.option_up_to_blitz_ace:
+        overdrive_location_ids = []
+
+        up_to = world.options.tidus_overdrives.value
+        slice_and_dice = world.options.tidus_overdrives.option_up_to_slice_and_dice
+        energy_rain = world.options.tidus_overdrives.option_up_to_energy_rain
+        blitz_ace = world.options.tidus_overdrives.option_up_to_blitz_ace
+
+        if up_to < blitz_ace:
+            overdrive_location_ids.append(3) # Overdrive: Use Tidus's Overdrive 80 Times (Blitz Ace)
+
+        if up_to < energy_rain:
+            overdrive_location_ids.append(2) # Overdrive: Use Tidus's Overdrive 30 Times (Energy Rain)
+
+        if up_to < slice_and_dice:
+            overdrive_location_ids.append(1) # Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)
+
+        for id in overdrive_location_ids:
             location_name = world.location_id_to_name[id | OverdriveOffset]
             world.options.exclude_locations.value.add(location_name) 
     
     # Kimahri
     if not world.options.kimahri_ronso_rages.value:
-        overdrive_locations_ids = [
+        overdrive_location_ids = [
           # 8,  # Ronso Rage: Jump
             9,  # Ronso Rage: Use Lancet to Learn Fire Breath
             10, # Ronso Rage: Use Lancet to Learn Seed Cannon
@@ -667,7 +677,7 @@ def create_regions(world: FFXWorld, player) -> None:
             18, # Ronso Rage: Use Lancet to Learn Mighty Guard
             19, # Ronso Rage: Use Lancet to Learn Nova
         ]
-        for id in overdrive_locations_ids:
+        for id in overdrive_location_ids:
             location_name = world.location_id_to_name[id | OverdriveOffset]
             world.options.exclude_locations.value.add(location_name) 
                 

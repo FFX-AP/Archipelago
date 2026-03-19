@@ -259,7 +259,9 @@ class TidusOverdrives(Toggle):
     display_name = "Tidus's Overdrives"
     default = 0
     option_off = 0
-    option_on = 1
+    option_up_to_slice_and_dice = 1
+    option_up_to_energy_rain = 2
+    option_up_to_blitz_ace = 3
 
 
 class TidusEarlyOverdriveAccess(Choice):
