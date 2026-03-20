@@ -109,6 +109,12 @@ class WebHostContext(Context):
         except ImportError:
             self.logger.debug("Context destroyed")
 
+    def _load_game_data(self):
+        for key, value in self.static_server_data.items():
+            # NOTE: attributes are mutable and shared, so they will have to be copied before being modified
+            setattr(self, key, value)
+        self.non_hintable_names = collections.defaultdict(frozenset, self.non_hintable_names)
+
     async def listen_to_db_commands(self):
         cmdprocessor = DBCommandProcessor(self)
 
@@ -316,19 +322,9 @@ def tear_down_logging(room_id):
         del logging.Logger.manager.loggerDict[logger_name]
 
 
-def run_server_process(
-        name: str,
-        ponyconfig: dict[str, typing.Any],
-        static_server_data: StaticServerData,
-        cert_file: typing.Optional[str],
-        cert_key_file: typing.Optional[str],
-        host: str,
-        game_ports: typing.Iterable[str | int],
-        rooms_to_run: multiprocessing.Queue,
-        rooms_shutting_down: multiprocessing.Queue,
-) -> None:
-    import gc
-
+def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
+                       cert_file: typing.Optional[str], cert_key_file: typing.Optional[str],
+                       host: str, rooms_to_run: multiprocessing.Queue, rooms_shutting_down: multiprocessing.Queue):
     from setproctitle import setproctitle
 
     setproctitle(name)
