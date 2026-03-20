@@ -3,9 +3,8 @@ from collections import Counter
 from dataclasses import dataclass
 from typing_extensions import override
 
-from BaseClasses import CollectionState, Location, Region
+from BaseClasses import CollectionState, Location
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
-# from rule_builder import set
 from worlds.generic.Rules import CollectionRule
 from . import key_items
 from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, overdrive_names, party_member_items, region_unlock_items, equipItemOffset
@@ -92,30 +91,47 @@ class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        sum = 0
-        for location in self.locations:
-            if CanReachLocation(location.name) is not None:
-                sum += 1
-                if sum >= self.locations_required:
-                    return True_().resolve(world)
-        return False_().resolve(world)
+        return self.Resolved(tuple([location.name for location in self.locations]), 
+                             self.locations_required, player=world.player)
+    
+    class Resolved(Rule.Resolved):
+        locations: tuple[str, ...]
+        locations_required: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            sum = 0
+            for location in self.locations:
+                if state.can_reach_location(location, self.player):
+                    sum += 1
+                    if sum >= self.locations_required:
+                        return True
+            return False
 
       
 @dataclass()
 class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
     """A rule that checks if a required number of regions are reachable from a given list of regions"""
-    regions: list[Region]
+    regions: list[str]
     regions_required: int
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        sum = 0
-        for region in self.regions:
-            if CanReachRegion(region.name) is not None:
-                sum += 1
-                if sum >= self.regions_required:
-                    return True_().resolve(world)
-        return False_().resolve(world)
+        return self.Resolved(tuple(self.regions), self.regions_required, player=world.player)
+    
+    class Resolved(Rule.Resolved):
+        regions: tuple[str, ...]
+        regions_required: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            sum = 0
+            for region in self.regions:
+                if state.can_reach_region(region, self.player):
+                    sum += 1
+                    if sum >= self.regions_required:
+                        return True
+            return False
 
 
 @dataclass()
@@ -704,9 +720,9 @@ def set_rules(world: FFXWorld) -> None:
     
     has_overdrive   = HasFromListUnique(*[f"Overdrive: {overdrive}" for overdrive in overdrive_names[:4]], count=1)
     
-    world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(overdrive_regions, 2))
-    world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(overdrive_regions, 4))
-    world.set_rule(blitz_ace,      has_overdrive & CanReachMinimumRegionRule(overdrive_regions, 8))
+    world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(combat_regions, 2))
+    world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(combat_regions, 4))
+    world.set_rule(blitz_ace,      has_overdrive & CanReachMinimumRegionRule(combat_regions, 8))
 
     # ----------------------------------- Auron ---------------------------------- #
     shooting_star   = world.get_location(world.location_id_to_name[4 | OverdriveOffset])
