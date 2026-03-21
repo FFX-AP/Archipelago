@@ -185,14 +185,14 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
 ]]
 
 FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveOffset, *location) for location in [
-  # ("Overdrive: Spiral Cut",                                                                                    0,   False),
-    ("Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)",                                               1,   False),
-    ("Overdrive: Use Tidus's Overdrive 20 Times (Energy Rain)",                                                  2,   False),
-    ("Overdrive: Use Tidus's Overdrive 40 Times (Blitz Ace)",                                                    3,   False),
-    ("Overdrive: Collect 1 Progressive Jecht's Sphere (Shooting Star)",                                          4,   False),
-  # ("Overdrive: Dragon Fang",                                                                                   5,   False),
-    ("Overdrive: Collect 3 Progressive Jecht's Spheres (Banishing Blade)",                                       6,   False),
-    ("Overdrive: Collect 10 Progressive Jecht's Spheres (Tornado)",                                              7,   False),
+  # ("Swordplay: Spiral Cut",                                                                                    0,   False),
+    ("Swordplay: Use Tidus's Overdrive 10 Times (Slice and Dice)",                                               1,   False),
+    ("Swordplay: Use Tidus's Overdrive 20 Times (Energy Rain)",                                                  2,   False),
+    ("Swordplay: Use Tidus's Overdrive 40 Times (Blitz Ace)",                                                    3,   False),
+    ("Bushido: Collect 1 Progressive Jecht's Sphere (Shooting Star)",                                            4,   False),
+  # ("Bushido: Dragon Fang",                                                                                     5,   False),
+    ("Bushido: Collect 3 Progressive Jecht's Spheres (Banishing Blade)",                                         6,   False),
+    ("Bushido: Collect 10 Progressive Jecht's Spheres (Tornado)",                                                7,   False),
   # ("Ronso Rage: Jump",                                                                                         8,   False),
     ("Ronso Rage: Use Lancet to Learn Fire Breath",                                                              9,   False), #Dual Horn, Valaha, Grendel, Yenke Ronso (m055, m056, m057, m135)
     ("Ronso Rage: Use Lancet to Learn Seed Cannon",                                                              10,  False), #Ragora, Grat, Sandragora, Ragora (m039, m040, m221, m234)
@@ -205,10 +205,10 @@ FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Ove
     ("Ronso Rage: Use Lancet to Learn Bad Breath",                                                               17,  False), #Malboro, Great Malboro (m064, m065)
     ("Ronso Rage: Use Lancet to Learn Mighty Guard",                                                             18,  False), #Behemoth, Behemoth King, Biran Ronso (m085, m086, m134)
     ("Ronso Rage: Use Lancet to Learn Nova",                                                                     19,  False), #Omega Weapon, Nemesis (m100, m276)
-  # ("Overdrive: Element Reels",                                                                                 20,  False),
-    ("Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)",                                             21,  False),
-    ("Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)",                    22,  False),
-    ("Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)", 23,  False),
+  # ("Reels: Element Reels",                                                                                     20,  False),
+    ("Reels: Come 1st in a Blitzball Tournament (Attack Reels)",                                                 21,  False),
+    ("Reels: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)",                        22,  False),
+    ("Reels: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)",     23,  False),
     ("BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)",                                     109, False), #Energy Blast
 ]]
 
