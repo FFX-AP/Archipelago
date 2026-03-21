@@ -660,9 +660,9 @@ def set_rules(world: FFXWorld) -> None:
 
     # Jupiter Sigil
     world.set_rule(world.get_location(world.location_id_to_name[244 | TreasureOffset]), 
-                   CanReachLocation("Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)") & 
-                   CanReachLocation("Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)") & 
-                   CanReachLocation("Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)"))
+                   CanReachLocation("Reels: Come 1st in a Blitzball Tournament (Attack Reels)") & 
+                   CanReachLocation("Reels: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)") & 
+                   CanReachLocation("Reels: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)"))
 
     # -------------------------- Celestial Upgrades -------------------------- #
     celestial_upgrades = [
@@ -737,8 +737,8 @@ def set_rules(world: FFXWorld) -> None:
     status_reels    = world.get_location(world.location_id_to_name[22 | OverdriveOffset])
     aurochs_reels   = world.get_location(world.location_id_to_name[23 | OverdriveOffset])
 
-    world.set_rule(status_reels,  CanReachLocation("Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)"))
-    world.set_rule(aurochs_reels, CanReachLocation("Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)"))
+    world.set_rule(status_reels,  CanReachLocation("Reels: Come 1st in a Blitzball Tournament (Attack Reels)"))
+    world.set_rule(aurochs_reels, CanReachLocation("Reels: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)"))
 
     # ---------------------------------------------------------------------------- #
     #                                     Todo                                     #
