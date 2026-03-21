@@ -251,7 +251,7 @@ class JechtSpheres(Toggle):
     option_on = 1
 
 
-class TidusOverdrives(Toggle):
+class TidusOverdrives(Choice):
     """
     Sets whether Tidus's Overdrive locations are included or not. If off they will only have filler items.
     Default is off.

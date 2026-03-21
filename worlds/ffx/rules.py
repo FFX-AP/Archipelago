@@ -718,7 +718,7 @@ def set_rules(world: FFXWorld) -> None:
     energy_rain     = world.get_location(world.location_id_to_name[2 | OverdriveOffset])
     blitz_ace       = world.get_location(world.location_id_to_name[3 | OverdriveOffset])
     
-    has_overdrive   = HasFromListUnique(*[f"Overdrive: {overdrive}" for overdrive in overdrive_names[:4]], count=1)
+    has_overdrive   = HasFromListUnique(*[f"Swordplay: {overdrive}" for overdrive in overdrive_names[:4]], count=1)
     
     world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(combat_regions, 2))
     world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(combat_regions, 4))
