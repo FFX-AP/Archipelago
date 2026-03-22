@@ -3,13 +3,12 @@ from collections import Counter
 from dataclasses import dataclass
 from typing_extensions import override
 
-from BaseClasses import CollectionState, Location, Region
+from BaseClasses import CollectionState, Location
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
-# from rule_builder import set
 from worlds.generic.Rules import CollectionRule
 from . import key_items
-from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, party_member_items, region_unlock_items, equipItemOffset
-from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset
+from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, overdrive_names, party_member_items, region_unlock_items, equipItemOffset
+from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset, OverdriveOffset
 
 if typing.TYPE_CHECKING:
     from .__init__ import FFXWorld
@@ -71,11 +70,15 @@ region_to_first_visit: dict[str, str] = {
 @dataclass()
 class AbilityRule(Rule[FFXWorld], game="Final Fantasy X"):
     ability_name: str
+    character_name: str | None
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        if world.options.sphere_grid_randomization.value == world.options.sphere_grid_randomization.option_on:
-            return HasAny(HasAll([f"{name} Ability: {self.ability_name}", f"Party Member: {name}"]) for name in character_names).resolve(world)
+        if world.options.sphere_grid_randomization.value:
+            if self.character_name is not None:
+                return Has(f"{self.character_name} Ability: {self.ability_name}").resolve(world)
+            else:
+                return HasAny(HasAll([f"{name} Ability: {self.ability_name}", f"Party Member: {name}"]) for name in character_names).resolve(world)
         else:
             return True_().resolve(world)
 
@@ -88,30 +91,47 @@ class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        sum = 0
-        for location in self.locations:
-            if CanReachLocation(location.name) is not None:
-                sum += 1
-                if sum >= self.locations_required:
-                    return True_().resolve(world)
-        return False_().resolve(world)
+        return self.Resolved(tuple([location.name for location in self.locations]), 
+                             self.locations_required, player=world.player)
     
+    class Resolved(Rule.Resolved):
+        locations: tuple[str, ...]
+        locations_required: int
 
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            sum = 0
+            for location in self.locations:
+                if state.can_reach_location(location, self.player):
+                    sum += 1
+                    if sum >= self.locations_required:
+                        return True
+            return False
+
+      
 @dataclass()
 class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
     """A rule that checks if a required number of regions are reachable from a given list of regions"""
-    regions: list[Region]
+    regions: list[str]
     regions_required: int
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        sum = 0
-        for region in self.regions:
-            if CanReachRegion(region.name) is not None:
-                sum += 1
-                if sum >= self.regions_required:
-                    return True_().resolve(world)
-        return False_().resolve(world)
+        return self.Resolved(tuple(self.regions), self.regions_required, player=world.player)
+    
+    class Resolved(Rule.Resolved):
+        regions: tuple[str, ...]
+        regions_required: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            sum = 0
+            for region in self.regions:
+                if state.can_reach_region(region, self.player):
+                    sum += 1
+                    if sum >= self.regions_required:
+                        return True
+            return False
 
 
 @dataclass()
@@ -315,7 +335,7 @@ regionBossRuleDict: dict[str, Rule] = {
     "Evrae Altana":        LogicDifficultyRule(12) & MinSwimmerRule(3),
     "Seymour Natus":       LogicDifficultyRule(12) & MinPartyRule  (3),
     "Defender X":          LogicDifficultyRule(13) & MinPartyRule  (3),
-    "Biran and Yenke":     LogicDifficultyRule(14) & MinPartyRule  (3),
+    "Biran and Yenke":     LogicDifficultyRule(14) & Has("Party Member: Kimahri"),
     "Seymour Flux":        LogicDifficultyRule(14) & MinPartyRule  (3),
     "Sanctuary Keeper":    LogicDifficultyRule(14) & MinPartyRule  (3),
     "Spectral Keeper":     LogicDifficultyRule(15) & MinPartyRule  (3),
@@ -327,10 +347,12 @@ regionBossRuleDict: dict[str, Rule] = {
     "Braska's Final Aeon": LogicDifficultyRule(16) & MinPartyRule  (3),
     "Ultima Weapon":       LogicDifficultyRule(17) & MinPartyRule  (3),
     "Omega Weapon":        LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Nemesis":             LogicDifficultyRule(18) & MinPartyRule  (3),
 }
 
 staticEncounterRuleDict: dict[str, Rule] = {
-    "Belgemine":    MinSummonRule(2)
+    "Belgemine":    MinSummonRule(2),
+    "Ronso Rage":   Has("Party Member: Kimahri")
 }
 
 arenaBossRuleDict: dict[int, Rule] = {
@@ -636,6 +658,12 @@ def set_rules(world: FFXWorld) -> None:
     # Mercury Sigil
     world.set_rule(world.get_location(world.location_id_to_name[279 | TreasureOffset]), CanReachRegion("Airship 1st visit: Post-Evrae"))
 
+    # Jupiter Sigil
+    world.set_rule(world.get_location(world.location_id_to_name[244 | TreasureOffset]), 
+                   CanReachLocation("Slots: Come 1st in a Blitzball Tournament (Attack Reels)") & 
+                   CanReachLocation("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)") & 
+                   CanReachLocation("Slots: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)"))
+
     # -------------------------- Celestial Upgrades -------------------------- #
     celestial_upgrades = [
         (38, 0x25, "Sun"),
@@ -659,6 +687,62 @@ def set_rules(world: FFXWorld) -> None:
     # Complete Al Bhed Primers
     world.set_rule(world.get_location(world.location_id_to_name[405 | TreasureOffset]), Has("Progressive Al Bhed Primer", count=26))
 
+
+    # ---------------------------------------------------------------------------- #
+    #                                  Overdrives                                  #
+    # ---------------------------------------------------------------------------- #
+
+    # ----------------------------------- Tidus ---------------------------------- #
+    combat_regions: list[str] = [
+        "Besaid Island 1st visit",
+        "Kilika 1st visit: Pre-Geneaux",
+        "Mi'ihen Highroad 1st visit: Pre-Chocobo Eater",
+        "Mushroom Rock Road 1st visit: Pre-Sinspawn Gui",
+        "Djose 1st visit",
+        "Moonflow 1st visit: Pre-Extractor",
+        "Thunder Plains 1st visit",
+        "Macalania Woods 1st visit: Pre-Spherimorph",
+        "Bikanel 1st visit: Post-Zu",
+        "Airship 1st visit: Pre-Evrae",
+        "Bevelle 1st visit: Pre-Isaaru",
+        "Calm Lands 1st visit: Pre-Defender X",
+        "Cavern of the Stolen Fayth 1st visit",
+        "Mt. Gagazet 1st visit: Post-Biran and Yenke",
+        "Zanarkand Ruins 1st visit: Pre-Spectral Keeper",
+        "Sin: Pre-Seymour Omnis",
+        "Omega Ruins: Pre-Ultima Weapon"
+    ]
+    overdrive_regions = [world.get_region(region_name) for region_name in combat_regions]
+    
+    slice_and_dice  = world.get_location(world.location_id_to_name[1 | OverdriveOffset])
+    energy_rain     = world.get_location(world.location_id_to_name[2 | OverdriveOffset])
+    blitz_ace       = world.get_location(world.location_id_to_name[3 | OverdriveOffset])
+    
+    has_overdrive   = HasFromListUnique(*[f"Swordplay: {overdrive}" for overdrive in overdrive_names[:4]], count=1)
+    
+    world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(combat_regions, 4))
+    world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(combat_regions, 8))
+    world.set_rule(blitz_ace,      has_overdrive & CanReachMinimumRegionRule(combat_regions, 14))
+
+    # ----------------------------------- Auron ---------------------------------- #
+    shooting_star   = world.get_location(world.location_id_to_name[4 | OverdriveOffset])
+    banishing_blade = world.get_location(world.location_id_to_name[6 | OverdriveOffset])
+    tornado         = world.get_location(world.location_id_to_name[7 | OverdriveOffset])
+
+    world.set_rule(shooting_star,   Has("Progressive Jecht's Sphere", count=1))
+    world.set_rule(banishing_blade, Has("Progressive Jecht's Sphere", count=3))
+    world.set_rule(tornado,         Has("Progressive Jecht's Sphere", count=10))
+
+    # ----------------------------------- Wakka ---------------------------------- #
+    status_reels    = world.get_location(world.location_id_to_name[22 | OverdriveOffset])
+    aurochs_reels   = world.get_location(world.location_id_to_name[23 | OverdriveOffset])
+
+    world.set_rule(status_reels,  CanReachLocation("Slots: Come 1st in a Blitzball Tournament (Attack Reels)"))
+    world.set_rule(aurochs_reels, CanReachLocation("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)"))
+
+    # ---------------------------------------------------------------------------- #
+    #                                     Todo                                     #
+    # ---------------------------------------------------------------------------- #
 
     # TODO: Disabled for now due to multiple bugs related to this location (Ship softlocks + possible Macalania softlock)
     # Clasko S.S. Liki second visit (Talk to Clasko before Crawler and make sure to have him become a Chocobo Breeder)

@@ -7,7 +7,7 @@ from typing import Callable, NamedTuple, List
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
     FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, \
     FFXSphereGridLocations, FFXCaptureLocations, FFXLocationData, TreasureOffset, BossOffset, PartyMemberOffset, \
-    RecruitOffset, CaptureOffset, OtherOffset
+    RecruitOffset, CaptureOffset, OtherOffset, OverdriveOffset
 from rule_builder.rules import Rule, Has
 from .rules import regionRuleDict, regionBossRuleDict, staticEncounterRuleDict, GoalRequirementRule, PrimerRequirementRule
 from .items import party_member_items, key_items, FFXItem
@@ -202,7 +202,6 @@ def create_regions(world: FFXWorld, player) -> None:
     all_locations = []
 
     # ------------------------ Add Locations by Region ----------------------- #
-
     for region_data in region_data_list:
         new_region = Region(region_data.name, player, world.multiworld)
         region_dict[region_data.id] = new_region
@@ -217,7 +216,7 @@ def create_regions(world: FFXWorld, player) -> None:
         add_locations_by_ids(new_region, region_data.bosses, FFXBossLocations, "Boss")
 
         # TODO: Implement in client
-        # add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
+        add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
 
         add_locations_by_ids(new_region, region_data.other, FFXOtherLocations, "Other")
 
@@ -226,8 +225,11 @@ def create_regions(world: FFXWorld, player) -> None:
     for location_id, region_name in captureDict.items():
         add_locations_by_ids(world.get_region(region_name), [location_id], FFXCaptureLocations, "Capture")
 
+    for location_data in FFXOverdriveLocations[:6]:
+        overdrive_location = FFXLocation(player, location_data.name, location_data.rom_address, menu_region)
+        menu_region.locations.append(overdrive_location)
+
     # ---------------------------- Entrance Rules ---------------------------- #
-    
     for region_data in region_data_list:
         curr_region = region_dict[region_data.id]
         for region_id in region_data.leads_to:
@@ -271,24 +273,40 @@ def create_regions(world: FFXWorld, player) -> None:
 
     # ------------------------------- Blitzball ------------------------------ #
     if not world.options.mini_game_blitzball.value is world.options.mini_game_blitzball.option_up_to_sigil:
-        blitzball_location_ids = []
+        blitzball_treasure_location_ids  = []
+        blitzball_overdrive_location_ids = []
 
-        up_to = world.options.mini_game_blitzball.value
-        up_to_story = world.options.mini_game_blitzball.option_up_to_story
-        up_to_celestial = world.options.mini_game_blitzball.option_up_to_celestial
-        up_to_sigil = world.options.mini_game_blitzball.option_up_to_sigil
+        up_to                = world.options.mini_game_blitzball.value
+        up_to_story          = world.options.mini_game_blitzball.option_up_to_story
+        up_to_world_champion = world.options.mini_game_blitzball.option_up_to_world_champion
+        up_to_attack_reels   = world.options.mini_game_blitzball.option_up_to_attack_reels
+        up_to_status_reels   = world.options.mini_game_blitzball.option_up_to_status_reels
+        up_to_aurochs_reels  = world.options.mini_game_blitzball.option_up_to_aurochs_reels
+        up_to_sigil          = world.options.mini_game_blitzball.option_up_to_sigil
 
         if up_to < up_to_sigil:
-          blitzball_location_ids.append(244) # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
+            blitzball_treasure_location_ids.append(244) # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
         
-        if up_to < up_to_celestial:
-          blitzball_location_ids.append(93) # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
+        if up_to < up_to_aurochs_reels:
+            blitzball_overdrive_location_ids.append(23) # Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)
+        
+        if up_to < up_to_status_reels:
+            blitzball_overdrive_location_ids.append(22) # Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)
+        
+        if up_to < up_to_attack_reels:
+            blitzball_overdrive_location_ids.append(21) # Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)
+
+        if up_to < up_to_world_champion:
+            blitzball_treasure_location_ids.append(93) # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
         
         if up_to < up_to_story:
-          blitzball_location_ids.append(497) # "LUCA: Win the Story Blitzball Tournament (Event)", 
+            blitzball_treasure_location_ids.append(497) # "LUCA: Win the Story Blitzball Tournament (Event)", 
 
-        for id in blitzball_location_ids:
+        for id in blitzball_treasure_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
+            world.options.exclude_locations.value.add(location_name)
+        for id in blitzball_overdrive_location_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
             world.options.exclude_locations.value.add(location_name)
     
     # ------------------------------ Butterflies ----------------------------- #
@@ -579,11 +597,14 @@ def create_regions(world: FFXWorld, player) -> None:
             44, # "Omega Ruins: Omega Weapon"
         ]
         super_boss_treasure_ids = [
-            332, # Omega Ruins - Behind Omega Weapon Chest
+            332, # OMGR: Omega Boss Arena (Chest)
             496, # MOAR: Become 'The One Who Conquered All' (Event)
         ]
         super_boss_other_ids = [
             27, # Jecht Sphere 2 - Requires Dark Valefor
+        ]
+        super_boss_overdrive_ids = [
+            19, # Ronso Rage: Use Lancet to Learn Nova
         ]
         for id in super_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]
@@ -593,7 +614,10 @@ def create_regions(world: FFXWorld, player) -> None:
             world.options.exclude_locations.value.add(location_name)
         for id in super_boss_other_ids:
             location_name = world.location_id_to_name[id | OtherOffset]
-            world.options.exclude_locations.value.add(location_name)    
+            world.options.exclude_locations.value.add(location_name)   
+        for id in super_boss_overdrive_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
+            world.options.exclude_locations.value.add(location_name) 
     
     # ---------------------------- Jecht's Spheres --------------------------- #
     if not world.options.jecht_spheres.value:
@@ -613,14 +637,55 @@ def create_regions(world: FFXWorld, player) -> None:
             world.options.exclude_locations.value.add(location_name) 
         location_name = world.location_id_to_name[177 | TreasureOffset]
         world.options.exclude_locations.value.add(location_name)
+
+    # ------------------------------ Overdrives ------------------------------ #
+    # Tidus
+    if not world.options.tidus_overdrives.value == world.options.tidus_overdrives.option_up_to_blitz_ace:
+        overdrive_location_ids = []
+
+        up_to = world.options.tidus_overdrives.value
+        slice_and_dice = world.options.tidus_overdrives.option_up_to_slice_and_dice
+        energy_rain = world.options.tidus_overdrives.option_up_to_energy_rain
+        blitz_ace = world.options.tidus_overdrives.option_up_to_blitz_ace
+
+        if up_to < blitz_ace:
+            overdrive_location_ids.append(3) # Overdrive: Use Tidus's Overdrive 80 Times (Blitz Ace)
+
+        if up_to < energy_rain:
+            overdrive_location_ids.append(2) # Overdrive: Use Tidus's Overdrive 30 Times (Energy Rain)
+
+        if up_to < slice_and_dice:
+            overdrive_location_ids.append(1) # Overdrive: Use Tidus's Overdrive 10 Times (Slice and Dice)
+
+        for id in overdrive_location_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
+            world.options.exclude_locations.value.add(location_name) 
     
+    # Kimahri
+    if not world.options.kimahri_ronso_rages.value:
+        overdrive_location_ids = [
+          # 8,  # Ronso Rage: Jump
+            9,  # Ronso Rage: Use Lancet to Learn Fire Breath
+            10, # Ronso Rage: Use Lancet to Learn Seed Cannon
+            11, # Ronso Rage: Use Lancet to Learn Self Destruct
+            12, # Ronso Rage: Use Lancet to Learn Thrust Kick
+            13, # Ronso Rage: Use Lancet to Learn Stone Breath
+            14, # Ronso Rage: Use Lancet to Learn Aqua Breath
+            15, # Ronso Rage: Use Lancet to Learn Doom
+            16, # Ronso Rage: Use Lancet to Learn White Wind
+            17, # Ronso Rage: Use Lancet to Learn Bad Breath
+            18, # Ronso Rage: Use Lancet to Learn Mighty Guard
+            19, # Ronso Rage: Use Lancet to Learn Nova
+        ]
+        for id in overdrive_location_ids:
+            location_name = world.location_id_to_name[id | OverdriveOffset]
+            world.options.exclude_locations.value.add(location_name) 
+                
 
     # ------------------------------------------------------------------------ #
     #                             Victory Condition                            #
     # ------------------------------------------------------------------------ #
-
-    
-    
+   
     final_region = world.get_region("Sin: Braska's Final Aeon")
     final_region.add_event("Sin: Braska's Final Aeon", "Victory", location_type=FFXLocation, item_type=FFXItem)
     final_aeon = world.get_location("Sin: Braska's Final Aeon")
