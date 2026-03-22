@@ -291,6 +291,17 @@ class KimahriRonsoRages(Toggle):
     option_on = 1
 
 
+class OverdriveModes(Toggle):
+    """
+    Sets whether you will start with all overdrive modes enabled for each chararcter.
+    Default is off.
+    """    
+    display_name = "Overdrive Modes"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+
 class LogicDifficulty(Range):
     """
     Sets how strict the logic is for region access. Higher is harder / less restrictive.
@@ -406,6 +417,7 @@ class FFXOptions(PerGameCommonOptions):
     tidus_overdrives: TidusOverdrives
     tidus_early_overdrive_access: TidusEarlyOverdriveAccess
     kimahri_ronso_rages: KimahriRonsoRages
+    overdrive_modes: OverdriveModes
     trap_percentage: TrapPercentage
     logic_difficulty: LogicDifficulty
     early_party_members: EarlyPartyMembers
@@ -459,6 +471,7 @@ ffx_option_groups: dict[str, list[Any]] = {
         TidusOverdrives,
         TidusEarlyOverdriveAccess,
         KimahriRonsoRages,
+        OverdriveModes,
     ],
 
     "Monster Arena Options": [
