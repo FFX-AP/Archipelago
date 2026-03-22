@@ -737,8 +737,8 @@ def set_rules(world: FFXWorld) -> None:
     status_reels    = world.get_location(world.location_id_to_name[22 | OverdriveOffset])
     aurochs_reels   = world.get_location(world.location_id_to_name[23 | OverdriveOffset])
 
-    world.set_rule(status_reels,  CanReachLocation("Reels: Come 1st in a Blitzball Tournament (Attack Reels)"))
-    world.set_rule(aurochs_reels, CanReachLocation("Reels: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)"))
+    world.set_rule(status_reels,  CanReachLocation("Slots: Come 1st in a Blitzball Tournament (Attack Reels)"))
+    world.set_rule(aurochs_reels, CanReachLocation("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)"))
 
     # ---------------------------------------------------------------------------- #
     #                                     Todo                                     #

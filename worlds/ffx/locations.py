@@ -205,10 +205,10 @@ FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Ove
     ("Ronso Rage: Use Lancet to Learn Bad Breath",                                                               17,  False), #Malboro, Great Malboro (m064, m065)
     ("Ronso Rage: Use Lancet to Learn Mighty Guard",                                                             18,  False), #Behemoth, Behemoth King, Biran Ronso (m085, m086, m134)
     ("Ronso Rage: Use Lancet to Learn Nova",                                                                     19,  False), #Omega Weapon, Nemesis (m100, m276)
-  # ("Reels: Element Reels",                                                                                     20,  False),
-    ("Reels: Come 1st in a Blitzball Tournament (Attack Reels)",                                                 21,  False),
-    ("Reels: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)",                        22,  False),
-    ("Reels: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)",     23,  False),
+  # ("Slots: Element Reels",                                                                                     20,  False),
+    ("Slots: Come 1st in a Blitzball Tournament (Attack Reels)",                                                 21,  False),
+    ("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)",                        22,  False),
+    ("Slots: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)",     23,  False),
     ("BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)",                                     109, False), #Energy Blast
 ]]
 
