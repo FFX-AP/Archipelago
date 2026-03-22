@@ -720,9 +720,9 @@ def set_rules(world: FFXWorld) -> None:
     
     has_overdrive   = HasFromListUnique(*[f"Swordplay: {overdrive}" for overdrive in overdrive_names[:4]], count=1)
     
-    world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(combat_regions, 2))
-    world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(combat_regions, 4))
-    world.set_rule(blitz_ace,      has_overdrive & CanReachMinimumRegionRule(combat_regions, 8))
+    world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(combat_regions, 4))
+    world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(combat_regions, 8))
+    world.set_rule(blitz_ace,      has_overdrive & CanReachMinimumRegionRule(combat_regions, 14))
 
     # ----------------------------------- Auron ---------------------------------- #
     shooting_star   = world.get_location(world.location_id_to_name[4 | OverdriveOffset])
