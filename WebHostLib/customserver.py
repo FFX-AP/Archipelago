@@ -4,6 +4,7 @@ import asyncio
 import collections
 import datetime
 import functools
+import itertools
 import logging
 import multiprocessing
 import pickle
@@ -13,7 +14,9 @@ import threading
 import time
 import typing
 import sys
+from asyncio import AbstractEventLoop
 
+import psutil
 import websockets
 from pony.orm import commit, db_session, select
 
@@ -24,8 +27,10 @@ from MultiServer import (
     server_per_message_deflate_factory,
 )
 from Utils import restricted_loads, cache_argsless
+from NetUtils import GamesPackage
+from apmw.webhost.customserver.gamespackagecache import DBGamesPackageCache
 from .locker import Locker
-from .models import Command, GameDataPackage, Room, db
+from .models import Command, Room, db
 
 
 class CustomClientMessageProcessor(ClientMessageProcessor):
@@ -62,18 +67,39 @@ class DBCommandProcessor(ServerCommandProcessor):
 
 class WebHostContext(Context):
     room_id: int
+    video: dict[tuple[int, int], tuple[str, str]]
+    main_loop: AbstractEventLoop
+    static_server_data: StaticServerData
 
-    def __init__(self, static_server_data: dict, logger: logging.Logger):
+    def __init__(
+            self,
+            static_server_data: StaticServerData,
+            games_package_cache: DBGamesPackageCache,
+            logger: logging.Logger,
+    ) -> None:
         # static server data is used during _load_game_data to load required data,
         # without needing to import worlds system, which takes quite a bit of memory
-        self.static_server_data = static_server_data
-        super(WebHostContext, self).__init__("", 0, "", "", 1,
-                                             40, True, "enabled", "enabled",
-                                             "enabled", 0, 2, logger=logger)
-        del self.static_server_data
-        self.main_loop = asyncio.get_running_loop()
-        self.video = {}
+        super(WebHostContext, self).__init__(
+            "",
+            0,
+            "",
+            "",
+            1,
+            40,
+            True,
+            "enabled",
+            "enabled",
+            "enabled",
+            0,
+            2,
+            games_package_cache=games_package_cache,
+            logger=logger,
+        )
         self.tags = ["AP", "WebHost"]
+        self.video = {}
+        self.main_loop = asyncio.get_running_loop()
+        self.static_server_data = static_server_data
+        self.games_package_cache = games_package_cache
 
     def __del__(self):
         try:
@@ -89,19 +115,24 @@ class WebHostContext(Context):
             setattr(self, key, value)
         self.non_hintable_names = collections.defaultdict(frozenset, self.non_hintable_names)
 
-    def listen_to_db_commands(self):
+    async def listen_to_db_commands(self):
         cmdprocessor = DBCommandProcessor(self)
 
         while not self.exit_event.is_set():
-            with db_session:
-                commands = select(command for command in Command if command.room.id == self.room_id)
-                if commands:
-                    for command in commands:
-                        self.main_loop.call_soon_threadsafe(cmdprocessor, command.commandtext)
-                        command.delete()
-                    commit()
-            del commands
-            time.sleep(5)
+            await self.main_loop.run_in_executor(None, self._process_db_commands, cmdprocessor)
+            try:
+                await asyncio.wait_for(self.exit_event.wait(), 5)
+            except asyncio.TimeoutError:
+                pass
+
+    def _process_db_commands(self, cmdprocessor):
+        with db_session:
+            commands = select(command for command in Command if command.room.id == self.room_id)
+            if commands:
+                for command in commands:
+                    self.main_loop.call_soon_threadsafe(cmdprocessor, command.commandtext)
+                    command.delete()
+                commit()
 
     @db_session
     def load(self, room_id: int):
@@ -110,45 +141,17 @@ class WebHostContext(Context):
         if room.last_port:
             self.port = room.last_port
         else:
-            self.port = get_random_port()
+            self.port = 0
 
         multidata = self.decompress(room.seed.multidata)
-        game_data_packages = {}
+        return self._load(multidata, True)
 
-        static_gamespackage = self.gamespackage  # this is shared across all rooms
-        static_item_name_groups = self.item_name_groups
-        static_location_name_groups = self.location_name_groups
-        self.gamespackage = {"Archipelago": static_gamespackage.get("Archipelago", {})}  # this may be modified by _load
-        self.item_name_groups = {"Archipelago": static_item_name_groups.get("Archipelago", {})}
-        self.location_name_groups = {"Archipelago": static_location_name_groups.get("Archipelago", {})}
-        missing_checksum = False
-
-        for game in list(multidata.get("datapackage", {})):
-            game_data = multidata["datapackage"][game]
-            if "checksum" in game_data:
-                if static_gamespackage.get(game, {}).get("checksum") == game_data["checksum"]:
-                    # non-custom. remove from multidata and use static data
-                    # games package could be dropped from static data once all rooms embed data package
-                    del multidata["datapackage"][game]
-                else:
-                    row = GameDataPackage.get(checksum=game_data["checksum"])
-                    if row:  # None if rolled on >= 0.3.9 but uploaded to <= 0.3.8. multidata should be complete
-                        game_data_packages[game] = restricted_loads(row.data)
-                        continue
-                    else:
-                        self.logger.warning(f"Did not find game_data_package for {game}: {game_data['checksum']}")
-            else:
-                missing_checksum = True  # Game rolled on old AP and will load data package from multidata
-            self.gamespackage[game] = static_gamespackage.get(game, {})
-            self.item_name_groups[game] = static_item_name_groups.get(game, {})
-            self.location_name_groups[game] = static_location_name_groups.get(game, {})
-
-        if not game_data_packages and not missing_checksum:
-            # all static -> use the static dicts directly
-            self.gamespackage = static_gamespackage
-            self.item_name_groups = static_item_name_groups
-            self.location_name_groups = static_location_name_groups
-        return self._load(multidata, game_data_packages, True)
+    def _load_world_data(self):
+        # Use static_server_data, but skip static data package since that is in cache anyway.
+        # Also NOT importing worlds here!
+        # FIXME: does this copy the non_hintable_names (also for games not part of the room)?
+        self.non_hintable_names = collections.defaultdict(frozenset, self.static_server_data["non_hintable_names"])
+        del self.static_server_data  # Not used past this point. Free memory.
 
     def init_save(self, enabled: bool = True):
         self.saving = enabled
@@ -156,9 +159,9 @@ class WebHostContext(Context):
             with db_session:
                 savegame_data = Room.get(id=self.room_id).multisave
                 if savegame_data:
-                    self.set_save(restricted_loads(Room.get(id=self.room_id).multisave))
+                    self.set_save(restricted_loads(savegame_data))
             self._start_async_saving(atexit_save=False)
-        threading.Thread(target=self.listen_to_db_commands, daemon=True).start()
+        asyncio.create_task(self.listen_to_db_commands())
 
     @db_session
     def _save(self, exit_save: bool = False) -> bool:
@@ -167,7 +170,7 @@ class WebHostContext(Context):
         room.multisave = pickle.dumps(self.get_save())
         # saving only occurs on activity, so we can "abuse" this information to mark this as last_activity
         if not exit_save:  # we don't want to count a shutdown as activity, which would restart the server again
-            room.last_activity = datetime.datetime.utcnow()
+            room.last_activity = Utils.utcnow()
         return True
 
     def get_save(self) -> dict:
@@ -176,37 +179,116 @@ class WebHostContext(Context):
         return d
 
 
-def get_random_port():
-    return random.randint(49152, 65535)
+class GameRangePorts(typing.NamedTuple):
+    parsed_ports: list[range]
+    weights: list[int]
+    ephemeral_allowed: bool
+
+
+@functools.cache
+def parse_game_ports(game_ports: tuple[str | int, ...]) -> GameRangePorts:
+    parsed_ports: list[range] = []
+    weights: list[int] = []
+    ephemeral_allowed = False
+    total_length = 0
+
+    for item in game_ports:
+        if isinstance(item, str) and "-" in item:
+            start, end = map(int, item.split("-"))
+            x = range(start, end + 1)
+            total_length += len(x)
+            weights.append(total_length)
+            parsed_ports.append(x)
+        elif int(item) == 0:
+            ephemeral_allowed = True
+        else:
+            total_length += 1
+            weights.append(total_length)
+            num = int(item)
+            parsed_ports.append(range(num, num + 1))
+
+    return GameRangePorts(parsed_ports, weights, ephemeral_allowed)
+
+
+def weighted_random(ranges: list[range], cum_weights: list[int]) -> int:
+    [picked] = random.choices(ranges, cum_weights=cum_weights)
+    return random.randrange(picked.start, picked.stop, picked.step)
+
+
+def create_random_port_socket(game_ports: tuple[str | int, ...], host: str) -> socket.socket:
+    parsed_ports, weights, ephemeral_allowed = parse_game_ports(game_ports)
+    used_ports = get_used_ports()
+    i = 1024 if len(parsed_ports) > 0 else 0
+    while i > 0:
+        port_num = weighted_random(parsed_ports, weights)
+        if port_num in used_ports:
+            used_ports = get_used_ports()
+            continue
+
+        i -= 0
+
+        try:
+            return socket.create_server((host, port_num))
+        except OSError:
+            pass
+
+    if ephemeral_allowed:
+        return socket.create_server((host, 0))
+
+    raise OSError(98, "No available ports")
+
+
+def try_conns_per_process(p: psutil.Process) -> typing.Iterable[int]:
+    try:
+        return (c.laddr.port for c in p.net_connections("tcp4"))
+    except psutil.AccessDenied:
+        return ()
+
+
+def get_active_net_connections() -> typing.Iterable[int]:
+    # Don't even try to check if system using AIX
+    if psutil.AIX:
+        return ()
+
+    try:
+        return (c.laddr.port for c in psutil.net_connections("tcp4"))
+    # raises AccessDenied when done on macOS
+    except psutil.AccessDenied:
+        # flatten the list of iterables
+        return itertools.chain.from_iterable(map(
+            # get the net connections of the process and then map its ports
+            try_conns_per_process,
+            # this method has caching handled by psutil
+            psutil.process_iter(["net_connections"])
+        ))
+
+
+def get_used_ports():
+    last_used_ports: tuple[frozenset[int], float] | None = getattr(get_used_ports, "last", None)
+    t_hash = round(time.time() / 90)  # cache for 90 seconds
+    if last_used_ports is None or last_used_ports[1] != t_hash:
+        last_used_ports = (frozenset(get_active_net_connections()), t_hash)
+        setattr(get_used_ports, "last", last_used_ports)
+
+    return last_used_ports[0]
+
+
+class StaticServerData(typing.TypedDict, total=True):
+    non_hintable_names: dict[str, typing.AbstractSet[str]]
+    games_package: dict[str, GamesPackage]
 
 
 @cache_argsless
-def get_static_server_data() -> dict:
+def get_static_server_data() -> StaticServerData:
     import worlds
-    data = {
+
+    return {
         "non_hintable_names": {
             world_name: world.hint_blacklist
             for world_name, world in worlds.AutoWorldRegister.world_types.items()
         },
-        "gamespackage": {
-            world_name: {
-                key: value
-                for key, value in game_package.items()
-                if key not in ("item_name_groups", "location_name_groups")
-            }
-            for world_name, game_package in worlds.network_data_package["games"].items()
-        },
-        "item_name_groups": {
-            world_name: world.item_name_groups
-            for world_name, world in worlds.AutoWorldRegister.world_types.items()
-        },
-        "location_name_groups": {
-            world_name: world.location_name_groups
-            for world_name, world in worlds.AutoWorldRegister.world_types.items()
-        },
+        "games_package": worlds.network_data_package["games"]
     }
-
-    return data
 
 
 def set_up_logging(room_id) -> logging.Logger:
@@ -229,6 +311,17 @@ def set_up_logging(room_id) -> logging.Logger:
     return logger
 
 
+def tear_down_logging(room_id):
+    """Close logging handling for a room."""
+    logger_name = f"RoomLogger {room_id}"
+    if logger_name in logging.Logger.manager.loggerDict:
+        logger = logging.getLogger(logger_name)
+        for handler in logger.handlers[:]:
+            logger.removeHandler(handler)
+            handler.close()
+        del logging.Logger.manager.loggerDict[logger_name]
+
+
 def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
                        cert_file: typing.Optional[str], cert_key_file: typing.Optional[str],
                        host: str, rooms_to_run: multiprocessing.Queue, rooms_shutting_down: multiprocessing.Queue):
@@ -247,14 +340,17 @@ def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
         resource.setrlimit(resource.RLIMIT_NOFILE, (file_limit, file_limit))
         del resource, file_limit
 
+    # prime the data package cache with static data
+    games_package_cache = DBGamesPackageCache(static_server_data["games_package"])
+    # convert to tuple because its hashable
+    game_ports = tuple(game_ports)
+
     # establish DB connection for multidata and multisave
     db.bind(**ponyconfig)
     db.generate_mapping(check_tables=False)
 
     if "worlds" in sys.modules:
         raise Exception("Worlds system should not be loaded in the custom server.")
-
-    import gc
 
     if not cert_file:
         def get_ssl_context():
@@ -280,23 +376,29 @@ def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
         with Locker(f"RoomLocker {room_id}"):
             try:
                 logger = set_up_logging(room_id)
-                ctx = WebHostContext(static_server_data, logger)
+                ctx = WebHostContext(static_server_data, games_package_cache, logger)
                 ctx.load(room_id)
                 ctx.init_save()
                 assert ctx.server is None
-                try:
+                if ctx.port != 0:
+                    try:
+                        ctx.server = websockets.serve(
+                            functools.partial(server, ctx=ctx),
+                            ctx.host,
+                            ctx.port,
+                            ssl=get_ssl_context(),
+                            extensions=[server_per_message_deflate_factory],
+                        )
+                        await ctx.server
+                    except OSError:
+                        ctx.port = 0
+                if ctx.port == 0:
                     ctx.server = websockets.serve(
                         functools.partial(server, ctx=ctx),
-                        ctx.host,
-                        ctx.port,
+                        sock=create_random_port_socket(game_ports, ctx.host),
                         ssl=get_ssl_context(),
                         extensions=[server_per_message_deflate_factory],
                     )
-                    await ctx.server
-                except OSError:  # likely port in use
-                    ctx.server = websockets.serve(
-                        functools.partial(server, ctx=ctx), ctx.host, 0, ssl=get_ssl_context())
-
                     await ctx.server
                 port = 0
                 for wssocket in ctx.server.ws_server.sockets:
@@ -343,12 +445,17 @@ def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
                     ctx.save_dirty = False  # make sure the saving thread does not write to DB after final wakeup
                     ctx.exit_event.set()  # make sure the saving thread stops at some point
                     # NOTE: async saving should probably be an async task and could be merged with shutdown_task
+
+                    if ctx.server and hasattr(ctx.server, "ws_server"):
+                        ctx.server.ws_server.close()
+                        await ctx.server.ws_server.wait_closed()
+
                     with db_session:
                         # ensure the Room does not spin up again on its own, minute of safety buffer
                         room = Room.get(id=room_id)
-                        room.last_activity = datetime.datetime.utcnow() - \
-                                             datetime.timedelta(minutes=1, seconds=room.timeout)
+                        room.last_activity = Utils.utcnow() - datetime.timedelta(minutes=1, seconds=room.timeout)
                     del room
+                    tear_down_logging(room_id)
                     logging.info(f"Shutting down room {room_id} on {name}.")
                 finally:
                     await asyncio.sleep(5)
@@ -367,7 +474,7 @@ def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
 
         def run(self):
             while 1:
-                next_room = rooms_to_run.get(block=True,  timeout=None)
+                next_room = rooms_to_run.get(block=True, timeout=None)
                 gc.collect()
                 task = asyncio.run_coroutine_threadsafe(start_room(next_room), loop)
                 self._tasks.append(task)
