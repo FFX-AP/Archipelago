@@ -7,13 +7,6 @@ from ..items import Group, item_table
 from ..items.item_data import FILLER_GROUPS
 
 
-def get_real_item_count(multiworld):
-    number_items = len([item for item in multiworld.itempool
-                        if all(filler_group not in item_table[item.name].groups for filler_group in FILLER_GROUPS) and Group.TRAP not in item_table[
-                            item.name].groups and (item.classification & ItemClassification.progression)])
-    return number_items
-
-
 class TestLocationGeneration(SVTestBase):
 
     def test_all_location_created_are_in_location_table(self):
@@ -27,7 +20,8 @@ class TestMinLocationAndMaxItem(SVTestBase):
     def test_minimal_location_maximal_items_still_valid(self):
         valid_locations = self.get_real_locations()
         number_locations = len(valid_locations)
-        number_items = get_real_item_count(self.multiworld)
+        number_items = len([item for item in self.multiworld.itempool
+                            if all(filler_group not in item_table[item.name].groups for filler_group in FILLER_GROUPS) and Group.TRAP not in item_table[item.name].groups])
         print(f"Stardew Valley - Minimum Locations: {number_locations}, Maximum Items: {number_items} [ISLAND EXCLUDED]")
         self.assertGreaterEqual(number_locations, number_items)
 
@@ -38,7 +32,8 @@ class TestMinLocationAndMaxItemWithIsland(SVTestBase):
     def test_minimal_location_maximal_items_with_island_still_valid(self):
         valid_locations = self.get_real_locations()
         number_locations = len(valid_locations)
-        number_items = get_real_item_count(self.multiworld)
+        number_items = len([item for item in self.multiworld.itempool
+                            if all(filler_group not in item_table[item.name].groups for filler_group in FILLER_GROUPS) and Group.TRAP not in item_table[item.name].groups and (item.classification & ItemClassification.progression)])
         print(f"Stardew Valley - Minimum Locations: {number_locations}, Maximum Items: {number_items} [ISLAND INCLUDED]")
         self.assertGreaterEqual(number_locations, number_items)
 
@@ -104,5 +99,3 @@ class TestAllSanityWithModsSettingsHasAllExpectedLocations(SVTestBase):
                   f"\n\tPlease update test_allsanity_with_mods_has_at_least_locations"
                   f"\n\t\tExpected: {expected_locations}"
                   f"\n\t\tActual: {number_locations}")
-
-

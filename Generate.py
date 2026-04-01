@@ -87,8 +87,7 @@ def main(args=None) -> tuple[argparse.Namespace, int]:
 
     seed = get_seed(args.seed)
 
-    if __name__ == "__main__":
-        Utils.init_logging(f"Generate_{seed}", loglevel=args.log_level, add_timestamp=args.log_time)
+    Utils.init_logging(f"Generate_{seed}", loglevel=args.log_level, add_timestamp=args.log_time)
     random.seed(seed)
     seed_name = get_seed_name(random)
 

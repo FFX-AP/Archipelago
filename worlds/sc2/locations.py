@@ -249,6 +249,7 @@ def get_locations(world: Optional["SC2World"]) -> Tuple[LocationData, ...]:
             LocationType.VICTORY,
             lambda state: (
                 logic.terran_common_unit(state)
+                and logic.terran_defense_rating(state, True) >= 2
                 and (adv_tactics or logic.terran_basic_anti_air(state))
             ),
         ),
@@ -270,7 +271,10 @@ def get_locations(world: Optional["SC2World"]) -> Tuple[LocationData, ...]:
             "Third Group Rescued",
             SC2WOL_LOC_ID_OFFSET + 303,
             LocationType.VANILLA,
-            logic.terran_common_unit,
+            lambda state: (
+                logic.terran_common_unit(state)
+                and logic.terran_defense_rating(state, True) >= 2
+            ),
         ),
         make_location_data(
             SC2Mission.ZERO_HOUR.mission_name,
@@ -316,14 +320,20 @@ def get_locations(world: Optional["SC2World"]) -> Tuple[LocationData, ...]:
             "Hold Just a Little Longer",
             SC2WOL_LOC_ID_OFFSET + 309,
             LocationType.EXTRA,
-            logic.terran_common_unit,
+            lambda state: (
+                logic.terran_common_unit(state)
+                and logic.terran_defense_rating(state, True) >= 2
+            ),
         ),
         make_location_data(
             SC2Mission.ZERO_HOUR.mission_name,
             "Cavalry's on the Way",
             SC2WOL_LOC_ID_OFFSET + 310,
             LocationType.EXTRA,
-            logic.terran_common_unit,
+            lambda state: (
+                logic.terran_common_unit(state)
+                and logic.terran_defense_rating(state, True) >= 2
+            ),
         ),
         make_location_data(
             SC2Mission.EVACUATION.mission_name,

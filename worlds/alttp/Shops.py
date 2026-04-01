@@ -7,7 +7,7 @@ from Utils import int16_as_bytes
 
 from worlds.generic.Rules import add_rule
 
-from BaseClasses import CollectionState, Item, MultiWorld
+from BaseClasses import CollectionState
 from .SubClasses import ALttPLocation
 
 from .Items import item_name_groups
@@ -159,7 +159,7 @@ shop_class_mapping = {ShopType.UpgradeShop: UpgradeShop,
                       ShopType.TakeAny: TakeAny}
 
 
-def push_shop_inventories(multiworld: MultiWorld):
+def push_shop_inventories(multiworld):
     all_shops =  []
     for world in multiworld.get_game_worlds(ALttPLocation.game):
         all_shops.extend(world.shops)
@@ -183,7 +183,7 @@ def push_shop_inventories(multiworld: MultiWorld):
         world.pushed_shop_inventories.set()
 
 
-def create_shops(multiworld: MultiWorld, player: int):
+def create_shops(multiworld, player: int):
     from .Options import RandomizeShopInventories
     player_shop_table = shop_table.copy()
     if multiworld.worlds[player].options.include_witch_hut:
@@ -306,7 +306,7 @@ shop_generation_types = {
 }
 
 
-def set_up_shops(multiworld: MultiWorld, player: int):
+def set_up_shops(multiworld, player: int):
     from .Options import small_key_shuffle
     # TODO: move hard+ mode changes for shields here, utilizing the new shops
 
@@ -408,7 +408,7 @@ price_rate_display = {
 }
 
 
-def get_price_modifier(item: Item) -> float:
+def get_price_modifier(item) -> float:
     if item.game == "A Link to the Past":
         if any(x in item.name for x in
                ['Compass', 'Map', 'Single Bomb', 'Single Arrow', 'Piece of Heart']):
@@ -428,7 +428,7 @@ def get_price_modifier(item: Item) -> float:
         return 0.25
 
 
-def get_price(multiworld: MultiWorld, item: Item, player: int, price_type=None):
+def get_price(multiworld, item, player: int, price_type=None):
     """Converts a raw Rupee price into a special price type"""
     from .Options import small_key_shuffle
     if price_type:

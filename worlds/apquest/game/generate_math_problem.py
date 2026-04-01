@@ -6,7 +6,6 @@ from typing import NamedTuple
 
 _random = random.Random()
 
-
 class NumberChoiceConstraints(NamedTuple):
     num_1_min: int
     num_1_max: int

@@ -8,16 +8,14 @@ from kivy.core.window import Keyboard, Window
 from kivy.graphics import Color, Triangle
 from kivy.graphics.instructions import Canvas
 from kivy.input import MotionEvent
-from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.image import Image
-from kivy.uix.widget import Widget
 from kivymd.uix.recycleview import MDRecycleView
 
 from CommonClient import logger
 
 from ..game.inputs import Input
+
 
 INPUT_MAP = {
     "up": Input.UP,
@@ -53,9 +51,8 @@ class APQuestGameView(MDRecycleView):
         self.input_function = input_function
         self.bind_keyboard()
 
-    def on_touch_down(self, touch: MotionEvent) -> bool | None:
+    def on_touch_down(self, touch: MotionEvent) -> None:
         self.bind_keyboard()
-        return super().on_touch_down(touch)
 
     def bind_keyboard(self) -> None:
         if self._keyboard is not None:
@@ -80,7 +77,7 @@ class APQuestGrid(GridLayout):
         parent_width, parent_height = self.parent.size
 
         self_width_according_to_parent_height = parent_height * 12 / 11
-        self_height_according_to_parent_width = parent_width * 11 / 12
+        self_height_according_to_parent_width = parent_height * 11 / 12
 
         if self_width_according_to_parent_height > parent_width:
             self.size = parent_width, self_height_according_to_parent_width
@@ -206,22 +203,12 @@ class Confetti:
         return True
 
 
-class ConfettiView(Widget):
+class ConfettiView(MDRecycleView):
     confetti: list[Confetti]
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.confetti = []
-
-    # Don't eat tap events for the game grid under the confetti view
-    def on_touch_down(self, touch) -> bool:
-        return False
-
-    def on_touch_move(self, touch) -> bool:
-        return False
-
-    def on_touch_up(self, touch) -> bool:
-        return False
 
     def check_resize(self, _: int, _1: int) -> None:
         parent_width, parent_height = self.parent.size
@@ -267,32 +254,3 @@ class VolumeSliderView(BoxLayout):
 
 class APQuestControlsView(BoxLayout):
     pass
-
-
-class TapImage(ButtonBehavior, Image):
-    callback: Callable[[], None]
-
-    def __init__(self, callback: Callable[[], None], **kwargs) -> None:
-        self.callback = callback
-        super().__init__(**kwargs)
-
-    def on_release(self) -> bool:
-        self.callback()
-
-        return True
-
-
-class TapIfConfettiCannonImage(ButtonBehavior, Image):
-    callback: Callable[[], None]
-
-    is_confetti_cannon: bool = False
-
-    def __init__(self, callback: Callable[[], None], **kwargs: dict[str, Any]) -> None:
-        self.callback = callback
-        super().__init__(**kwargs)
-
-    def on_release(self) -> bool:
-        if self.is_confetti_cannon:
-            self.callback()
-
-        return True

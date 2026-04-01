@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from BaseClasses import Region, CollectionRule
+from BaseClasses import Entrance, Region
 from entrance_rando import EntranceType, randomize_entrances
 from .connections import RANDOMIZED_CONNECTIONS, TRANSITIONS
 from .options import ShuffleTransitions, TransitionPlando
@@ -26,6 +26,7 @@ def disconnect_entrances(world: "MessengerWorld") -> None:
         entrance.randomization_type = er_type
         mock_entrance.randomization_type = er_type
 
+
     for parent, child in RANDOMIZED_CONNECTIONS.items():
         if child == "Corrupted Future":
             entrance = world.get_entrance("Artificer's Portal")
@@ -35,9 +36,8 @@ def disconnect_entrances(world: "MessengerWorld") -> None:
             entrance = world.get_entrance(f"{parent} -> {child}")
         disconnect_entrance()
 
-
-def connect_plando(world: "MessengerWorld", plando_connections: TransitionPlando, keep_logic: bool = False) -> None:
-    def remove_dangling_exit(region: Region) -> CollectionRule:
+def connect_plando(world: "MessengerWorld", plando_connections: TransitionPlando) -> None:
+    def remove_dangling_exit(region: Region) -> None:
         # find the disconnected exit and remove references to it
         for _exit in region.exits:
             if not _exit.connected_region:
@@ -45,7 +45,6 @@ def connect_plando(world: "MessengerWorld", plando_connections: TransitionPlando
         else:
             raise ValueError(f"Unable to find randomized transition for {plando_connection}")
         region.exits.remove(_exit)
-        return _exit.access_rule
 
     def remove_dangling_entrance(region: Region) -> None:
         # find the disconnected entrance and remove references to it
@@ -66,35 +65,30 @@ def connect_plando(world: "MessengerWorld", plando_connections: TransitionPlando
             else:
                 dangling_exit = world.get_entrance("Artificer's Challenge")
             reg1.exits.remove(dangling_exit)
-            access_rule = dangling_exit.access_rule
         else:
             reg1 = world.get_region(plando_connection.entrance)
-            access_rule = remove_dangling_exit(reg1)
-
+            remove_dangling_exit(reg1)
+        
         reg2 = world.get_region(plando_connection.exit)
         remove_dangling_entrance(reg2)
         # connect the regions
-        new_exit1 = reg1.connect(reg2)
-        if keep_logic:
-            new_exit1.access_rule = access_rule
+        reg1.connect(reg2)
 
         # pretend the user set the plando direction as "both" regardless of what they actually put on coupled
         if ((world.options.shuffle_transitions == ShuffleTransitions.option_coupled
              or plando_connection.direction == "both")
                 and plando_connection.exit in RANDOMIZED_CONNECTIONS):
-            access_rule = remove_dangling_exit(reg2)
+            remove_dangling_exit(reg2)
             remove_dangling_entrance(reg1)
-            new_exit2 = reg2.connect(reg1)
-            if keep_logic:
-                new_exit2.access_rule = access_rule
+            reg2.connect(reg1)
 
 
-def shuffle_transitions(world: "MessengerWorld", keep_logic: bool = False) -> None:
+def shuffle_transitions(world: "MessengerWorld") -> None:
     coupled = world.options.shuffle_transitions == ShuffleTransitions.option_coupled
 
     plando = world.options.plando_connections
     if plando:
-        connect_plando(world, plando, keep_logic)
+        connect_plando(world, plando)
 
     result = randomize_entrances(world, coupled, {0: [0]})
 
