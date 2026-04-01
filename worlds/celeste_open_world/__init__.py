@@ -42,7 +42,7 @@ class CelesteOpenWorld(World):
     options_dataclass = CelesteOptions
     options: CelesteOptions
 
-    apworld_version = 10007
+    apworld_version = 10005
 
     level_data: dict[str, Level] = load_logic_data()
 

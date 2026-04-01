@@ -189,7 +189,7 @@ class HKWorld(World):
 
     ranges: typing.Dict[str, typing.Tuple[int, int]]
     charm_costs: typing.List[int]
-    cached_filler_items: typing.List[str]
+    cached_filler_items = {}
     grub_count: int
     grub_player_count: typing.Dict[int, int]
 
@@ -201,7 +201,6 @@ class HKWorld(World):
         self.ranges = {}
         self.created_shop_items = 0
         self.vanilla_shop_costs = deepcopy(vanilla_shop_costs)
-        self.cached_filler_items = []
 
     def generate_early(self):
         options = self.options
@@ -700,7 +699,7 @@ class HKWorld(World):
         return f"{base}_{i}"
 
     def get_filler_item_name(self) -> str:
-        if not self.cached_filler_items:
+        if self.player not in self.cached_filler_items:
             fillers = ["One_Geo", "Soul_Refill"]
             exclusions = self.white_palace_exclusions()
             for group in (
@@ -710,8 +709,8 @@ class HKWorld(World):
                 if getattr(self.options, group):
                     fillers.extend(item for item in hollow_knight_randomize_options[group].items if item not in
                                    exclusions)
-            self.cached_filler_items = fillers
-        return self.random.choice(self.cached_filler_items)
+            self.cached_filler_items[self.player] = fillers
+        return self.random.choice(self.cached_filler_items[self.player])
 
 
 def create_region(multiworld: MultiWorld, player: int, name: str, location_names=None) -> Region:

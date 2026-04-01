@@ -89,6 +89,6 @@ class ConnectionData:
 
 @dataclass(frozen=True)
 class ModRegionsData:
-    content_pack: str
+    mod_name: str
     regions: list[RegionData]
     connections: list[ConnectionData]

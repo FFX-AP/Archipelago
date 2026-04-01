@@ -16,7 +16,7 @@ celeste_base_id: int = 0xCA10000
 
 
 class CelesteLocation(Location):
-    game = "Celeste (Open World)"
+    game = "Celeste"
 
 
 class CelesteLocationData(NamedTuple):

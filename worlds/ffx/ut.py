@@ -21,8 +21,6 @@ def setup_options_from_slot_data(world: FFXWorld) -> None:
             world.options.mini_game_cactuar_village.value   = world.passthrough["mini_game_cactuar_village"]
             world.options.mini_game_chocobo_training.value  = world.passthrough["mini_game_chocobo_training"]
             world.options.mini_game_chocobo_race.value      = world.passthrough["mini_game_chocobo_race"]
-            world.options.tidus_overdrives.value            = world.passthrough["tidus_overdrive"]
-            world.options.kimahri_ronso_rages.value         = world.passthrough["kimahri_ronso_rage"]
             world.options.recruit_sanity.value              = world.passthrough["recruit_sanity"]
             world.options.capture_sanity.value              = world.passthrough["capture_sanity"]
             world.options.creation_rewards.value            = world.passthrough["creation_rewards"]

@@ -2,7 +2,6 @@ from ..bases import SVTestBase
 from ... import options
 from ...mods.mod_data import ModNames
 from ...strings.ap_names.mods.mod_items import SVEQuestItem
-from ...strings.ap_names.transport_names import Transportation
 from ...strings.quest_names import ModQuest
 from ...strings.region_names import SVERegion
 
@@ -10,15 +9,15 @@ from ...strings.region_names import SVERegion
 class TestAuroraVineyard(SVTestBase):
     options = {
         options.Cropsanity.internal_name: options.Cropsanity.option_enabled,
-        options.Mods.internal_name: frozenset({ModNames.sve}),
+        options.Mods.internal_name: frozenset({ModNames.sve})
     }
 
     def test_need_tablet_to_do_quest(self):
         self.collect("Starfruit Seeds")
-        self.collect(Transportation.bus_repair)
+        self.collect("Bus Repair")
         self.collect("Shipping Bin")
         self.collect("Summer")
-        location_name = f"Quest: {ModQuest.AuroraVineyard}"
+        location_name = ModQuest.AuroraVineyard
         self.assert_cannot_reach_location(location_name, self.multiworld.state)
         self.collect(SVEQuestItem.aurora_vineyard_tablet)
         self.assert_can_reach_location(location_name, self.multiworld.state)

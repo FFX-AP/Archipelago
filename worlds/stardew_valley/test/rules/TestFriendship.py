@@ -11,7 +11,6 @@ class TestFriendsanityDatingRules(SVTestBase):
 
     def test_earning_dating_heart_requires_dating(self):
         self.collect_all_the_money()
-        self.collect(self.create_item("Landslide Removed"))
         self.multiworld.state.collect(self.create_item("Fall"))
         self.multiworld.state.collect(self.create_item("Beach Bridge"))
         self.multiworld.state.collect(self.create_item("Progressive House"))
@@ -48,10 +47,8 @@ class TestFriendsanityDatingRules(SVTestBase):
         for i in range(1, max_reachable + 1):
             if i % step != 0 and i != 14:
                 continue
-            location = f"{prefix}{npc} {i}{suffix}"
-            self.assert_can_reach_location(location)
+            self.assert_can_reach_location(f"{prefix}{npc} {i}{suffix}")
         for i in range(max_reachable + 1, 14 + 1):
             if i % step != 0 and i != 14:
                 continue
-            location = f"{prefix}{npc} {i}{suffix}"
-            self.assert_cannot_reach_location(location)
+            self.assert_cannot_reach_location(f"{prefix}{npc} {i}{suffix}")

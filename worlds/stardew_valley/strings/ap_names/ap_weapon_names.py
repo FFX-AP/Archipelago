@@ -5,5 +5,3 @@ class APWeapon:
     dagger = "Progressive Dagger"
     slingshot = "Progressive Slingshot"
     footwear = "Progressive Footwear"
-
-    all_weapons = (weapon, sword, club, dagger)

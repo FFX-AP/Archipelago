@@ -696,11 +696,12 @@ async def dolphin_sync_task(ctx: TWWContext) -> None:
             continue
 
 
-def main(*args: str) -> None:
+def main(connect: Optional[str] = None, password: Optional[str] = None) -> None:
     """
     Run the main async loop for the Wind Waker client.
 
-    :param *args: Command line arguments passed to the client.
+    :param connect: Address of the Archipelago server.
+    :param password: Password for server authentication.
     """
     Utils.init_logging("The Wind Waker Client")
 
@@ -725,11 +726,14 @@ def main(*args: str) -> None:
         if ctx.dolphin_sync_task:
             await ctx.dolphin_sync_task
 
-    parser = get_base_parser()
-    parsed_args = parser.parse_args(args)
-
     import colorama
 
     colorama.init()
-    asyncio.run(_main(parsed_args.connect, parsed_args.password))
+    asyncio.run(_main(connect, password))
     colorama.deinit()
+
+
+if __name__ == "__main__":
+    parser = get_base_parser()
+    args = parser.parse_args()
+    main(args.connect, args.password)

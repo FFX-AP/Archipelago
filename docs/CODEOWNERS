@@ -19,6 +19,8 @@
 # NewSoupVi is acting maintainer, but world belongs to core with the exception of the music
 /worlds/apquest/ @NewSoupVi
 
+# Sudoku (APSudoku)
+/worlds/apsudoku/ @EmilyV99
 
 # Aquaria
 /worlds/aquaria/ @tioui
@@ -131,9 +133,6 @@
 
 # Mega Man 2
 /worlds/mm2/ @Silvris
-
-# Mega Man 3
-/worlds/mm3/ @Silvris
 
 # MegaMan Battle Network 3
 /worlds/mmbn3/ @digiholic

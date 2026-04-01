@@ -3,7 +3,7 @@ Archipelago World definition for Final Fantasy X
 """
 
 from typing import ClassVar, Any, Optional
-from random import choice, Random, shuffle
+from random import Random, shuffle
 from settings import Group, FilePath
 
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
@@ -14,8 +14,7 @@ from Utils import visualize_regions
 from .client import FFXClient
 
 from .items import create_item_label_to_code_map, item_table, key_items, filler_items, AllItems, FFXItem, \
-    party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items, \
-    overdrive_items
+    party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items
 from .locations import create_location_label_to_id_map, FFXLocation, allLocations
 from .regions import create_regions
 from .options import FFXOptions, create_option_groups
@@ -95,7 +94,6 @@ class FFXWorld(World):
 
         required_items = []
 
-        # ----------------------------- Key Items ---------------------------- #
         for item in key_items:
             match item.itemName:
                 case "Progressive Jecht's Sphere":
@@ -107,7 +105,7 @@ class FFXWorld(World):
                 case _:
                     required_items.append(item.itemName)
             
-        # ------------------ Celestial Weapons & Brotherhood ----------------- #
+        # Progressive celestial weapons and Brotherhood
         for item in equip_items:
             if item.progression == ItemClassification.progression:
                 if item.itemID & 0x0FFF == 0x0001:
@@ -117,34 +115,30 @@ class FFXWorld(World):
                     # Celestial
                     required_items.extend([item.itemName]*3)
 
-        # ----------------------------- Abilities ---------------------------- #
         # for item in skill_abilities:
         #     required_items.append(item.itemName)
         #
         # for item in stat_abilities:
         #     required_items.extend([item.itemName for _ in range(1)])
 
-        # -------------------------- Starting Region ------------------------- #
         possible_starting_regions = [f"Region: {region}" for region, level in world_battle_levels.items() 
                                      if 0 < level <= min(self.options.logic_difficulty.value, 3)]
         starting_region = self.random.choice(possible_starting_regions)
 
         self.multiworld.push_precollected(self.create_item(starting_region))
 
-        # --------------------------- Monster Arena -------------------------- #
         if self.options.arena_access.value == self.options.arena_access.option_early:
             self.multiworld.early_items[self.player]["Region: Monster Arena"] = 1
         elif self.options.arena_access.value == self.options.arena_access.option_always:
             self.multiworld.push_precollected(self.create_item("Region: Monster Arena"))
 
-        # ------------------------ Region Unlock Items ----------------------- #
         for item in region_unlock_items:
             if item.itemName != starting_region:
                 required_items.append(item.itemName)
         if self.options.arena_access.value == self.options.arena_access.option_always:
             required_items.remove("Region: Monster Arena")
 
-        # --------------------------- Party Members -------------------------- #
+
         starting_character = party_member_items[0]
         self.multiworld.push_precollected(self.create_item(starting_character.itemName))
         for party_member in party_member_items:
@@ -157,37 +151,22 @@ class FFXWorld(World):
             shuffle(partyMembers)
             for i in range(self.options.early_party_members.value):
                 self.multiworld.early_items[self.player][partyMembers.pop(0).itemName] = 1
-        
-        # ---------------------------- Overdrives ---------------------------- #
-        for overdrive in overdrive_items:
-            required_items.append(overdrive.itemName)
-        
-        if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_early:
-            overdrive = choice(overdrive_items[:4])
-            self.multiworld.early_items[self.player][overdrive.itemName] = 1
-        if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_start_with:
-            overdrive = choice(overdrive_items[:4])
-            self.multiworld.push_precollected(self.create_item(overdrive.itemName))
-            required_items.remove(overdrive.itemName)
 
-        # ------------------------ Unfilled Locations ------------------------ #
+
         unfilled_locations = len(self.multiworld.get_unfilled_locations(self.player))
+
         items_remaining = unfilled_locations - len(required_items)
 
-        # ------------------------ Excluded Locations ------------------------ #
         for _ in self.options.exclude_locations.value:
             self.multiworld.itempool.append(self.create_filler())
             items_remaining -= 1
 
-        # ---------------------- Items & Traps Remaining --------------------- #
         traps_remaining = int(items_remaining * self.options.trap_percentage.value / 100)
         items_remaining = items_remaining - traps_remaining
 
-        # ----------------- Add Required Items to Multiworld ----------------- #
         for itemName in required_items:
             self.multiworld.itempool.append(self.create_item(itemName))
 
-        # ------------------------ Set up Useful Items ----------------------- #
         useful_items = []
         for item in AllItems:
             if item.progression == ItemClassification.useful:
@@ -195,13 +174,11 @@ class FFXWorld(World):
 
         self.random.shuffle(useful_items)
 
-        # -------------------------- Generate Traps -------------------------- #
         traps = [trap.itemName for trap in self.random.choices(trap_items, k=traps_remaining)]
 
         for trap in traps:
             self.multiworld.itempool.append(self.create_item(trap))
 
-        # ----------------------- Fill Remaining items ----------------------- #
         for i in range(items_remaining):
             if i > len(useful_items) - 1:
                 self.multiworld.itempool.append(self.create_filler())
@@ -232,8 +209,6 @@ class FFXWorld(World):
             "mini_game_cactuar_village": self.options.mini_game_cactuar_village.value,
             "mini_game_chocobo_training": self.options.mini_game_chocobo_training.value,
             "mini_game_chocobo_race": self.options.mini_game_chocobo_race.value,
-            "tidus_overdrive": self.options.tidus_overdrives.value,
-            "kimahri_ronso_rage": self.options.kimahri_ronso_rages.value,
             "recruit_sanity": self.options.recruit_sanity.value,
             "capture_sanity": self.options.capture_sanity.value,
             "creation_rewards": self.options.creation_rewards.value,

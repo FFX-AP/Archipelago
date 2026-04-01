@@ -1,7 +1,7 @@
 import unittest
 
 from ....content import choose_tool_progression
-from ....options import ToolProgression, SkillProgression, StartWithout
+from ....options import ToolProgression, SkillProgression
 from ....strings.tool_names import Tool
 
 
@@ -10,9 +10,8 @@ class TestToolDistribution(unittest.TestCase):
     def test_given_vanilla_tool_progression_when_create_feature_then_only_one_scythe_is_randomized(self):
         tool_progression = ToolProgression(ToolProgression.option_vanilla)
         skill_progression = SkillProgression.from_text("random")
-        start_without = StartWithout(StartWithout.preset_none)
 
-        feature = choose_tool_progression(tool_progression, skill_progression, start_without)
+        feature = choose_tool_progression(tool_progression, skill_progression)
 
         self.assertEqual(feature.tool_distribution, {
             Tool.scythe: 1,
@@ -21,9 +20,8 @@ class TestToolDistribution(unittest.TestCase):
     def test_given_progressive_tool_when_create_feature_then_all_tool_upgrades_are_randomized(self):
         tool_progression = ToolProgression(ToolProgression.option_progressive)
         skill_progression = SkillProgression(SkillProgression.option_progressive)
-        start_without = StartWithout(StartWithout.preset_none)
 
-        feature = choose_tool_progression(tool_progression, skill_progression, start_without)
+        feature = choose_tool_progression(tool_progression, skill_progression)
 
         self.assertEqual(feature.tool_distribution, {
             Tool.scythe: 1,
@@ -39,9 +37,8 @@ class TestToolDistribution(unittest.TestCase):
     def test_given_progressive_tool_and_skill_masteries_when_create_feature_then_additional_scythe_and_fishing_rod_are_randomized(self):
         tool_progression = ToolProgression(ToolProgression.option_progressive)
         skill_progression = SkillProgression(SkillProgression.option_progressive_with_masteries)
-        start_without = StartWithout(StartWithout.preset_none)
 
-        feature = choose_tool_progression(tool_progression, skill_progression, start_without)
+        feature = choose_tool_progression(tool_progression, skill_progression)
 
         self.assertEqual(feature.tool_distribution, {
             Tool.scythe: 2,

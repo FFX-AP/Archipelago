@@ -4,14 +4,14 @@ import json
 import logging
 import multiprocessing
 import typing
-from datetime import timedelta
+from datetime import timedelta, datetime
 from threading import Event, Thread
 from typing import Any
 from uuid import UUID
 
-from pony.orm import db_session, select, commit, PrimaryKey, desc
+from pony.orm import db_session, select, commit, PrimaryKey
 
-from Utils import restricted_loads, utcnow
+from Utils import restricted_loads
 from .locker import Locker, AlreadyRunningException
 
 _stop_event = Event()
@@ -129,11 +129,10 @@ def autohost(config: dict):
                     with db_session:
                         rooms = select(
                             room for room in Room if
-                            room.last_activity >= utcnow() - timedelta(
-                                seconds=config["MAX_ROOM_TIMEOUT"])).order_by(desc(Room.last_port))
+                            room.last_activity >= datetime.utcnow() - timedelta(days=3))
                         for room in rooms:
                             # we have to filter twice, as the per-room timeout can't currently be PonyORM transpiled.
-                            if room.last_activity >= utcnow() - timedelta(seconds=room.timeout + 5):
+                            if room.last_activity >= datetime.utcnow() - timedelta(seconds=room.timeout + 5):
                                 hosters[room.id.int % len(hosters)].start_room(room.id)
 
         except AlreadyRunningException:
@@ -188,7 +187,6 @@ class MultiworldInstance():
         self.cert = config["SELFLAUNCHCERT"]
         self.key = config["SELFLAUNCHKEY"]
         self.host = config["HOST_ADDRESS"]
-        self.game_ports = config["GAME_PORTS"]
         self.rooms_to_start = multiprocessing.Queue()
         self.rooms_shutting_down = multiprocessing.Queue()
         self.name = f"MultiHoster{id}"
@@ -199,7 +197,7 @@ class MultiworldInstance():
 
         process = multiprocessing.Process(group=None, target=run_server_process,
                                           args=(self.name, self.ponyconfig, get_static_server_data(),
-                                                self.cert, self.key, self.host, self.game_ports,
+                                                self.cert, self.key, self.host,
                                                 self.rooms_to_start, self.rooms_shutting_down),
                                           name=self.name)
         process.start()

@@ -1,3 +1,4 @@
+from ..mod_data import ModNames
 from ...logic.base_logic import BaseLogicMixin, BaseLogic
 from ...options import ElevatorProgression
 from ...stardew_rule import StardewRule, True_, true_
@@ -54,9 +55,9 @@ class DeepWoodsLogic(BaseLogic):
         rules = [self.logic.received(DeepWoodsItem.pendant_depths) & self.logic.received(DeepWoodsItem.pendant_community) &
                  self.logic.received(DeepWoodsItem.pendant_elder),
                  self.logic.skill.has_total_level(40)]
-        if ModSkill.luck in self.content.skills:
+        if ModNames.luck_skill in self.options.mods:
             rules.append(self.logic.skill.has_level(ModSkill.luck, 7))
         else:
-            # You need more luck than this, but it'll push the logic down a ways; you can get the rest there.
-            rules.append(self.logic.has(Meal.magic_rock_candy))
+            rules.append(
+                self.logic.has(Meal.magic_rock_candy))  # You need more luck than this, but it'll push the logic down a ways; you can get the rest there.
         return self.logic.and_(*rules)

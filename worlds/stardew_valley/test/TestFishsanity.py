@@ -398,7 +398,6 @@ class TestFishsanityMasterAnglerSVEWithoutQuests(WorldAssertMixin, SVTestBase):
         Mods: (ModNames.sve,),
     }
 
-    @property
     def run_default_tests(self) -> bool:
         return True
 

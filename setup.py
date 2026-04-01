@@ -71,6 +71,7 @@ non_apworlds: set[str] = {
     "Ocarina of Time",
     "Overcooked! 2",
     "Raft",
+    "Sudoku",
     "Super Mario 64",
     "VVVVVV",
     "Wargroove",
@@ -657,7 +658,7 @@ cx_Freeze.setup(
     options={
         "build_exe": {
             "packages": ["worlds", "kivy", "cymem", "websockets", "kivymd"],
-            "includes": ["rule_builder.cached_world"],
+            "includes": [],
             "excludes": ["numpy", "Cython", "PySide2", "PIL",
                          "pandas"],
             "zip_includes": [],

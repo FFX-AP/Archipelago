@@ -63,7 +63,7 @@ def randomize_opponent_parties(world: "PokemonEmeraldWorld") -> None:
                 if len(merged_blacklist) < NUM_REAL_SPECIES:
                     break
             else:
-                merged_blacklist: Set[int] = set()
+                raise RuntimeError("This should never happen")
 
             candidates = [
                 species

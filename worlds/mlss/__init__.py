@@ -19,7 +19,8 @@ from .Rules import set_rules
 class MLSSWebWorld(WebWorld):
     theme = "partyTime"
     bug_report_page = "https://github.com/jamesbrq/ArchipelagoMLSS/issues"
-    setup_en =Tutorial(
+    tutorials = [
+        Tutorial(
             tutorial_name="Setup Guide",
             description="A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
             language="English",
@@ -27,17 +28,7 @@ class MLSSWebWorld(WebWorld):
             link="setup/en",
             authors=["jamesbrq"],
         )
-    
-    setup_es = Tutorial(
-            tutorial_name=setup_en.tutorial_name,
-            description=setup_en.description,
-            language="Español",
-            file_name="setup_es.md",
-            link="setup/es",
-            authors=["GreenMarco"],
-        )
-    
-    tutorials =[setup_en, setup_es]
+    ]
 
 
 class MLSSSettings(settings.Group):

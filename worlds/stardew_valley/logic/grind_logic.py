@@ -1,6 +1,12 @@
+from typing import Union, TYPE_CHECKING
+
 from Utils import cache_self1
 from .base_logic import BaseLogic, BaseLogicMixin
-from ..options import ExcludeGingerIsland
+from .book_logic import BookLogicMixin
+from .has_logic import HasLogicMixin
+from .received_logic import ReceivedLogicMixin
+from .region_logic import RegionLogicMixin
+from .time_logic import TimeLogicMixin
 from ..stardew_rule import StardewRule, HasProgressionPercent
 from ..strings.book_names import Book
 from ..strings.craftable_names import Consumable
@@ -11,6 +17,11 @@ from ..strings.material_names import Material
 from ..strings.region_names import Region
 from ..strings.tool_names import Tool
 
+if TYPE_CHECKING:
+    from .tool_logic import ToolLogicMixin
+else:
+    ToolLogicMixin = object
+
 MIN_MEDIUM_ITEMS = 10
 MAX_MEDIUM_ITEMS = 999
 PERCENT_REQUIRED_FOR_MAX_MEDIUM_ITEM = 24
@@ -18,7 +29,7 @@ PERCENT_REQUIRED_FOR_MAX_MEDIUM_ITEM = 24
 EASY_ITEMS = {Material.wood, Material.stone, Material.fiber, Material.sap}
 MIN_EASY_ITEMS = 300
 MAX_EASY_ITEMS = 2997
-PERCENT_REQUIRED_FOR_MAX_EASY_ITEM = 8
+PERCENT_REQUIRED_FOR_MAX_EASY_ITEM = 6
 
 
 class GrindLogicMixin(BaseLogicMixin):
@@ -48,8 +59,9 @@ class GrindLogic(BaseLogic):
 
     def can_grind_prize_tickets(self, quantity: int) -> StardewRule:
         claiming_rule = self.logic.region.can_reach(Region.mayor_house)
-        help_wanted_rules = self.logic.quest.can_complete_help_wanteds(quantity * 3)
-        return self.logic.and_(claiming_rule, self.logic.has(Currency.prize_ticket), help_wanted_rules)
+        return self.logic.and_(claiming_rule, self.logic.has(Currency.prize_ticket),
+                               # Assuming two per month if the player does not grind it.
+                               self.logic.time.has_lived_months(quantity // 2))
 
     def can_grind_fishing_treasure_chests(self, quantity: int) -> StardewRule:
         return self.logic.and_(self.logic.has(WaterChest.fishing_chest),
@@ -61,22 +73,11 @@ class GrindLogic(BaseLogic):
                                # Assuming twelve per month if the player does not grind it.
                                self.logic.time.has_lived_months(quantity // 12))
 
-    def can_grind_weeds(self, quantity: int) -> StardewRule:
-        regions = [Region.farm, Region.town, Region.forest, Region.secret_woods, Region.backwoods, Region.mountain, Region.railroad, Region.mutant_bug_lair]
-        if self.options.exclude_ginger_island == ExcludeGingerIsland.option_false:
-            regions.extend([Region.island_east, Region.island_west])
-        return self.logic.and_(self.logic.tool.has_scythe(),
-                               self.logic.region.can_reach_all(*regions),
-                               # Assuming 1000 per month if the player does not grind it
-                               self.logic.time.has_lived_months(quantity // 1000))
-
     def can_grind_item(self, quantity: int, item: str | None = None) -> StardewRule:
-        if item is None:
-            return self.logic.grind.can_grind_medium_item(quantity)
-
         if item in EASY_ITEMS:
-            return self.logic.grind.can_grind_easy_item(quantity) & self.logic.has(item)
-        return self.logic.grind.can_grind_medium_item(quantity) & self.logic.has(item)
+            return self.logic.grind.can_grind_easy_item(quantity)
+        else:
+            return self.logic.grind.can_grind_medium_item(quantity)
 
     @cache_self1
     def can_grind_medium_item(self, quantity: int) -> StardewRule:

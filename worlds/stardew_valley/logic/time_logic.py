@@ -1,12 +1,14 @@
 from functools import cached_property
+from typing import Union
 
 from Utils import cache_self1
 from .base_logic import BaseLogic, BaseLogicMixin
+from .has_logic import HasLogicMixin
 from ..stardew_rule import StardewRule, HasProgressionPercent
 
 ONE_YEAR = 4
 MAX_MONTHS = 3 * ONE_YEAR
-PERCENT_REQUIRED_FOR_MAX_MONTHS = 64
+PERCENT_REQUIRED_FOR_MAX_MONTHS = 48
 MONTH_COEFFICIENT = PERCENT_REQUIRED_FOR_MAX_MONTHS // MAX_MONTHS
 
 MIN_ITEMS = 10

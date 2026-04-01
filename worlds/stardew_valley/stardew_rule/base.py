@@ -251,13 +251,10 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
 
             # If the queue is None, it means we have not start simplifying. Otherwise, we will continue simplification where we left.
             if local_state.rules_to_simplify is None:
-                try:
-                    rules_to_simplify = frozenset(local_state.original_simplifiable_rules)
-                    if self.complement in rules_to_simplify:
-                        return self.short_circuit_simplification()
-                    local_state.rules_to_simplify = deque(rules_to_simplify)
-                except Exception as err:
-                    assert False, err
+                rules_to_simplify = frozenset(local_state.original_simplifiable_rules)
+                if self.complement in rules_to_simplify:
+                    return self.short_circuit_simplification()
+                local_state.rules_to_simplify = deque(rules_to_simplify)
 
             # Start simplification where we left.
             while local_state.rules_to_simplify:
@@ -435,17 +432,8 @@ class Count(BaseStardewRule):
     def rules_count(self):
         return len(self.rules)
 
-    def __str__(self):
-        if all(value == 1 for value in self.counter.values()):
-            return f"Has {self.count} of [{', '.join(str(rule) for rule in self.counter.keys())}]"
-
-        return f"Has {self.count} of [{', '.join(f'{value}x {str(rule)}' for rule, value in self.counter.items())}]"
-
     def __repr__(self):
-        if all(value == 1 for value in self.counter.values()):
-            return f"Has {self.count} of [{', '.join(repr(rule) for rule in self.counter.keys())}]"
-
-        return f"Has {self.count} of [{', '.join(f'{value}x {repr(rule)}' for rule, value in self.counter.items())}]"
+        return f"Received {self.count} [{', '.join(f'{value}x {repr(rule)}' for rule, value in self.counter.items())}]"
 
 
 @dataclass(frozen=True)

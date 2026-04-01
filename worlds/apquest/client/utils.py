@@ -16,6 +16,10 @@ def make_data_directory(dir_name: str) -> Path:
     gitignore = specific_data_directory / ".gitignore"
 
     with open(gitignore, "w") as f:
-        f.write("*\n")
+        f.write(
+            """*
+!.gitignore
+"""
+        )
 
     return specific_data_directory

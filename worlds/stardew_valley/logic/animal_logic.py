@@ -1,3 +1,5 @@
+import typing
+
 from .base_logic import BaseLogicMixin, BaseLogic
 from ..stardew_rule import StardewRule
 from ..strings.building_names import Building

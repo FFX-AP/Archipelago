@@ -9,8 +9,6 @@ from ..strings.season_names import Season
 class ForagingSource(Source):
     regions: Tuple[str, ...]
     seasons: Tuple[str, ...] = Season.all
-    require_all_regions: bool = False
-    grind_months: int = 0
 
 
 @dataclass(frozen=True, kw_only=True)

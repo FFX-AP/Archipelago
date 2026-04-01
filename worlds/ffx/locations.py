@@ -21,13 +21,13 @@ class FFXLocationData(NamedTuple):
 
 TreasureOffset: int = 0x1000
 BossOffset: int = 0x2000
-OverdriveOffset: int = 0x3000
+PartyMemberOffset: int = 0x3000
+OverdriveOffset: int = 0x4000
 OverdriveModeOffset: int = 0x5000
 OtherOffset: int = 0x6000
 RecruitOffset: int = 0x7000
 SphereGridOffset: int = 0x8000
 CaptureOffset: int = 0x9000
-PartyMemberOffset: int = 0xF000
 
 location_types: Dict[int, str] = {
     TreasureOffset: "Treasure",
@@ -123,7 +123,7 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
     ("AIRS: Defeat Sin Right Fin (Boss)",             22, False),
     ("AIRS: Defeat Sin Core (Boss)",                  23, False),
     ("AIRS: Defeat Overdrive Sin (Boss)",             24, False),
-  # ("AIRS: Defeat Penance (Superboss)",              25, False),
+    # ("AIRS: Defeat Penance (Superboss)",            25, False),
     ("BEVL: Defeat Isaaru (Boss)",                    26, False),
     ("BEVL: Defeat Evrae Altana (Boss)",              27, False),
     ("BEVL: Defeat Seymour Natus (Boss)",             28, False),
@@ -141,8 +141,8 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
     #("SINS: Defeat Braska's Final Aeon (Boss)",      40, False),
     #("SINS: Defeat Yuna's Aeons (Boss)",             41, False),
     #("SINS: Defeat Yu Yevon (Boss)",                 42, False),
-    ("OMGR: Defeat Ultima Weapon (Boss)",             43, False),
-    ("OMGR: Defeat Omega Weapon (Superboss)",         44, False),
+    ("OMGR: Defeat Ultima (Boss)",                    43, False),
+    ("OMGR: Defeat Omega (Superboss)",                44, False),
     ("MUSH: Defeat Dark Mindy (Superboss)",           45, False),
     ("MUSH: Defeat Dark Sandy (Superboss)",           46, False),
     ("MUSH: Defeat Dark Cindy (Superboss)",           47, False),
@@ -185,31 +185,27 @@ FFXBossLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+BossOffs
 ]]
 
 FFXOverdriveLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveOffset, *location) for location in [
-  # ("Swordplay: Spiral Cut",                                                                                    0,   False),
-    ("Swordplay: Use Tidus's Overdrive 10 Times (Slice and Dice)",                                               1,   False),
-    ("Swordplay: Use Tidus's Overdrive 20 Times (Energy Rain)",                                                  2,   False),
-    ("Swordplay: Use Tidus's Overdrive 40 Times (Blitz Ace)",                                                    3,   False),
-    ("Bushido: Collect 1 Progressive Jecht's Sphere (Shooting Star)",                                            4,   False),
-  # ("Bushido: Dragon Fang",                                                                                     5,   False),
-    ("Bushido: Collect 3 Progressive Jecht's Spheres (Banishing Blade)",                                         6,   False),
-    ("Bushido: Collect 10 Progressive Jecht's Spheres (Tornado)",                                                7,   False),
-  # ("Ronso Rage: Jump",                                                                                         8,   False),
-    ("Ronso Rage: Use Lancet to Learn Fire Breath",                                                              9,   False), #Dual Horn, Valaha, Grendel, Yenke Ronso (m055, m056, m057, m135)
-    ("Ronso Rage: Use Lancet to Learn Seed Cannon",                                                              10,  False), #Ragora, Grat, Sandragora, Ragora (m039, m040, m221, m234)
-    ("Ronso Rage: Use Lancet to Learn Self Destruct",                                                            11,  False), #Bomb, Grenade, Puroboros, Biran Ronso (, m134)
-    ("Ronso Rage: Use Lancet to Learn Thrust Kick",                                                              12,  False), #YKT-63, YKT-11, Biran Ronso (m195, m196, m134)
-    ("Ronso Rage: Use Lancet to Learn Stone Breath",                                                             13,  False), #Basilisk, Anacondaur, Demonolith(?), Yenke Ronso, (m185, m186, m095, m135)
-    ("Ronso Rage: Use Lancet to Learn Aqua Breath",                                                              14,  False), #Chimera, Chimera Brain, Chimera, Yenke Ronso (m087, m088, m227, m135)
-    ("Ronso Rage: Use Lancet to Learn Doom",                                                                     15,  False), #Ghost, Wraith, Biran Ronso (m050, m220, m134)
-    ("Ronso Rage: Use Lancet to Learn White Wind",                                                               16,  False), #Dark Flan, Spirit, Yenke Ronso (m021, m219, m135)
-    ("Ronso Rage: Use Lancet to Learn Bad Breath",                                                               17,  False), #Malboro, Great Malboro (m064, m065)
-    ("Ronso Rage: Use Lancet to Learn Mighty Guard",                                                             18,  False), #Behemoth, Behemoth King, Biran Ronso (m085, m086, m134)
-    ("Ronso Rage: Use Lancet to Learn Nova",                                                                     19,  False), #Omega Weapon, Nemesis (m100, m276)
-  # ("Slots: Element Reels",                                                                                     20,  False),
-    ("Slots: Come 1st in a Blitzball Tournament (Attack Reels)",                                                 21,  False),
-    ("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)",                        22,  False),
-    ("Slots: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)",     23,  False),
-    ("BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)",                                     109, False), #Energy Blast
+    ("Slice and Dice",  1, False),
+    ("Energy Rain",     2, False),
+    ("Blitz Ace",       3, False),
+    ("Shooting Star",   4, False),
+    ("Banishing Blade", 5, False),
+    ("Tornado",         6, False),
+    ("Attack Reels",    7, False),
+    ("Status Reels",    8, False),
+    ("Auroch Reels",    9, False),
+    ("Seed Cannon",    10, False), #Ragora, Grat, Sandragora, Ragora (m039, m040, m221, m234)
+    ("Stone Breath",   11, False), #Basilisk, Anacondaur, Demonolith(?), Yenke Ronso, (m185, m186, m095, m135)
+    ("Self Destruct",  12, False), #Bomb, Grenade, Puroboros, Biran Ronso (, m134)
+    ("Fire Breath",    13, False), #Dual Horn, Valaha, Grendel, Yenke Ronso (m055, m056, m057, m135)
+    ("Aqua Breath",    14, False), #Chimera, Chimera Brain, Chimera, Yenke Ronso (m087, m088, m227, m135)
+    ("Bad Breath",     15, False), #Malboro, Great Malboro (m064, m065)
+    ("Doom",           16, False), #Ghost, Wraith, Biran Ronso (m050, m220, m134)
+    ("Thrust Kick",    17, False), #YKT-63, YKT-11, Biran Ronso (m195, m196, m134)
+    ("White Wind",     18, False), #Dark Flan, Spirit, Yenke Ronso (m021, m219, m135)
+    ("Mighty Guard",   19, False), #Behemoth, Behemoth King, Biran Ronso (m085, m086, m134)
+    ("Nova",           20, False), #Omega Weapon, Nemesis (m100, m276)
+    ("BSIL: Village, House - Something Mangled and Slobbery from Dog (NPC)",   21, False), #Energy Blast
 ]]
 
 FFXOverdriveModeLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OverdriveModeOffset, *location) for location in [
@@ -552,7 +548,7 @@ FFXTreasureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Trea
     ("SINS: City of Dying Dreams - Lift Up in Center of First Area, Just Before Lift Down (Chest)", 173, False),  # Item: 1x Defense Sphere [2058h]
     ("SINS: City of Dying Dreams - First Open Area, Glyph in Northwest Corner (Chest)",             174, False),  # Item: 1x Megalixir [2009h]
     ("SINS: City of Dying Dreams - Secret Slide South of Rising Block Area (Chest)",                175, False),  # Gear: buki_get #54 [36h] { Yuna [01h], Weapon {SOS Overdrive [8010h]} }
-    ("REMI: Win Chocobo Race (Event)",                                                              176, False),  # Key Item: Cloudy Mirror [A002h]
+    ("REMI: Win the Chocobo Race (Event)",                                                          176, False),  # Key Item: Cloudy Mirror [A002h]
     ("MCWO: After Spherimorph (Jecht's Sphere)",                                                    177, False),  # Key Item: Jecht's Sphere [A020h]
     ("THPL: South - West Side, South of Save Sphere (Chest)",                                       178, False),  # Item: 2x Phoenix Down [2006h]
     ("THPL: South - West Side, North of Save Sphere (Chest)",                                       179, False),  # Item: 2x Hi-Potion [2001h]

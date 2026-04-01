@@ -10,7 +10,6 @@ class DifficultyRanges(MuseDashTestBase):
         "PeroPero in the Universe",
         "umpopoff",
         "P E R O P E R O Brother Dance",
-        "Master Bancho's Sushi Class",
     ]
 
     def test_all_difficulty_ranges(self) -> None:
@@ -79,7 +78,7 @@ class DifficultyRanges(MuseDashTestBase):
 
             # Some songs are weird and have less than the usual 3 difficulties.
             # So this override is to avoid failing on these songs.
-            if song_name in ("umpopoff", "P E R O P E R O Brother Dance", "Master Bancho's Sushi Class"):
+            if song_name in ("umpopoff", "P E R O P E R O Brother Dance"):
                 self.assertTrue(song.easy is None and song.hard is not None and song.master is None,
                                 f"Song '{song_name}' difficulty not set when it should be.")
             else:

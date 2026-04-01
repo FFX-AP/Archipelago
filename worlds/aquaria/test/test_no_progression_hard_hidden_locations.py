@@ -9,7 +9,7 @@ from BaseClasses import ItemClassification
 from ..Locations import AquariaLocationNames
 
 
-class NoProgressionHardHiddenTest(AquariaTestBase):
+class UNoProgressionHardHiddenTest(AquariaTestBase):
     """Unit test used to test that no progression items can be put in hard or hidden locations when option enabled"""
     options = {
         "no_progression_hard_or_hidden_locations": True
@@ -43,7 +43,7 @@ class NoProgressionHardHiddenTest(AquariaTestBase):
         AquariaLocationNames.ARNASSI_RUINS_ARNASSI_ARMOR,
     ]
 
-    def test_no_progression_hard_or_hidden(self) -> None:
+    def test_unconfine_home_water_both_location_fillable(self) -> None:
         """
             Unit test used to test that no progression items can be put in hard or hidden locations when option enabled
         """

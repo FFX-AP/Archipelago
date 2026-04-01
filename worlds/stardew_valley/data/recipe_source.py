@@ -121,17 +121,6 @@ class ShopSource(RecipeSource):
         return f"ShopSource at {self.region} costing {self.price}g"
 
 
-class ShopWithKnownRecipeSource(ShopSource):
-    recipe_required: str
-
-    def __init__(self, region: str, price: int, recipe_required: str):
-        super().__init__(region, price)
-        self.recipe_required = recipe_required
-
-    def __repr__(self):
-        return f"ShopSource at {self.region} costing {self.price}g"
-
-
 class ShopFriendshipSource(RecipeSource):
     friend: str
     hearts: int

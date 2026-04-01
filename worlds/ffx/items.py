@@ -20,16 +20,15 @@ class FFXItem(Item):
     game: str = "Final Fantasy X"
 
 
-gilItemOffset           = 0x1000
 normalItemOffset        = 0x2000
-overdriveItemOffset     = 0x3000
-equipItemOffset         = 0x5000
-trapItemOffset          = 0x9000
 keyItemOffset           = 0xA000
-otherItemOffset         = 0xC000
-abilityItemOffset       = 0xD000
-regionItemOffset        = 0xE000
+equipItemOffset         = 0x5000
 partyMemberItemOffset   = 0xF000
+regionItemOffset        = 0xE000
+abilityItemOffset       = 0xD000
+gilItemOffset           = 0x1000
+trapItemOffset          = 0x9000
+otherItemOffset         = 0xC000
 
 
 
@@ -376,63 +375,6 @@ aeon_names = [
     "Yojimbo",
     "Magus Sisters",
 ]
-
-overdrive_names = [
-    "Spiral Cut",
-    "Slice and Dice",
-    "Energy Rain",
-    "Blitz Ace",
-    "Dragon Fang",
-    "Shooting Star",
-    "Banishing Blade",
-    "Tornado",
-    "Jump",
-    "Fire Breath",
-    "Seed Cannon",
-    "Self Destruct",
-    "Thrust Kick",
-    "Stone Breath",
-    "Aqua Breath",
-    "Doom",
-    "White Wind",
-    "Bad Breath",
-    "Mighty Guard",
-    "Nova",
-    "Element Reels",
-    "Attack Reels",
-    "Status Reels",
-    "Aurochs Reels",
-    "Requiem",
-]
-
-overdrive_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | overdriveItemOffset) for x in [
-    ("Swordplay: Spiral Cut",       ItemClassification.progression, 0x0060),
-    ("Swordplay: Slice and Dice",   ItemClassification.progression, 0x0061),
-    ("Swordplay: Energy Rain",      ItemClassification.progression, 0x0062),
-    ("Swordplay: Blitz Ace",        ItemClassification.progression, 0x0063),
-    ("Bushido: Shooting Star",      ItemClassification.progression, 0x0064),
-    ("Bushido: Dragon Fang",        ItemClassification.progression, 0x0065),
-    ("Bushido: Banishing Blade",    ItemClassification.progression, 0x0066),
-    ("Bushido: Tornado",            ItemClassification.progression, 0x0067),
-    ("Ronso Rage: Jump",            ItemClassification.progression, 0x0068),
-    ("Ronso Rage: Fire Breath",     ItemClassification.progression, 0x0069),
-    ("Ronso Rage: Seed Cannon",     ItemClassification.progression, 0x006A),
-    ("Ronso Rage: Self Destruct",   ItemClassification.progression, 0x006B),
-    ("Ronso Rage: Thrust Kick",     ItemClassification.progression, 0x006C),
-    ("Ronso Rage: Stone Breath",    ItemClassification.progression, 0x006D),
-    ("Ronso Rage: Aqua Breath",     ItemClassification.progression, 0x006E),
-    ("Ronso Rage: Doom",            ItemClassification.progression, 0x006F),
-    ("Ronso Rage: White Wind",      ItemClassification.progression, 0x0070),
-    ("Ronso Rage: Bad Breath",      ItemClassification.progression, 0x0071),
-    ("Ronso Rage: Mighty Guard",    ItemClassification.progression, 0x0072),
-    ("Ronso Rage: Nova",            ItemClassification.progression, 0x0073),
-    ("Slots: Element Reels",        ItemClassification.progression, 0x0074),
-    ("Slots: Attack Reels",         ItemClassification.progression, 0x0075),
-    ("Slots: Status Reels",         ItemClassification.progression, 0x0076),
-    ("Slots: Aurochs Reels",        ItemClassification.progression, 0x0077),
-    ("Overdrive: Energy Blast",     ItemClassification.progression, 0x00CD),
-    ("Overdrive: Requiem",          ItemClassification.progression, 0x00E3),
-]]
 
 abilities_per_character: list[ItemData] = [ ItemData(f"{character_names[character]} {ability[0]}", ItemClassification.progression, ability[1] | abilityItemOffset | character << 8) for character in range(7) for ability in [
     # Lvl 3 lock
@@ -960,8 +902,7 @@ AllItems = list(chain(normal_items,
                       party_member_items,
                       region_unlock_items,
                       trap_items,
-                      other_items,
-                      overdrive_items))
+                      other_items))
 
 filler_items: list[ItemData] = [item for item in AllItems if item.progression == ItemClassification.filler]
 

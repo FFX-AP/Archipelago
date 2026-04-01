@@ -15,7 +15,7 @@ from ..strings.region_names import Region
 @dataclass(frozen=True)
 class MuseumItem:
     item_name: str
-    artifact_spot_locations: Tuple[str, ...]
+    locations: Tuple[str, ...]
     geodes: Tuple[str, ...]
     monsters: Tuple[str, ...]
     difficulty: float
@@ -23,11 +23,11 @@ class MuseumItem:
     @staticmethod
     def of(item_name: str,
            difficulty: float,
-           artifact_spot_locations: Union[str, Tuple[str, ...]],
+           locations: Union[str, Tuple[str, ...]],
            geodes: Union[str, Tuple[str, ...]],
            monsters: Union[str, Tuple[str, ...]]) -> MuseumItem:
-        if isinstance(artifact_spot_locations, str):
-            artifact_spot_locations = (artifact_spot_locations,)
+        if isinstance(locations, str):
+            locations = (locations,)
 
         if isinstance(geodes, str):
             geodes = (geodes,)
@@ -35,10 +35,10 @@ class MuseumItem:
         if isinstance(monsters, str):
             monsters = (monsters,)
 
-        return MuseumItem(item_name, artifact_spot_locations, geodes, monsters, difficulty)
+        return MuseumItem(item_name, locations, geodes, monsters, difficulty)
 
     def __repr__(self):
-        return f"{self.item_name} (Artifact Spot Locations: {self.artifact_spot_locations} |" \
+        return f"{self.item_name} (Locations: {self.locations} |" \
                f" Geodes: {self.geodes} |" \
                f" Monsters: {self.monsters}) "
 
@@ -53,17 +53,17 @@ all_museum_items: List[MuseumItem] = []
 
 def create_artifact(name: str,
                     difficulty: float,
-                    artifact_spot_locations: Union[str, Tuple[str, ...]] = (),
+                    locations: Union[str, Tuple[str, ...]] = (),
                     geodes: Union[str, Tuple[str, ...]] = (),
                     monsters: Union[str, Tuple[str, ...]] = ()) -> MuseumItem:
-    artifact_item = MuseumItem.of(name, difficulty, artifact_spot_locations, geodes, monsters)
+    artifact_item = MuseumItem.of(name, difficulty, locations, geodes, monsters)
     all_museum_artifacts.append(artifact_item)
     all_museum_items.append(artifact_item)
     return artifact_item
 
 
 def create_mineral(name: str,
-                   artifact_spot_locations: Union[str, Tuple[str, ...]] = (),
+                   locations: Union[str, Tuple[str, ...]] = (),
                    geodes: Union[str, Tuple[str, ...]] = (),
                    monsters: Union[str, Tuple[str, ...]] = (),
                    difficulty: Optional[float] = None) -> MuseumItem:
@@ -80,7 +80,7 @@ def create_mineral(name: str,
         if "Fishing Chest" in geodes:
             difficulty += 4.3
 
-    mineral_item = MuseumItem.of(name, difficulty, artifact_spot_locations, geodes, monsters)
+    mineral_item = MuseumItem.of(name, difficulty, locations, geodes, monsters)
     all_museum_minerals.append(mineral_item)
     all_museum_items.append(mineral_item)
     return mineral_item
@@ -168,7 +168,7 @@ class Artifact:
                                        geodes=WaterChest.fishing_chest)
     palm_fossil = create_artifact("Palm Fossil", 10.2,
                                   (Region.dig_site, Region.desert, Region.forest, Region.beach))
-    trilobite = create_artifact(Fossil.trilobite, 7.4, (Region.dig_site, Region.desert, Region.forest, Region.beach))
+    trilobite = create_artifact("Trilobite", 7.4, (Region.dig_site, Region.desert, Region.forest, Region.beach))
 
 
 class Mineral:
@@ -267,15 +267,15 @@ class Mineral:
                              geodes=(Geode.geode, Geode.omni))
     basalt = create_mineral("Basalt",
                             geodes=(Geode.magma, Geode.omni))
-    limestone = create_mineral(Mineral.limestone,
+    limestone = create_mineral("Limestone",
                                geodes=(Geode.geode, Geode.omni))
     soapstone = create_mineral("Soapstone",
                                geodes=(Geode.frozen, Geode.omni))
     hematite = create_mineral("Hematite",
                               geodes=(Geode.frozen, Geode.omni))
-    mudstone = create_mineral(Mineral.mudstone,
+    mudstone = create_mineral("Mudstone",
                               geodes=(Geode.geode, Geode.omni))
-    obsidian = create_mineral(Mineral.obsidian,
+    obsidian = create_mineral("Obsidian",
                               geodes=(Geode.magma, Geode.omni))
     slate = create_mineral("Slate", geodes=(Geode.geode, Geode.omni))
     fairy_stone = create_mineral("Fairy Stone", geodes=(Geode.frozen, Geode.omni))

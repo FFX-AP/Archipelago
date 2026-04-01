@@ -16,7 +16,7 @@ register_mod_content_pack(ContentPack(
             sources=(
                 ShopSource(
                     shop_region=Region.carpenter,
-                    price=150_000,
+                    money_price=150_000,
                     items_price=((20, MetalBar.iron), (5, MetalBar.iridium), (1, ArtisanGood.battery_pack)),
                 ),
             ),

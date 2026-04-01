@@ -1,14 +1,13 @@
 from functools import cached_property
 
 from .base_logic import BaseLogic, BaseLogicMixin
-from ..content.vanilla.ginger_island import ginger_island_content_pack
-from ..options import Walnutsanity
-from ..stardew_rule import StardewRule
+from ..options import ExcludeGingerIsland, Walnutsanity
+from ..stardew_rule import StardewRule, False_, True_
 from ..strings.ap_names.ap_option_names import WalnutsanityOptionName
 from ..strings.ap_names.event_names import Event
 from ..strings.craftable_names import Furniture
 from ..strings.crop_names import Fruit
-from ..strings.metal_names import Fossil
+from ..strings.metal_names import Mineral, Fossil
 from ..strings.region_names import Region
 from ..strings.seed_names import Seed
 
@@ -22,10 +21,10 @@ class WalnutLogicMixin(BaseLogicMixin):
 class WalnutLogic(BaseLogic):
 
     def has_walnut(self, number: int) -> StardewRule:
-        if not self.content.is_enabled(ginger_island_content_pack):
-            return self.logic.false_
+        if self.options.exclude_ginger_island == ExcludeGingerIsland.option_true:
+            return False_()
         if number <= 0:
-            return self.logic.true_
+            return True_()
 
         if self.options.walnutsanity == Walnutsanity.preset_none:
             return self.can_get_walnuts(number)
@@ -96,8 +95,8 @@ class WalnutLogic(BaseLogic):
             return self.logic.and_(*reach_walnut_regions)
         if number <= 50:
             return reach_entire_island
-
-        return reach_entire_island & self.logic.has(Fruit.banana) & self.logic.museum.has_all_gems() & \
+        gems = (Mineral.amethyst, Mineral.aquamarine, Mineral.emerald, Mineral.ruby, Mineral.topaz)
+        return reach_entire_island & self.logic.has(Fruit.banana) & self.logic.has_all(*gems) & \
             self.logic.ability.can_mine_perfectly() & self.logic.ability.can_fish_perfectly() & \
             self.logic.has(Furniture.flute_block) & self.logic.has(Seed.melon) & self.logic.has(Seed.wheat) & \
             self.logic.has(Seed.garlic) & self.can_complete_field_office()

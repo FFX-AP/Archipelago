@@ -13,7 +13,7 @@ from Options import Toggle
 from worlds.AutoWorld import WebWorld, World
 from worlds.Files import APPlayerContainer
 from worlds.generic.Rules import add_item_rule
-from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, icon_paths, launch
+from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, icon_paths, launch_subprocess
 
 from .Items import ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem, item_name_groups
 from .Locations import LOCATION_TABLE, TWWFlag, TWWLocation
@@ -29,16 +29,14 @@ from .Rules import set_rules
 VERSION: tuple[int, int, int] = (3, 0, 0)
 
 
-def run_client(*args: str) -> None:
+def run_client() -> None:
     """
     Launch the The Wind Waker client.
-
-    :param *args: Variable length argument list passed to the client.
     """
     print("Running The Wind Waker Client")
     from .TWWClient import main
 
-    launch(main, name="TheWindWakerClient", args=args)
+    launch_subprocess(main, name="TheWindWakerClient")
 
 
 components.append(
