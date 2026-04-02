@@ -3,7 +3,7 @@ Option definitions for Final Fantasy ¨X
 """
 from typing import Any
 from dataclasses import dataclass
-from Options import Choice, DefaultOnToggle, Option, OptionGroup, Range, Toggle, PerGameCommonOptions
+from Options import Choice, DefaultOnToggle, Option, OptionGroup, NamedRange, Range, Toggle, PerGameCommonOptions
 
 class GoalRequirement(Choice):
     """
@@ -227,6 +227,28 @@ class MonsterArenaBosses(Choice):
     option_original = 3
 
 
+class EncounterWeighting(NamedRange):
+    """
+    Sets how much more likely enemy formations are to appear in encounters
+    when they contain fiends that need to be captured.
+    - Disabled: No weighting will be done. This is the default option.
+    - Low: Remaining formations will be weighted a little.
+    - Comfortable: Remaining formations will be weighted a noticeable amount.
+    - Extreme: Remaining formations will be heavily weighted.
+    """
+    default = 0
+    range_start = 0
+    range_end = 30
+    display_name = "Encounter Weighting"
+    rich_text_doc = True
+    special_range_names = {
+        "disabled": 0,
+        "low": 5,
+        "comfortable": 10,
+        "extreme": 30,
+    }
+
+
 class SuperBosses(Toggle):
     """
     Sets whether Super Boss locations are included or not. If off they will only have filler items.
@@ -412,6 +434,7 @@ class FFXOptions(PerGameCommonOptions):
     arena_access: MonsterArenaAccess
     creation_rewards: CreationRewards
     arena_bosses: MonsterArenaBosses
+    encounter_weighting: EncounterWeighting
     super_bosses: SuperBosses
     jecht_spheres: JechtSpheres
     tidus_overdrives: TidusOverdrives
@@ -479,6 +502,7 @@ ffx_option_groups: dict[str, list[Any]] = {
         MonsterArenaAccess,
         CreationRewards,
         MonsterArenaBosses,
+        EncounterWeighting,
         AlwaysCapture,
         CaptureDamage,
     ],
