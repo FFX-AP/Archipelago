@@ -229,6 +229,7 @@ class MonsterArenaBosses(Choice):
 
 class EncounterWeighting(NamedRange):
     """
+    ** Requires Capture Sanity **
     Sets how much more likely enemy formations are to appear in encounters
     when they contain fiends that need to be captured.
     - Disabled: No weighting will be done. This is the default option.
