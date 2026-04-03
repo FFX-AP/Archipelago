@@ -1,0 +1,73 @@
+triggers:
+  - option_category: Final Fantasy X
+    option_name: goal_requirement
+    option_result: nemesis
+    options:
+      Final Fantasy X:
+        capture_sanity: 'on'
+        creation_rewards: original
+        arena_bosses: original
+  
+  - option_category: Final Fantasy X
+    option_name: capture_sanity
+    option_result: 'off'
+    options:
+      Final Fantasy X:
+        creation_rewards: 'off'
+        arena_bosses: 'off'
+
+  - option_category: Final Fantasy X
+    option_name: creation_rewards
+    option_result: area
+    options:
+      Final Fantasy X:
+        capture_sanity: 'on'
+
+  - option_category: Final Fantasy X
+    option_name: creation_rewards
+    option_result: species
+    options:
+      Final Fantasy X:
+        capture_sanity: 'on'
+
+  - option_category: Final Fantasy X
+    option_name: creation_rewards
+    option_result: original
+    options:
+      Final Fantasy X:
+        capture_sanity: 'on'
+
+  - option_category: Final Fantasy X
+    option_name: arena_bosses
+    option_result: area
+    options:
+      Final Fantasy X:
+        capture_sanity: 'on'
+
+  - option_category: Final Fantasy X
+    option_name: arena_bosses
+    option_result: species
+    options:
+      Final Fantasy X:
+        capture_sanity: 'on'
+
+  - option_category: Final Fantasy X
+    option_name: arena_bosses
+    option_result: original
+    options:
+      Final Fantasy X:
+        capture_sanity: 'on'
+
+  - option_category: Final Fantasy X
+    option_name: capture_sanity
+    option_result: 'false'
+    options:
+      Final Fantasy X:
+        encounter_weighting: 0
+
+  - option_category: Final Fantasy X
+    option_name: capture_sanity
+    option_result: 'off'
+    options:
+      Final Fantasy X:
+        encounter_weighting: 0
