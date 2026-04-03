@@ -52,6 +52,9 @@ def options_validation(world: FFXWorld) -> None:
     elif world.options.arena_bosses.value and not world.options.capture_sanity.value:
         raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
                 "Arena Bosses cannot be enabled if Capture Sanity is disabled.")
+    elif world.options.encounter_weighting.value and not world.options.capture_sanity.value:
+        raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
+                "Encounter Weighting cannot be enabled if Capture Sanity is disabled.")
     
     if world.options.goal_requirement.value == world.options.goal_requirement.option_party_members:
         if world.options.required_party_members.value > 8:
