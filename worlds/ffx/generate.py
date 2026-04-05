@@ -72,7 +72,8 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
         "RequiredPrimers":      world.options.required_primers.value,
         "APMultiplier":         world.options.ap_multiplier.value,
         "AlwaysSensor":         world.options.always_sensor.value,
-        "CaptureRequirement":    max(world.options.creation_rewards.value, world.options.arena_bosses.value),
+        "CaptureRequirement":   0 if not world.options.capture_sanity.value \
+                                else max(1, world.options.creation_rewards.value, world.options.arena_bosses.value),
         "AlwaysCapture":        world.options.always_capture.value,
         "CaptureDamage":        world.options.capture_damage.value,
         "EncounterWeighting":   world.options.encounter_weighting.value,
