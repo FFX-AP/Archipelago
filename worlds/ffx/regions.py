@@ -598,13 +598,9 @@ def create_regions(world: FFXWorld, player) -> None:
         ]
         super_boss_treasure_ids = [
             332, # OMGR: Omega Boss Arena (Chest)
-            496, # MOAR: Become 'The One Who Conquered All' (Event)
         ]
         super_boss_other_ids = [
             27, # Jecht Sphere 2 - Requires Dark Valefor
-        ]
-        super_boss_overdrive_ids = [
-            19, # Ronso Rage: Use Lancet to Learn Nova
         ]
         for id in super_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]
@@ -614,9 +610,6 @@ def create_regions(world: FFXWorld, player) -> None:
             world.options.exclude_locations.value.add(location_name)
         for id in super_boss_other_ids:
             location_name = world.location_id_to_name[id | OtherOffset]
-            world.options.exclude_locations.value.add(location_name)   
-        for id in super_boss_overdrive_ids:
-            location_name = world.location_id_to_name[id | OverdriveOffset]
             world.options.exclude_locations.value.add(location_name) 
     
     # ---------------------------- Jecht's Spheres --------------------------- #
@@ -680,7 +673,10 @@ def create_regions(world: FFXWorld, player) -> None:
         for id in overdrive_location_ids:
             location_name = world.location_id_to_name[id | OverdriveOffset]
             world.options.exclude_locations.value.add(location_name) 
-                
+    # Nova
+    if not world.options.arena_bosses.value == world.options.arena_bosses.option_original and not world.options.super_bosses.value:
+        nova_location = world.location_id_to_name[19 | OverdriveOffset]
+        world.options.exclude_locations.value.add(nova_location)                
 
     # ------------------------------------------------------------------------ #
     #                             Victory Condition                            #
