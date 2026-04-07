@@ -26,31 +26,31 @@ class RegionData(dict):
         return self["id"]
     @property
     def treasures(self) -> list[int]:
-        return self["treasures"]
+        return self.get("treasures")
     @property
     def party_members(self) -> list[int]:
-        return self["party_members"]
+        return self.get("party_members")
     @property
     def bosses(self) -> list[int]:
-        return self["bosses"]
+        return self.get("bosses")
     @property
     def overdrives(self) -> list[int]:
-        return self["overdrives"]
+        return self.get("overdrives")
     @property
     def other(self) -> list[int]:
-        return self["other"]
+        return self.get("other")
     @property
     def recruits(self) -> list[int]:
-        return self["recruits"]
+        return self.get("recruits")
     @property
     def captures(self) -> list[int]:
-        return self["captures"]
+        return self.get("captures")
     @property
     def leads_to(self) -> list[int]:
-        return self["leads_to"]
+        return self.get("leads_to")
     @property
     def rules(self) -> list[str]:
-        return self["rules"]
+        return self.get("rules")
 
 
 def create_regions(world: FFXWorld, player) -> None:
@@ -192,9 +192,13 @@ def create_regions(world: FFXWorld, player) -> None:
     world.multiworld.regions.append(menu_region)
 
     region_file = pkgutil.get_data(__name__, "data/regions.json")
-    #region_data_list = [RegionData(x) for x in json.loads(region_file)]
-    region_data_list = json.loads(region_file)
-    region_data_list = [RegionData(x) for x in region_data_list]
+    enemy_file  = pkgutil.get_data(__name__, "data/enemies.json")
+
+    enemy_data_list   = json.loads(enemy_file)
+    region_data_list  = json.loads(region_file)
+    
+    region_data_list  = [RegionData(x) for x in region_data_list]
+    region_data_list += [RegionData(x) for x in enemy_data_list]
 
     region_dict: dict[int, Region] = dict()
     region_rules: dict[int, list[str]] = dict()
@@ -209,18 +213,26 @@ def create_regions(world: FFXWorld, player) -> None:
         if len(region_data.rules) > 0:
             region_rules[region_data.id] = region_data.rules
 
-        add_locations_by_ids(new_region, region_data.treasures, FFXTreasureLocations, "Treasure")
+        if region_data.treasures:
+            add_locations_by_ids(new_region, region_data.treasures, FFXTreasureLocations, "Treasure")
 
-        add_locations_by_ids(new_region, region_data.party_members, FFXPartyMemberLocations, "Party Member")
+        if region_data.party_members:
+            add_locations_by_ids(new_region, region_data.party_members, FFXPartyMemberLocations, "Party Member")
 
-        add_locations_by_ids(new_region, region_data.bosses, FFXBossLocations, "Boss")
+        if region_data.bosses:
+            add_locations_by_ids(new_region, region_data.bosses, FFXBossLocations, "Boss")
 
-        # TODO: Implement in client
-        add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
+        if region_data.overdrives:
+            add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
 
-        add_locations_by_ids(new_region, region_data.other, FFXOtherLocations, "Other")
+        if region_data.other:
+            add_locations_by_ids(new_region, region_data.other, FFXOtherLocations, "Other")
 
-        add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
+        if region_data.recruits:
+            add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
+
+        if region_data.captures:
+            add_locations_by_ids(new_region, region_data.capture, FFXCaptureLocations, "Capture")
 
     for location_id, region_name in captureDict.items():
         add_locations_by_ids(world.get_region(region_name), [location_id], FFXCaptureLocations, "Capture")
@@ -231,22 +243,23 @@ def create_regions(world: FFXWorld, player) -> None:
 
     # ---------------------------- Entrance Rules ---------------------------- #
     for region_data in region_data_list:
-        curr_region = region_dict[region_data.id]
-        for region_id in region_data.leads_to:
-            other_region = region_dict[region_id]
-            rules = region_rules.get(region_id)
-            entrance: Entrance = curr_region.connect(other_region)
-            new_rule: Rule = None
-            if rules is not None:
-                for rule in rules:
-                    regionRule: Rule | None = regionRuleDict.get(rule, 
-                        regionBossRuleDict.get(rule, 
-                        staticEncounterRuleDict.get(rule, None)))
-                    if new_rule is not None:
-                        new_rule &= regionRule
-                    else:
-                        new_rule = regionRule
-                world.set_rule(entrance, new_rule)
+        if region_data.leads_to:
+            curr_region = region_dict[region_data.id]
+            for region_id in region_data.leads_to:
+                other_region = region_dict[region_id]
+                rules = region_rules.get(region_id)
+                entrance: Entrance = curr_region.connect(other_region)
+                new_rule: Rule = None
+                if rules is not None:
+                    for rule in rules:
+                        regionRule: Rule | None = regionRuleDict.get(rule, 
+                            regionBossRuleDict.get(rule, 
+                            staticEncounterRuleDict.get(rule, None)))
+                        if new_rule is not None:
+                            new_rule &= regionRule
+                        else:
+                            new_rule = regionRule
+                    world.set_rule(entrance, new_rule)
 
     top_level_regions: list[tuple[Region, Entrance]] = []
     for region_id, other_region in region_dict.items():

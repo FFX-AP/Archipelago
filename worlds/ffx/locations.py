@@ -920,7 +920,7 @@ FFXCaptureLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+Captu
     ("Fiend Capture: Garuda",           40, False),
     ("Fiend Capture: Zu",               41, False),
     ("Fiend Capture: Sand Worm",        42, False),
-    # ("Unused Arena Index",            43, False),
+  # ("Unused Arena Index",              43, False),
     ("Fiend Capture: Ghost",            44, False),
     ("Fiend Capture: Achelous",         45, False),
     ("Fiend Capture: Maelspike",        46, False),
