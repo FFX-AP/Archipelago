@@ -184,6 +184,11 @@ def create_regions(world: FFXWorld, player) -> None:
     103: "Omega Ruins: Pre-Ultima Weapon",                                  # Machea
 }    
 
+    # enemy region id (2xxx) -> logical region id (xxx)
+    # monsterToRegionDict: dict [int, int] = {
+
+    # }
+
     # ------------------------------------------------------------------------ #
     #                              Region Creation                             #
     # ------------------------------------------------------------------------ #
@@ -193,46 +198,56 @@ def create_regions(world: FFXWorld, player) -> None:
 
     region_file = pkgutil.get_data(__name__, "data/regions.json")
     enemy_file  = pkgutil.get_data(__name__, "data/enemies.json")
-
-    enemy_data_list   = json.loads(enemy_file)
-    region_data_list  = json.loads(region_file)
+   
+    region_data_list = json.loads(region_file)
+    enemy_data_list  = json.loads(enemy_file)
     
-    region_data_list  = [RegionData(x) for x in region_data_list]
-    region_data_list += [RegionData(x) for x in enemy_data_list]
+    region_data_list = [RegionData(x) for x in region_data_list]
+    enemy_data_list  = [RegionData(x) for x in enemy_data_list]
 
     region_dict: dict[int, Region] = dict()
     region_rules: dict[int, list[str]] = dict()
 
+    enemyToRegionDict: dict[Region, Region] = dict()
+
     all_locations = []
 
-    # ------------------------ Add Locations by Region ----------------------- #
+    # ------------------------ Create Logical Regions ----------------------- #
     for region_data in region_data_list:
         new_region = Region(region_data.name, player, world.multiworld)
         region_dict[region_data.id] = new_region
         world.multiworld.regions.append(new_region)
         if len(region_data.rules) > 0:
             region_rules[region_data.id] = region_data.rules
+    
+    # ---------------------- Create Enemy Region Dictionary ---------------------- #
+    for enemy_data in enemy_data_list:
+        
+        for region_id, region in region_dict:
 
+
+    # ------------------------- Add Locations to Regions ------------------------- #
+    for region_data in region_data_list:
         if region_data.treasures:
-            add_locations_by_ids(new_region, region_data.treasures, FFXTreasureLocations, "Treasure")
+            add_locations_by_ids(region_dict[region_data.id], region_data.treasures, FFXTreasureLocations, "Treasure")
 
         if region_data.party_members:
-            add_locations_by_ids(new_region, region_data.party_members, FFXPartyMemberLocations, "Party Member")
+            add_locations_by_ids(region_dict[region_data.id], region_data.party_members, FFXPartyMemberLocations, "Party Member")
 
         if region_data.bosses:
-            add_locations_by_ids(new_region, region_data.bosses, FFXBossLocations, "Boss")
+            add_locations_by_ids(region_dict[region_data.id], region_data.bosses, FFXBossLocations, "Boss")
 
         if region_data.overdrives:
-            add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
+            add_locations_by_ids(region_dict[region_data.id], region_data.overdrives, FFXOverdriveLocations, "Overdrive")
 
         if region_data.other:
-            add_locations_by_ids(new_region, region_data.other, FFXOtherLocations, "Other")
+            add_locations_by_ids(region_dict[region_data.id], region_data.other, FFXOtherLocations, "Other")
 
         if region_data.recruits:
-            add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
+            add_locations_by_ids(region_dict[region_data.id], region_data.recruits, FFXRecruitLocations, "Recruit")
 
         if region_data.captures:
-            add_locations_by_ids(new_region, region_data.capture, FFXCaptureLocations, "Capture")
+            add_locations_by_ids(region_dict[region_data.id], region_data.capture, FFXCaptureLocations, "Capture")
 
     for location_id, region_name in captureDict.items():
         add_locations_by_ids(world.get_region(region_name), [location_id], FFXCaptureLocations, "Capture")

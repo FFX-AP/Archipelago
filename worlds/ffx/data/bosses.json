@@ -1,0 +1,836 @@
+[
+    {
+    "name": "Ultima Weapon",
+    "id": 3099,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Omega Weapon",
+    "id": 3100,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Tros",
+    "id": 3101,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Geneaux",
+    "id": 3102,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Geneaux's Tentacle",
+    "id": 3103,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Chocobo Eater",
+    "id": 3104,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Neslug",
+    "id": 3105,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Mortiphasm",
+    "id": 3106,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sin Fin - Sinscale",
+    "id": 3107,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Geosgaeno",
+    "id": 3109,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Oblitzerator",
+    "id": 3110,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Extractor",
+    "id": 3111,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Kimahri",
+    "id": 3112,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sin Fin",
+    "id": 3113,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Echuilles",
+    "id": 3114,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Echuilles - Sinscale",
+    "id": 3115,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Yojimbo - Sinscale",
+    "id": 3116,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Gui",
+    "id": 3117,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Evrae",
+    "id": 3119,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Evrae Altana",
+    "id": 3120,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Spherimorph",
+    "id": 3121,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Crawler",
+    "id": 3122,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Negator",
+    "id": 3123,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Seymour",
+    "id": 3124,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Anima - Seymour",
+    "id": 3125,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Seymour Natus",
+    "id": 3126,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Mortibody",
+    "id": 3127,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sanctuary Keeper",
+    "id": 3128,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Spectral Keeper",
+    "id": 3129,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Yunalesca",
+    "id": 3130,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Seymour Omnis",
+    "id": 3131,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Braska's Final Aeon",
+    "id": 3132,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Crane",
+    "id": 3133,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Biran Ronso",
+    "id": 3134,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Yenke Ronso",
+    "id": 3135,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sin - Left Fin",
+    "id": 3136,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sin - Right Fin",
+    "id": 3137,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sin Core",
+    "id": 3138,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Genais",
+    "id": 3139,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Overdrive Sin",
+    "id": 3140,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Guado Guardian - Seymour",
+    "id": 3141,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Seymour Flux",
+    "id": 3142,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Mortiorchis",
+    "id": 3143,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Kimahri Weapon",
+    "id": 3144,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinscale - Dream Zanarkand",
+    "id": 3147,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Ammes - Sinscale",
+    "id": 3148,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Lord Ochu",
+    "id": 3153,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Klikk",
+    "id": 3158,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Ammes",
+    "id": 3159,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Gui - Head",
+    "id": 3160,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sinspawn Gui - Arm",
+    "id": 3161,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Gate Lock 1",
+    "id": 3162,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Valefor - Contest",
+    "id": 3163,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Ifrit - Contest",
+    "id": 3164,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Ixion  - Contest",
+    "id": 3165,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Shiva - Contest",
+    "id": 3166,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Bahamut - Contest",
+    "id": 3167,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Anima - Contest",
+    "id": 3168,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Yojimbo - Contest",
+    "id": 3169,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Tanker",
+    "id": 3170,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Gate Lock 2",
+    "id": 3171,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Yu Pagoda - Right",
+    "id": 3173,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Yu Pagoda - Left",
+    "id": 3174,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Tentacle",
+    "id": 3175,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Yu Yevon",
+    "id": 3176,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Cindy - Contest",
+    "id": 3178,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sandy - Contest",
+    "id": 3179,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Mindy - Contest",
+    "id": 3180,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Wendigo",
+    "id": 3212,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Guado Guardian - Wendigo",
+    "id": 3213,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Defender X",
+    "id": 3229,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Isaaru",
+    "id": 3248,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Mira",
+    "id": 3249,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine",
+    "id": 3250,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Valefor",
+    "id": 3254,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Anima",
+    "id": 3265,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Koma Inu",
+    "id": 3266,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Katana",
+    "id": 3269,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Kozuka",
+    "id": 3270,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Shuriken",
+    "id": 3271,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Ultima Buster - Head",
+    "id": 3272,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Ultima Buster - Arm",
+    "id": 3273,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Nishida",
+    "id": 3274,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sword",
+    "id": 3275,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Nemesis",
+    "id": 3276,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Catastrophe",
+    "id": 3277,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Earth Eater",
+    "id": 3279,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Ultima Buster",
+    "id": 3280,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Greater Sphere",
+    "id": 3281,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Th'uban",
+    "id": 3282,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Shinryu",
+    "id": 3283,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Ifrit",
+    "id": 3284,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Ixion",
+    "id": 3285,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Shiva",
+    "id": 3286,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Bahamut",
+    "id": 3287,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Yojimbo",
+    "id": 3288,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Sandy",
+    "id": 3289,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Cindy",
+    "id": 3290,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Belgemine - Mindy",
+    "id": 3291,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Tanket",
+    "id": 3292,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Vidatu",
+    "id": 3293,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Fenrir",
+    "id": 3294,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Jumbo Flan",
+    "id": 3295,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Ornitholestes",
+    "id": 3296,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Pteryx",
+    "id": 3297,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Hornet",
+    "id": 3298,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "One-Eye",
+    "id": 3299,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Stratoavis",
+    "id": 3300,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Abyss Worm",
+    "id": 3301,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Juggernaut",
+    "id": 3302,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Fafnir",
+    "id": 3303,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Malboro Menace",
+    "id": 3304,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Kottos",
+    "id": 3305,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Nega Elemental",
+    "id": 3306,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Catoblepas",
+    "id": 3307,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Chimerageist",
+    "id": 3308,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Coeurlregina",
+    "id": 3309,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Ironclad",
+    "id": 3310,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Jormungand",
+    "id": 3311,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Abaddon",
+    "id": 3312,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Bomb King",
+    "id": 3313,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Cactuar King",
+    "id": 3314,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Vorban",
+    "id": 3315,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Sleep Sprout",
+    "id": 3316,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Don Tonberry",
+    "id": 3317,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Espada",
+    "id": 3318,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Valefor",
+    "id": 3334,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Ifrit",
+    "id": 3335,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Ixion",
+    "id": 3336,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Shiva",
+    "id": 3337,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Bahamut",
+    "id": 3338,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Anima",
+    "id": 3339,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Yojimbo",
+    "id": 3340,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Cindy",
+    "id": 3341,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Sandy",
+    "id": 3342,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Dark Mindy",
+    "id": 3343,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Penance",
+    "id": 3344,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Penance - Right Arm",
+    "id": 3345,
+    "captures": [],
+    "rules": []
+  },
+  {
+    "name": "Penance - Left Arm",
+    "id": 3346,
+    "captures": [],
+    "rules": []
+  }
+]
