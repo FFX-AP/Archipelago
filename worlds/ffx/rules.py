@@ -318,6 +318,7 @@ regionRuleDict: dict[str, Rule] = {
 }
 
 regionBossRuleDict: dict[str, Rule] = {
+    "Tros":                LogicDifficultyRule( 1) & MinSwimmerRule(1),
     "Sin Fin":             LogicDifficultyRule( 2) & MinPartyRule  (3) & RangedRule(),
     "Sinspawn Echuilles":  LogicDifficultyRule( 2) & MinSwimmerRule(2),
     "Sinspawn Geneaux":    LogicDifficultyRule( 3) & MinPartyRule  (3),
@@ -348,6 +349,17 @@ regionBossRuleDict: dict[str, Rule] = {
     "Ultima Weapon":       LogicDifficultyRule(17) & MinPartyRule  (3),
     "Omega Weapon":        LogicDifficultyRule(18) & MinPartyRule  (3),
     "Nemesis":             LogicDifficultyRule(18) & MinPartyRule  (3),
+
+    "Dark Valefor":        LogicDifficultyRule(18) & MinPartyRule  (3) & Has("Party Member: Yuna"),
+    "Dark Ifrit":          LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Dark Ixion":          LogicDifficultyRule(18) & MinPartyRule  (3) & Has("Party Member: Yuna"),
+    "Dark Shiva":          LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Dark Bahamut":        LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Dark Anima":          LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Dark Yojimbo":        LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Dark Mindy":          LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Dark Sandy":          LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Dark Cindy":          LogicDifficultyRule(18) & MinPartyRule  (3),
 }
 
 staticEncounterRuleDict: dict[str, Rule] = {

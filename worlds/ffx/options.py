@@ -418,6 +418,16 @@ class SphereGridRandomization(Choice):
     option_off = 0
 
 
+class EnemyRandomization(Choice):
+    """
+    Sets whether enemy positions are randomized.
+    Default is off.
+    """
+    display_name = "Enemy Randomization"
+    default = 0
+    option_off = 0
+
+
 @dataclass
 class FFXOptions(PerGameCommonOptions):
     goal_requirement: GoalRequirement
@@ -450,6 +460,7 @@ class FFXOptions(PerGameCommonOptions):
     capture_damage: CaptureDamage
     skip_contest_of_aeons: SkipContestOfAeons
     sphere_grid_randomization: SphereGridRandomization
+    enemy_randomization: EnemyRandomization
 
 # Ethically inspired by A Hat in Time's world
 def create_option_groups() -> list[OptionGroup]:
@@ -480,6 +491,10 @@ ffx_option_groups: dict[str, list[Any]] = {
         AlwaysSensor,
         SkipContestOfAeons,
         SphereGridRandomization,
+    ],
+
+    "Enemy Rando Options": [
+        EnemyRandomization
     ],
 
     "Minigame Options": [

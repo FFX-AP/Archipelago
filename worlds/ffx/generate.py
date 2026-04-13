@@ -11,6 +11,7 @@ from Options import OptionError
 from worlds.AutoWorld import World
 from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatch, APPlayerContainer
 from .locations import location_types, get_location_type
+from .regions import enemyToRegionDict
 
 if typing.TYPE_CHECKING:
     from .__init__ import FFXWorld
@@ -102,11 +103,14 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
         starting_items.append(item.code)
     locations["StartingItems"] = starting_items
 
+    enemies = enemyToRegionDict
+
     mod_name = world.multiworld.get_out_file_name_base(world.player)
     mod_dir = os.path.join(output_directory, mod_name)
     mod_files = {
         "options.json"  : json.dumps(options_data, indent=4),
         "locations.json": json.dumps(locations   , indent=4),
+        "enemies.json"  : json.dumps(enemies     , indent=4),
     }
     mod = FFXContainer(mod_files, mod_dir, output_directory, world.player,
                        world.multiworld.get_file_safe_player_name(world.player))

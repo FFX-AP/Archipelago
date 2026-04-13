@@ -2,835 +2,974 @@
     {
     "name": "Ultima Weapon",
     "id": 3099,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Omega Weapon",
     "id": 3100,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Tros",
     "id": 3101,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Geneaux",
     "id": 3102,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Geneaux's Tentacle",
     "id": 3103,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Chocobo Eater",
     "id": 3104,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Neslug",
     "id": 3105,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Mortiphasm",
     "id": 3106,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sin Fin - Sinscale",
     "id": 3107,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Geosgaeno",
     "id": 3109,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Oblitzerator",
     "id": 3110,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Extractor",
     "id": 3111,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Kimahri",
     "id": 3112,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sin Fin",
     "id": 3113,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Echuilles",
     "id": 3114,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Echuilles - Sinscale",
     "id": 3115,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Yojimbo - Sinscale",
     "id": 3116,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Gui",
     "id": 3117,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Evrae",
     "id": 3119,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Evrae Altana",
     "id": 3120,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Spherimorph",
     "id": 3121,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Crawler",
     "id": 3122,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Negator",
     "id": 3123,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Seymour",
     "id": 3124,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Anima - Seymour",
     "id": 3125,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Seymour Natus",
     "id": 3126,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Mortibody",
     "id": 3127,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sanctuary Keeper",
     "id": 3128,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Spectral Keeper",
     "id": 3129,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Yunalesca",
     "id": 3130,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Seymour Omnis",
     "id": 3131,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Braska's Final Aeon",
     "id": 3132,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Crane",
     "id": 3133,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Biran Ronso",
     "id": 3134,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Yenke Ronso",
     "id": 3135,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sin - Left Fin",
     "id": 3136,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sin - Right Fin",
     "id": 3137,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sin Core",
     "id": 3138,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Genais",
     "id": 3139,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Overdrive Sin",
     "id": 3140,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Guado Guardian - Seymour",
     "id": 3141,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Seymour Flux",
     "id": 3142,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Mortiorchis",
     "id": 3143,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Kimahri Weapon",
     "id": 3144,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinscale - Dream Zanarkand",
     "id": 3147,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Ammes - Sinscale",
     "id": 3148,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Lord Ochu",
     "id": 3153,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Klikk",
     "id": 3158,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Ammes",
     "id": 3159,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Gui - Head",
     "id": 3160,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sinspawn Gui - Arm",
     "id": 3161,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Gate Lock 1",
     "id": 3162,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Valefor - Contest",
     "id": 3163,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Ifrit - Contest",
     "id": 3164,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Ixion  - Contest",
     "id": 3165,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Shiva - Contest",
     "id": 3166,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Bahamut - Contest",
     "id": 3167,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Anima - Contest",
     "id": 3168,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Yojimbo - Contest",
     "id": 3169,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Tanker",
     "id": 3170,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Gate Lock 2",
     "id": 3171,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Yu Pagoda - Right",
     "id": 3173,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Yu Pagoda - Left",
     "id": 3174,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Tentacle",
     "id": 3175,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Yu Yevon",
     "id": 3176,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Cindy - Contest",
     "id": 3178,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sandy - Contest",
     "id": 3179,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Mindy - Contest",
     "id": 3180,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Wendigo",
     "id": 3212,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Guado Guardian - Wendigo",
     "id": 3213,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Defender X",
     "id": 3229,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Isaaru",
     "id": 3248,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Mira",
     "id": 3249,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine",
     "id": 3250,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Valefor",
     "id": 3254,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Anima",
     "id": 3265,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Koma Inu",
     "id": 3266,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Katana",
     "id": 3269,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Kozuka",
     "id": 3270,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Shuriken",
     "id": 3271,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Ultima Buster - Head",
     "id": 3272,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Ultima Buster - Arm",
     "id": 3273,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Nishida",
     "id": 3274,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sword",
     "id": 3275,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Nemesis",
     "id": 3276,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Catastrophe",
     "id": 3277,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Earth Eater",
     "id": 3279,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Ultima Buster",
     "id": 3280,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Greater Sphere",
     "id": 3281,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Th'uban",
     "id": 3282,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Shinryu",
     "id": 3283,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Ifrit",
     "id": 3284,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Ixion",
     "id": 3285,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Shiva",
     "id": 3286,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Bahamut",
     "id": 3287,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Yojimbo",
     "id": 3288,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Sandy",
     "id": 3289,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Cindy",
     "id": 3290,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Belgemine - Mindy",
     "id": 3291,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Tanket",
     "id": 3292,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Vidatu",
     "id": 3293,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Fenrir",
     "id": 3294,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Jumbo Flan",
     "id": 3295,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Ornitholestes",
     "id": 3296,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Pteryx",
     "id": 3297,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Hornet",
     "id": 3298,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "One-Eye",
     "id": 3299,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Stratoavis",
     "id": 3300,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Abyss Worm",
     "id": 3301,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Juggernaut",
     "id": 3302,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Fafnir",
     "id": 3303,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Malboro Menace",
     "id": 3304,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Kottos",
     "id": 3305,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Nega Elemental",
     "id": 3306,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Catoblepas",
     "id": 3307,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Chimerageist",
     "id": 3308,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Coeurlregina",
     "id": 3309,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Ironclad",
     "id": 3310,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Jormungand",
     "id": 3311,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Abaddon",
     "id": 3312,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Bomb King",
     "id": 3313,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Cactuar King",
     "id": 3314,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Vorban",
     "id": 3315,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Sleep Sprout",
     "id": 3316,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Don Tonberry",
     "id": 3317,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Espada",
     "id": 3318,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Valefor",
     "id": 3334,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Ifrit",
     "id": 3335,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Ixion",
     "id": 3336,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Shiva",
     "id": 3337,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Bahamut",
     "id": 3338,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Anima",
     "id": 3339,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Yojimbo",
     "id": 3340,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Cindy",
     "id": 3341,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Sandy",
     "id": 3342,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Dark Mindy",
     "id": 3343,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Penance",
     "id": 3344,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Penance - Right Arm",
     "id": 3345,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   },
   {
     "name": "Penance - Left Arm",
     "id": 3346,
-    "captures": [],
+    "bosses": [],
+    "leads_to": [],
     "rules": []
   }
 ]

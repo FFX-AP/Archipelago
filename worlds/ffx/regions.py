@@ -52,6 +52,177 @@ class RegionData(dict):
     def rules(self) -> list[str]:
         return self.get("rules")
 
+# enemy region id (2xxx) --> default logical region id (xxx)
+enemyToRegionDict: dict [int, list[int]] = {
+    2001: [40, 41, 42],   # Raldo
+    2002: [60, 61, 70, 71, 72],   # Bunyip
+    2003: [],   # Murussu
+    2004: [],   # Mafdet
+    2005: [],   # Shred
+    2006: [],   # Gandarewa
+    2007: [],   # Aerouge
+    2008: [],   # Imp
+    2009: [],   # Dingo
+    2010: [],   # Mi'ihen Fang
+    2011: [],   # Garm
+    2012: [],   # Snow Wolf
+    2013: [],   # Sand Wolf
+    2014: [],   # Skoll
+    2015: [],   # Bandersnatch
+    2016: [],   # Water Flan
+    2017: [],   # Thunder Flan
+    2018: [],   # Snow Flan
+    2019: [],   # Ice Flan
+    2020: [],   # Flame Flan
+    2021: [],   # Dark Flan
+    2022: [],   # Dinonix
+    2023: [],   # Ipiria
+    2024: [],   # Raptor
+    2025: [],   # Melusine
+    2026: [],   # Iguion
+    2027: [],   # Yowie
+    2028: [],   # Condor
+    2029: [],   # Simurgh
+    2030: [],   # Alcyone
+    2031: [],   # Killer Bee
+    2032: [],   # Bite Bug
+    2033: [],   # Wasp
+    2034: [],   # Nebiros
+    2035: [],   # Floating Eye
+    2036: [],   # Buer
+    2037: [],   # Evil Eye
+    2038: [],   # Ahriman
+    2039: [],   # Ragora
+    2040: [],   # Grat
+    2042: [],   # Sahagin - Bevelle 1
+    2043: [],   # Sahagin - Bevelle 2
+    2044: [],   # Garuda
+    2045: [],   # Zu
+    2046: [],   # Sand Worm
+    2047: [],   # Land Worm
+    2048: [],   # Defender
+    2049: [],   # Defender Z
+    2050: [],   # Ghost
+    2051: [],   # Phlegyas
+    2052: [],   # Achelous
+    2053: [],   # Remora
+    2054: [],   # Maelspike
+    2055: [],   # Dual Horn
+    2056: [],   # Valaha
+    2057: [],   # Grendel
+    2058: [],   # Octopus
+    2059: [],   # Vouivre
+    2060: [],   # Lamashtu
+    2061: [],   # Kusariqqu
+    2062: [],   # Mushussu
+    2063: [],   # Nidhogg
+    2064: [],   # Malboro
+    2065: [],   # Great Malboro
+    2066: [],   # Ogre
+    2067: [],   # Bashura
+    2068: [],   # Piranha 1
+    2069: [],   # Piranha 2
+    2070: [],   # Piranha 3
+    2071: [],   # Splasher 1
+    2072: [],   # Splasher 2
+    2073: [],   # Splasher 3
+    2077: [],   # Yellow Element
+    2078: [],   # White Element
+    2079: [],   # Red Element
+    2080: [],   # Gold Element
+    2081: [],   # Blue Element
+    2082: [],   # Dark Element
+    2083: [],   # Black Element
+    2084: [],   # Epaaj
+    2085: [],   # Behemoth
+    2086: [],   # Behemoth King
+    2087: [],   # Chimera
+    2088: [],   # Chimera Brain
+    2089: [],   # Coeurl
+    2090: [],   # Master Coeurl
+    2091: [],   # Mech Guard
+    2092: [],   # Mech Scouter 1
+    2093: [],   # Mech Scouter 2
+    2094: [],   # Mech Leader
+    2095: [],   # Demonolith
+    2096: [],   # Mech Gunner
+    2097: [],   # Mech Hunter
+    2098: [],   # Mech Defender
+    2151: [],   # Vouivre - Luca
+    2152: [],   # Worker
+    2155: [],   # Sahagin - Baaj
+    2156: [],   # Sahagin Chief
+    2157: [],   # Garuda - Luca
+    2181: [],   # Iron Giant
+    2182: [],   # Gemini - Sword
+    2184: [],   # Gemini - Club
+    2185: [],   # Basilisk
+    2186: [],   # Anacondaur
+    2187: [],   # Adamantoise
+    2188: [],   # Varuna
+    2189: [],   # Ochu
+    2190: [],   # Mandragora
+    2191: [],   # YAT-99
+    2192: [],   # YAT-97
+    2193: [],   # Bomb
+    2194: [],   # Grenade
+    2195: [],   # YKT-63
+    2196: [],   # YKT-11
+    2197: [],   # Warrior Monk - Rifle
+    2198: [],   # Fallen Monk - Rifle
+    2199: [],   # Warrior Monk - Fire
+    2200: [],   # Fallen Monk - Fire
+    2201: [],   # PuPu
+    2202: [],   # Magic Urn 1
+    2203: [],   # Magic Urn 2
+    2204: [],   # Magic Urn 3
+    2205: [],   # Magic Urn 4
+    2206: [],   # Magic Urn 5
+    2207: [],   # Qactuar
+    2208: [],   # Cactuar
+    2209: [],   # Larva
+    2210: [],   # Barbatos
+    2214: [],   # Funguar
+    2215: [],   # Thorn
+    2216: [],   # Exoray
+    2217: [],   # Xiphos
+    2218: [],   # Puroboros
+    2219: [],   # Spirit
+    2220: [],   # Wraith
+    2221: [],   # Sandragora
+    2222: [],   # Guado Guardian - Summon
+    2223: [],   # Tonberry
+    2224: [],   # Master Tonberry
+    2225: [],   # Evil Eye - Home & Airship
+    2226: [],   # Bomb - Home & Airship
+    2228: [],   # Dual Horn - Home & Airship
+    2230: [],   # Garuda - Tutorial
+    2231: [],   # Dingo - Tutorial
+    2232: [],   # Water Flan - Tutorial
+    2233: [],   # Condor - Tutorial
+    2234: [],   # Ragora - Tutorial
+    2235: [],   # Raldo - Tutorial
+    2238: [],   # Zu - Tutorial
+    2239: [],   # Zaurus
+    2240: [],   # Halma
+    2241: [],   # Aqua Flan
+    2242: [],   # Floating Death
+    2243: [],   # Maze Larva
+    2244: [],   # Machea
+    2245: [],   # Cave Iguion
+    2246: [],   # Swamp Mafdet
+    2247: [],   # Bat Eye
+    2251: [],   # Mimic 1
+    2252: [],   # Mimic 2
+    2253: [],   # Mimic 3
+    2256: [],   # Mimic 4
+    2257: [],   # Mimic Parts 1
+    2260: [],   # Mimic Parts 2
+    2261: [],   # Mimic Parts 3
+    2262: [],   # Mimic Parts 4
+    2263: [],   # Rifle
+    2321: [],   # Vulture
+}
 
 def create_regions(world: FFXWorld, player) -> None:
     def create_region_locations(region_name, treasures):
@@ -184,10 +355,12 @@ def create_regions(world: FFXWorld, player) -> None:
     103: "Omega Ruins: Pre-Ultima Weapon",                                  # Machea
 }    
 
-    # enemy region id (2xxx) -> logical region id (xxx)
-    # monsterToRegionDict: dict [int, int] = {
-
-    # }
+    global enemyToRegionDict
+    if world.options.enemy_randomization.value:
+        enemy_regions = list(enemyToRegionDict.key())
+        logical_regions = list(enemyToRegionDict.values())
+        world.random.shuffle(logical_regions)
+        enemyToRegionDict = dict(zip(enemy_regions, logical_regions))
 
     # ------------------------------------------------------------------------ #
     #                              Region Creation                             #
@@ -198,17 +371,18 @@ def create_regions(world: FFXWorld, player) -> None:
 
     region_file = pkgutil.get_data(__name__, "data/regions.json")
     enemy_file  = pkgutil.get_data(__name__, "data/enemies.json")
+    boss_file   = pkgutil.get_data(__name__, "data/bosses.json")
    
     region_data_list = json.loads(region_file)
     enemy_data_list  = json.loads(enemy_file)
+    boss_data_list   = json.loads(boss_file)
     
     region_data_list = [RegionData(x) for x in region_data_list]
     enemy_data_list  = [RegionData(x) for x in enemy_data_list]
+    boss_data_list   = [RegionData(x) for x in boss_data_list]
 
     region_dict: dict[int, Region] = dict()
     region_rules: dict[int, list[str]] = dict()
-
-    enemyToRegionDict: dict[Region, Region] = dict()
 
     all_locations = []
 
@@ -220,14 +394,22 @@ def create_regions(world: FFXWorld, player) -> None:
         if len(region_data.rules) > 0:
             region_rules[region_data.id] = region_data.rules
     
-    # ---------------------- Create Enemy Region Dictionary ---------------------- #
     for enemy_data in enemy_data_list:
-        
-        for region_id, region in region_dict:
+        new_region = Region(enemy_data.name, player, world.multiworld)
+        region_dict[enemy_data.id] = new_region
+        world.multiworld.regions.append(new_region)
+        if len(enemy_data.rules) > 0:
+            region_rules[enemy_data.id] = enemy_data.rules
 
+    # for boss_data in boss_data_list:
+    #     new_region = Region(boss_data.name, player, world.multiworld)
+    #     region_dict[boss_data.id] = new_region
+    #     world.multiworld.regions.append(new_region)
+    #     if len(boss_data.rules) > 0:
+    #         region_rules[boss_data.id] = boss_data.rules
 
     # ------------------------- Add Locations to Regions ------------------------- #
-    for region_data in region_data_list:
+    for region_data in region_data_list + enemy_data_list: # + boss_data_list:
         if region_data.treasures:
             add_locations_by_ids(region_dict[region_data.id], region_data.treasures, FFXTreasureLocations, "Treasure")
 
@@ -247,23 +429,19 @@ def create_regions(world: FFXWorld, player) -> None:
             add_locations_by_ids(region_dict[region_data.id], region_data.recruits, FFXRecruitLocations, "Recruit")
 
         if region_data.captures:
-            add_locations_by_ids(region_dict[region_data.id], region_data.capture, FFXCaptureLocations, "Capture")
-
-    for location_id, region_name in captureDict.items():
-        add_locations_by_ids(world.get_region(region_name), [location_id], FFXCaptureLocations, "Capture")
+            add_locations_by_ids(region_dict[region_data.id], region_data.captures, FFXCaptureLocations, "Capture")
 
     for location_data in FFXOverdriveLocations[:6]:
         overdrive_location = FFXLocation(player, location_data.name, location_data.rom_address, menu_region)
         menu_region.locations.append(overdrive_location)
 
-    # ---------------------------- Entrance Rules ---------------------------- #
+    # ---------------------------- Create Entrances ---------------------------- #
     for region_data in region_data_list:
         if region_data.leads_to:
             curr_region = region_dict[region_data.id]
             for region_id in region_data.leads_to:
                 other_region = region_dict[region_id]
                 rules = region_rules.get(region_id)
-                entrance: Entrance = curr_region.connect(other_region)
                 new_rule: Rule = None
                 if rules is not None:
                     for rule in rules:
@@ -274,13 +452,13 @@ def create_regions(world: FFXWorld, player) -> None:
                             new_rule &= regionRule
                         else:
                             new_rule = regionRule
-                    world.set_rule(entrance, new_rule)
-
-    top_level_regions: list[tuple[Region, Entrance]] = []
-    for region_id, other_region in region_dict.items():
-        if len(other_region.entrances) == 0:
-            rules = region_rules.get(region_id)
-            menu_entrance: Entrance = menu_region.connect(other_region)
+                curr_region.connect(other_region, rule=new_rule)
+    
+    for enemy, logical_regions in enemyToRegionDict.items():
+        enemy_region = region_dict[enemy]
+        for region in logical_regions:
+            logical_region = region_dict[region]
+            rules = region_rules.get(enemy)
             new_rule: Rule = None
             if rules is not None:
                 for rule in rules:
@@ -291,7 +469,23 @@ def create_regions(world: FFXWorld, player) -> None:
                         new_rule &= regionRule
                     else:
                         new_rule = regionRule
-                world.set_rule(menu_entrance, new_rule)
+            logical_region.connect(enemy_region, rule=new_rule)
+
+    top_level_regions: list[tuple[Region, Entrance]] = []
+    for region_id, other_region in region_dict.items():
+        if len(other_region.entrances) == 0:
+            rules = region_rules.get(region_id)
+            new_rule: Rule = None
+            if rules is not None:
+                for rule in rules:
+                    regionRule: Rule | None = regionRuleDict.get(rule, 
+                        regionBossRuleDict.get(rule, 
+                        staticEncounterRuleDict.get(rule, None)))
+                    if new_rule is not None:
+                        new_rule &= regionRule
+                    else:
+                        new_rule = regionRule
+            menu_entrance: Entrance = menu_region.connect(other_region, rule=new_rule)
             top_level_regions.append((other_region, menu_entrance))
 
 
