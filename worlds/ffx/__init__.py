@@ -2,7 +2,7 @@
 Archipelago World definition for Final Fantasy X
 """
 import math
-from typing import ClassVar, Any, Optional
+from typing import ClassVar, Any
 from settings import Group, FilePath
 
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType

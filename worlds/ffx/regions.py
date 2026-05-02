@@ -1,7 +1,7 @@
 from BaseClasses import Entrance, ItemClassification, Region, Location, LocationProgressType, CollectionState
 import json
 import pkgutil
-import typing
+from typing import TYPE_CHECKING
 
 from .locations import FFXLocation, FFXTreasureLocations, FFXPartyMemberLocations, FFXBossLocations, \
     FFXOverdriveLocations, FFXOtherLocations, FFXRecruitLocations, \
@@ -11,7 +11,7 @@ from rule_builder.rules import Rule, Has
 from .rules import regionRuleDict, regionBossRuleDict, staticEncounterRuleDict, GoalRequirementRule, PrimerRequirementRule
 from .items import party_member_items, key_items, FFXItem
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from .__init__ import FFXWorld
 else:
     FFXWorld = object
