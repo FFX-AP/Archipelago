@@ -3,7 +3,6 @@ Archipelago World definition for Final Fantasy X
 """
 import math
 from typing import ClassVar, Any, Optional
-from random import choice, Random, shuffle
 from settings import Group, FilePath
 
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
@@ -163,10 +162,10 @@ class FFXWorld(World):
             required_items.append(overdrive.itemName)
 
         if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_early:
-            overdrive = choice(overdrive_items[:4])
+            overdrive = self.random.choice(overdrive_items[:4])
             self.multiworld.early_items[self.player][overdrive.itemName] = 1
         if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_start_with:
-            overdrive = choice(overdrive_items[:4])
+            overdrive = self.random.choice(overdrive_items[:4])
             self.multiworld.push_precollected(self.create_item(overdrive.itemName))
             required_items.remove(overdrive.itemName)
 
