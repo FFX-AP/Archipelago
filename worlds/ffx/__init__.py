@@ -14,7 +14,7 @@ from .client import FFXClient
 
 from .items import create_item_label_to_code_map, item_table, key_items, filler_items, AllItems, FFXItem, \
     party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items, normal_items, \
-    generated_normal_items, overdrive_items
+    generated_normal_items, overdrive_items, NormalItemData
 from .locations import create_location_label_to_id_map, FFXLocation, allLocations
 from .regions import create_regions
 from .options import FFXOptions, create_option_groups
@@ -182,26 +182,42 @@ class FFXWorld(World):
         traps_remaining = int(items_remaining * self.options.trap_percentage.value / 100)
         items_remaining = items_remaining - traps_remaining
 
+        filler_remaining = int(items_remaining * self.options.filler_percentage.value / 100)
+        items_remaining = items_remaining - filler_remaining
+
         # ----------------- Add Required Items to Multiworld ----------------- #
         for itemName in required_items:
             self.multiworld.itempool.append(self.create_item(itemName))
 
         # ------------------------ Set up Useful Items ----------------------- #
-        useful_items = []
-        generated_normal_item_names = set(item.itemName for item in generated_normal_items)
+        all_useful_items: list[str] = []
+        generated_normal_item_names: set[str] = {item.itemName for item in generated_normal_items}
         for item in AllItems:
             if item.progression == ItemClassification.useful:
                 if item.itemName in generated_normal_item_names:
                     continue
-                useful_items += [item.itemName]
+                all_useful_items += [item.itemName]
 
-        for itemName, classification, _, min_amount, max_amount, weight in normal_items:
-            if classification == ItemClassification.useful:
-                quantity = min(max_amount, math.floor(self.random.triangular(min_amount, max_amount+1, weight)))
-                #quantity = self.random.randint(1, 99)
-                useful_items.append(f"{itemName} x {quantity}" if quantity > 1 else itemName)
+        useful_normal_items: dict[str, NormalItemData] = {item.itemName: item for item in normal_items if item.progression == ItemClassification.useful}
+        all_useful_items += [itemName for itemName in useful_normal_items.keys()]
 
-        self.random.shuffle(useful_items)
+        useful_items: list[str] = [itemName for itemName in all_useful_items]
+
+        if len(useful_items) < items_remaining:
+            #print(f"Adding {items_remaining-len(useful_items)} useful items")
+            useful_items += self.random.choices(all_useful_items, k=items_remaining-len(useful_items))
+        else:
+            self.random.shuffle(useful_items)
+
+        for i, itemName in enumerate(useful_items):
+            if itemName in useful_normal_items.keys():
+                item: NormalItemData = useful_normal_items[itemName]
+                quantity = min(item.max, math.floor(self.random.triangular(item.min, item.max+1, item.weight)))
+                #print(f"Replacing {useful_items[i]} with {f"{itemName} x {quantity}" if quantity > 1 else itemName}")
+                useful_items[i] = f"{itemName} x {quantity}" if quantity > 1 else itemName
+
+        for i in range(items_remaining):
+            self.multiworld.itempool.append(self.create_item(useful_items[i]))
 
         # -------------------------- Generate Traps -------------------------- #
         traps = [trap.itemName for trap in self.random.choices(trap_items, k=traps_remaining)]
@@ -210,11 +226,8 @@ class FFXWorld(World):
             self.multiworld.itempool.append(self.create_item(trap))
 
         # ----------------------- Fill Remaining items ----------------------- #
-        for i in range(items_remaining):
-            if i > len(useful_items) - 1:
-                self.multiworld.itempool.append(self.create_filler())
-            else:
-                self.multiworld.itempool.append(self.create_item(useful_items[i]))
+        for i in range(filler_remaining):
+            self.multiworld.itempool.append(self.create_filler())
 
     def create_item(self, name: str) -> Item:
         item = item_table[name]

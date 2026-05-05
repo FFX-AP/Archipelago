@@ -397,6 +397,17 @@ class SkipContestOfAeons(Toggle):
     option_on = 1
 
 
+class FillerPercentage(Range):
+    """
+    Sets the percentage of non-progression items that will be traps.
+    Default is 0.
+    """
+    display_name = "Filler"
+    default = 0
+    range_start = 0
+    range_end = 100
+
+
 class TrapPercentage(Range):
     """
     Sets the percentage of non-progression items that will be traps.
@@ -442,6 +453,7 @@ class FFXOptions(PerGameCommonOptions):
     tidus_early_overdrive_access: TidusEarlyOverdriveAccess
     kimahri_ronso_rages: KimahriRonsoRages
     overdrive_modes: OverdriveModes
+    filler_percentage: FillerPercentage
     trap_percentage: TrapPercentage
     logic_difficulty: LogicDifficulty
     early_party_members: EarlyPartyMembers
@@ -467,6 +479,7 @@ ffx_option_groups: dict[str, list[Any]] = {
     ],
 
     "Progression Options": [
+        FillerPercentage,
         TrapPercentage,
         LogicDifficulty,
         EarlyPartyMembers,
