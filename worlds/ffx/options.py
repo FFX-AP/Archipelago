@@ -5,6 +5,19 @@ from typing import Any
 from dataclasses import dataclass
 from Options import Choice, DefaultOnToggle, Option, OptionGroup, NamedRange, Range, Toggle, PerGameCommonOptions
 
+
+class Goal(Choice):
+    """
+    Sets the goal.
+    - Yu Yevon: Defeat Yu Yevon.
+    - Nemesis: Defeat Nemesis.
+    """
+    display_name = "Goal Requirement"
+    default = 0
+    option_yu_yevon = 0
+    option_nemesis = 1
+
+
 class GoalRequirement(Choice):
     """
     Sets the requirement to start the final battles. Defeating Yu Yevon is always the goal.
@@ -420,6 +433,7 @@ class SphereGridRandomization(Choice):
 
 @dataclass
 class FFXOptions(PerGameCommonOptions):
+    goal: Goal
     goal_requirement: GoalRequirement
     required_party_members: RequiredPartyMembers
     required_primers: RequiredPrimers
@@ -461,6 +475,7 @@ def create_option_groups() -> list[OptionGroup]:
 
 ffx_option_groups: dict[str, list[Any]] = {
     "Goal Options": [
+        Goal,
         GoalRequirement,
         RequiredPartyMembers,
         RequiredPrimers,

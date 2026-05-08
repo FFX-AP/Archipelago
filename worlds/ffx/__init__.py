@@ -71,6 +71,8 @@ class FFXWorld(World):
     location_name_to_id = create_location_label_to_id_map()
     explicit_indirect_conditions = False
 
+    skip_locations: set[str] = set()
+
     # Universal Tracker
     tracker_world = tracker_world
     ut_can_gen_without_yaml = True
@@ -222,6 +224,7 @@ class FFXWorld(World):
         slot_data = {
             "SeedId": self.multiworld.get_out_file_name_base(self.player),
             # Options
+            "goal": self.options.goal.value,
             "goal_requirement": self.options.goal_requirement.value,
             "required_party_members": self.options.required_party_members.value,
             "required_primers": self.options.required_primers.value,
