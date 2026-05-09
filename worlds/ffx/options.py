@@ -12,7 +12,7 @@ class Goal(Choice):
     - Yu Yevon: Defeat Yu Yevon.
     - Nemesis: Defeat Nemesis.
     """
-    display_name = "Goal Requirement"
+    display_name = "Goal"
     default = 0
     option_yu_yevon = 0
     option_nemesis = 1
