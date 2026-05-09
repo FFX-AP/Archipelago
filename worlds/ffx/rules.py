@@ -545,12 +545,14 @@ def set_rules(world: FFXWorld) -> None:
 
         # ------------------------------ Mars Sigil ------------------------------ #
         if world.location_id_to_name[276 | TreasureOffset] not in world.skip_locations:
-            conquest_locations = [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(424, 451))]
-            if world.options.creation_rewards.value == world.options.creation_rewards.option_area:
-                for location in [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(437, 451))]:
-                    conquest_locations.remove(location)
-            location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
-            world.set_rule(location, CanReachMinimumLocationRule(conquest_locations, 10))
+            conquest_locations = []
+            if world.options.creation_rewards.value >= world.options.creation_rewards.option_area:
+                conquest_locations.extend([world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(424, 437))])
+            if world.options.creation_rewards.value >= world.options.creation_rewards.option_species:
+                conquest_locations.extend([world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(437, 451))])
+            if len(conquest_locations) > 0:
+                location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
+                world.set_rule(location, CanReachMinimumLocationRule(conquest_locations, 10))
 
         # -------------------- Original Creations - Conquests -------------------- #
         original_creation_conquests = [
