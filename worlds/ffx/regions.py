@@ -704,4 +704,4 @@ def create_regions(world: FFXWorld, player) -> None:
     world.set_rule(goal_location, GoalRequirementRule() & PrimerRequirementRule())
 
 
-    world.set_completion_rule(Has("Victory"))   
+    world.set_completion_rule(Has("Victory"))
