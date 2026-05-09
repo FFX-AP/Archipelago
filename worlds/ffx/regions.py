@@ -585,7 +585,7 @@ def create_regions(world: FFXWorld, player) -> None:
         for id in overdrive_location_ids:
             location_name = world.location_id_to_name[id | OverdriveOffset]
             world.skip_locations.add(location_name)
-            # Nova
+    # Nova
     if not world.options.arena_bosses.value == world.options.arena_bosses.option_original and not world.options.super_bosses.value:
         nova_location = world.location_id_to_name[19 | OverdriveOffset]
         world.skip_locations.add(nova_location)
