@@ -466,169 +466,189 @@ def set_rules(world: FFXWorld) -> None:
     #                                 Captures                                 #
     # ------------------------------------------------------------------------ #
 
-    # ---------------------------- Fiend Captures ---------------------------- #
-    # If AlwaysCapture, Arena region not required for Fiend Capture checks, only rewards & bosses
-    if not world.options.always_capture.value:
-        for location_id in range(104):
-            if (not location_id == 43 and not location_id == 59):
-                location = world.get_location(world.location_id_to_name[location_id | CaptureOffset])
-                world.set_rule(location, CanReachRegion("Monster Arena"))
+    if world.options.capture_sanity.value:
+        # ---------------------------- Fiend Captures ---------------------------- #
+        # If AlwaysCapture, Arena region not required for Fiend Capture checks, only rewards & bosses
+        if not world.options.always_capture.value:
+            for location_id in range(104):
+                if (not location_id == 43 and not location_id == 59):
+                    location = world.get_location(world.location_id_to_name[location_id | CaptureOffset])
+                    world.set_rule(location, CanReachRegion("Monster Arena"))
 
-    # ----------------------------- Area Conquest ---------------------------- #
-    area_conquest = [
-        (424, 49, (8, 15, 27,                                     )),  # Stratoavis
-        (425, 50, (21, 30, 38, 61,                                )),  # Malboro Menace
-        (426, 51, (0, 9, 22, 34, 47, 50, 62, 85,                  )),  # Kottos
-        (427, 52, (5, 16, 23, 40, 51, 63, 91,                     )),  # Coeurlregina
-        (428, 53, (1, 10, 17, 28, 31, 79, 83                      )),  # Jormungand
-        (429, 54, (6, 24, 35, 52, 64, 76, 87, 89,                 )),  # Cactuar King
-        (430, 55, (2, 3, 11, 18, 25, 32, 36, 65, 71, 94,          )),  # Espada
-        (431, 56, (12, 29, 41, 42, 53, 88,                        )),  # Abyss Worm
-        (432, 57, (4, 13, 19, 33, 55, 57, 72, 73, 80,             )),  # Chimerageist
-        (433, 58, (7, 26, 44, 48, 54, 66, 68, 92, 98,             )),  # Don Tonberry
-        (434, 59, (14, 20, 37, 39, 45, 46, 49, 58, 60, 69, 84, 86,)),  # Catoblepas
-        (435, 60, (56, 70, 75, 77, 78, 81, 90, 93, 97,            )),  # Abaddon
-        (436, 61, (67, 74, 82, 95, 96, 99, 100, 101, 102, 103,    )),  # Vorban
-    ]
-    for location_id, boss_id, fiend_ids in area_conquest:
-        location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-        boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-        
-        fiend_rule: Rule = None
-        for fiend_id in fiend_ids:
-            fiend = world.get_location(world.location_id_to_name[fiend_id | CaptureOffset])
-            if fiend_rule is not None:
-                fiend_rule &= CanReachLocation(fiend.name)
-            else:
-                fiend_rule = CanReachLocation(fiend.name)
-        
-        world.set_rule(location, fiend_rule)
-        world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+        # ----------------------------- Area Conquest ---------------------------- #
 
-    # --------------------------- Species Conquest --------------------------- #
-    species_conquest = [
-        (437, 62, (8, 9, 10, 11, 12, 13, 14,   )), # Fenrir
-        (438, 63, (21, 22, 23, 24, 25, 26, 100,)), # Ornitholestes
-        (439, 64, (27, 28, 29,                 )), # Pteryx
-        (440, 65, (30, 31, 32, 33,             )), # Hornet
-        (441, 66, (5, 6, 7,                    )), # Vidatu
-        (442, 67, (34, 35, 36, 37, 102,        )), # One-Eye
-        (443, 68, (15, 16, 17, 18, 19, 20,     )), # Jumbo Flan
-        (444, 69, (61, 62, 63, 64, 65, 66, 67, )), # Nega Elemental
-        (445, 70, (0, 1, 2, 3, 4, 101,         )), # Tanket
-        (446, 71, (50, 51, 52, 53, 54,         )), # Fafnir
-        (447, 72, (91, 92, 93,                 )), # Sleep Sprout
-        (448, 73, (85, 86, 95,                 )), # Bomb King
-        (449, 74, (47, 48, 49,                 )), # Juggernaut
-        (450, 75, (76, 77, 78,                 )), # Ironclad
-    ]
-    for location_id, boss_id, fiend_ids in species_conquest:
-        location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-        boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-        
-        fiend_rule: Rule = None
-        for fiend_id in fiend_ids:
-            fiend = world.get_location(world.location_id_to_name[fiend_id | CaptureOffset])
-            if fiend_rule is not None:
-                fiend_rule &= CanReachLocation(fiend.name)
-            else:
-                fiend_rule = CanReachLocation(fiend.name)
-        
-        world.set_rule(location, fiend_rule)
-        world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+        area_conquest = [
+            (424, 49, (8, 15, 27,                                     )),  # Stratoavis
+            (425, 50, (21, 30, 38, 61,                                )),  # Malboro Menace
+            (426, 51, (0, 9, 22, 34, 47, 50, 62, 85,                  )),  # Kottos
+            (427, 52, (5, 16, 23, 40, 51, 63, 91,                     )),  # Coeurlregina
+            (428, 53, (1, 10, 17, 28, 31, 79, 83                      )),  # Jormungand
+            (429, 54, (6, 24, 35, 52, 64, 76, 87, 89,                 )),  # Cactuar King
+            (430, 55, (2, 3, 11, 18, 25, 32, 36, 65, 71, 94,          )),  # Espada
+            (431, 56, (12, 29, 41, 42, 53, 88,                        )),  # Abyss Worm
+            (432, 57, (4, 13, 19, 33, 55, 57, 72, 73, 80,             )),  # Chimerageist
+            (433, 58, (7, 26, 44, 48, 54, 66, 68, 92, 98,             )),  # Don Tonberry
+            (434, 59, (14, 20, 37, 39, 45, 46, 49, 58, 60, 69, 84, 86,)),  # Catoblepas
+            (435, 60, (56, 70, 75, 77, 78, 81, 90, 93, 97,            )),  # Abaddon
+            (436, 61, (67, 74, 82, 95, 96, 99, 100, 101, 102, 103,    )),  # Vorban
+        ]
+        for location_id, boss_id, fiend_ids in area_conquest:
+            if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
+                continue
+            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
 
-    # ------------------------------ Mars Sigil ------------------------------ #
-    conquest_locations = [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(424, 451))]
-    if world.options.creation_rewards.value == world.options.creation_rewards.option_area:
-        for location in [world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(437, 451))]:
-            conquest_locations.remove(location)
-    location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
-    world.set_rule(location, CanReachMinimumLocationRule(conquest_locations, 10))
+            fiend_rule: Rule = None
+            for fiend_id in fiend_ids:
+                fiend = world.get_location(world.location_id_to_name[fiend_id | CaptureOffset])
+                if fiend_rule is not None:
+                    fiend_rule &= CanReachLocation(fiend.name)
+                else:
+                    fiend_rule = CanReachLocation(fiend.name)
 
-    # -------------------- Original Creations - Conquests -------------------- #
-    original_creation_conquests = [
-        (451, 76, area_conquest,    2), # Earth Eather
-        (452, 77, species_conquest, 2), # Greater Sphere
-        (453, 78, area_conquest,    6), # Catastrophe
-        (454, 79, species_conquest, 6), # Th'uban
-    ]
-    for location_id, boss_id, arena_type, creations_required in original_creation_conquests:
-        location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-        boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-        capture_locations = [world.get_location(world.location_id_to_name[arena_id | TreasureOffset]) for arena_id, _, _ in arena_type]
-        
-        world.set_rule(location, CanReachMinimumLocationRule(capture_locations, creations_required))
-        world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
-    
-    # --------------------- Original Creations - Captures -------------------- #
-    original_creation_captures = [
-        (455, 80), # Neslug (1x Capture)
-        (456, 81), # Ultima Buster (5x Captures)
-        (458, 83), # Nemesis (10x Captures)
-    ]
-    capture_regions = [
-        "Besaid Island 1st visit",
-        "Kilika 1st visit: Pre-Geneaux",
-        "Mi'ihen Highroad 1st visit: Post-Chocobo Eater",
-        "Mushroom Rock Road 1st visit: Pre-Sinspawn Gui",
-        "Djose 1st visit",
-        "Moonflow 1st visit: Pre-Extractor",
-        "Thunder Plains 1st visit",
-        "Lake Macalania 1st visit: Pre-Crawler",
-        "Bikanel 1st visit: Post-Zu",
-        "Calm Lands 1st visit: Pre-Defender X",
-        "Cavern of the Stolen Fayth 1st visit",
-        "Mt. Gagazet 1st visit: Post-Seymour Flux",
-        "Sin: Post-Seymour Omnis",
-        "Omega Ruins: Pre-Ultima Weapon"
-    ]
-    for location_id, boss_id in original_creation_captures:
-        location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-        boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-        capture_region_rule: Rule = None
-        for region in capture_regions:
-            if capture_region_rule is not None:
-                capture_region_rule &= CanReachRegion(region)
-            else:
-                capture_region_rule = CanReachRegion(region)
+            world.set_rule(location, fiend_rule)
+            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
 
-        world.set_rule(location, capture_region_rule)
-        world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+        # --------------------------- Species Conquest --------------------------- #
+        species_conquest = [
+            (437, 62, (8, 9, 10, 11, 12, 13, 14,   )), # Fenrir
+            (438, 63, (21, 22, 23, 24, 25, 26, 100,)), # Ornitholestes
+            (439, 64, (27, 28, 29,                 )), # Pteryx
+            (440, 65, (30, 31, 32, 33,             )), # Hornet
+            (441, 66, (5, 6, 7,                    )), # Vidatu
+            (442, 67, (34, 35, 36, 37, 102,        )), # One-Eye
+            (443, 68, (15, 16, 17, 18, 19, 20,     )), # Jumbo Flan
+            (444, 69, (61, 62, 63, 64, 65, 66, 67, )), # Nega Elemental
+            (445, 70, (0, 1, 2, 3, 4, 101,         )), # Tanket
+            (446, 71, (50, 51, 52, 53, 54,         )), # Fafnir
+            (447, 72, (91, 92, 93,                 )), # Sleep Sprout
+            (448, 73, (85, 86, 95,                 )), # Bomb King
+            (449, 74, (47, 48, 49,                 )), # Juggernaut
+            (450, 75, (76, 77, 78,                 )), # Ironclad
+        ]
+        for location_id, boss_id, fiend_ids in species_conquest:
+            if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
+                continue
+            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
 
-    # --------------- Shinryu (Underwater Captures in Gagazet) --------------- #
-    location = world.get_location(world.location_id_to_name[457 | TreasureOffset])
-    boss = world.get_location(world.location_id_to_name[82 | BossOffset])
-    
-    world.set_rule(location, CanReachRegion("Mt. Gagazet 1st visit: Post-Seymour Flux"))
-    world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[82])
+            fiend_rule: Rule = None
+            for fiend_id in fiend_ids:
+                fiend = world.get_location(world.location_id_to_name[fiend_id | CaptureOffset])
+                if fiend_rule is not None:
+                    fiend_rule &= CanReachLocation(fiend.name)
+                else:
+                    fiend_rule = CanReachLocation(fiend.name)
 
-    # ------------- Nemesis requires killing all other creations ------------- #
-    nemesis = world.get_location(world.location_id_to_name[83 | BossOffset])
-    creation_bosses_rule: Rule = None
-    for _, rule in arenaBossRuleDict.items():
-        if creation_bosses_rule is not None:
-            creation_bosses_rule &= rule
-        else:
-            creation_bosses_rule = rule
-    world.set_rule(nemesis, creation_bosses_rule)
-    world.set_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), CanReachLocation(nemesis.name))
+            world.set_rule(location, fiend_rule)
+            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+
+        # ------------------------------ Mars Sigil ------------------------------ #
+        if world.location_id_to_name[276 | TreasureOffset] not in world.skip_locations:
+            conquest_locations = []
+            if world.options.creation_rewards.value >= world.options.creation_rewards.option_area:
+                conquest_locations.extend([world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(424, 437))])
+            if world.options.creation_rewards.value >= world.options.creation_rewards.option_species:
+                conquest_locations.extend([world.get_location(world.location_id_to_name[id | TreasureOffset]) for id in list(range(437, 451))])
+            if len(conquest_locations) > 0:
+                location = world.get_location(world.location_id_to_name[276 | TreasureOffset])
+                world.set_rule(location, CanReachMinimumLocationRule(conquest_locations, 10))
+
+        # -------------------- Original Creations - Conquests -------------------- #
+        original_creation_conquests = [
+            (451, 76, area_conquest,    2), # Earth Eather
+            (452, 77, species_conquest, 2), # Greater Sphere
+            (453, 78, area_conquest,    6), # Catastrophe
+            (454, 79, species_conquest, 6), # Th'uban
+        ]
+        for location_id, boss_id, arena_type, creations_required in original_creation_conquests:
+            if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
+                continue
+            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+            capture_locations = [world.get_location(world.location_id_to_name[arena_id | TreasureOffset]) for arena_id, _, _ in arena_type]
+
+            world.set_rule(location, CanReachMinimumLocationRule(capture_locations, creations_required))
+            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+
+        # --------------------- Original Creations - Captures -------------------- #
+        original_creation_captures = [
+            (455, 80), # Neslug (1x Capture)
+            (456, 81), # Ultima Buster (5x Captures)
+            (458, 83), # Nemesis (10x Captures)
+        ]
+        capture_regions = [
+            "Besaid Island 1st visit",
+            "Kilika 1st visit: Pre-Geneaux",
+            "Mi'ihen Highroad 1st visit: Post-Chocobo Eater",
+            "Mushroom Rock Road 1st visit: Pre-Sinspawn Gui",
+            "Djose 1st visit",
+            "Moonflow 1st visit: Pre-Extractor",
+            "Thunder Plains 1st visit",
+            "Lake Macalania 1st visit: Pre-Crawler",
+            "Bikanel 1st visit: Post-Zu",
+            "Calm Lands 1st visit: Pre-Defender X",
+            "Cavern of the Stolen Fayth 1st visit",
+            "Mt. Gagazet 1st visit: Post-Seymour Flux",
+            "Sin: Post-Seymour Omnis",
+            "Omega Ruins: Pre-Ultima Weapon"
+        ]
+        for location_id, boss_id in original_creation_captures:
+            if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
+                continue
+            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+            capture_region_rule: Rule = None
+            for region in capture_regions:
+                if capture_region_rule is not None:
+                    capture_region_rule &= CanReachRegion(region)
+                else:
+                    capture_region_rule = CanReachRegion(region)
+
+            world.set_rule(location, capture_region_rule)
+            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+
+        # --------------- Shinryu (Underwater Captures in Gagazet) --------------- #
+        if world.location_id_to_name[457 | TreasureOffset] not in world.skip_locations and world.location_id_to_name[82 | BossOffset] not in world.skip_locations:
+            location = world.get_location(world.location_id_to_name[457 | TreasureOffset])
+            boss = world.get_location(world.location_id_to_name[82 | BossOffset])
+
+            world.set_rule(location, CanReachRegion("Mt. Gagazet 1st visit: Post-Seymour Flux"))
+            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[82])
+
+        # ------------- Nemesis requires killing all other creations ------------- #
+        if world.location_id_to_name[83 | BossOffset] not in world.skip_locations:
+            nemesis = world.get_location(world.location_id_to_name[83 | BossOffset])
+            creation_bosses_rule: Rule = None
+            for _, rule in arenaBossRuleDict.items():
+                if creation_bosses_rule is not None:
+                    creation_bosses_rule &= rule
+                else:
+                    creation_bosses_rule = rule
+            world.set_rule(nemesis, creation_bosses_rule)
+            world.set_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), CanReachLocation(nemesis.name))
 
 
     # ------------------------------------------------------------------------ #
     #                               Super Bosses                               #
     # ------------------------------------------------------------------------ #
-    for boss_id, rule in superBossRuleDict.items():
-        boss: Location = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-        world.set_rule(boss, rule)
+    if world.options.super_bosses.value:
+        for boss_id, rule in superBossRuleDict.items():
+            if world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
+                continue
+            boss: Location = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+            world.set_rule(boss, rule)
 
     
     # ------------------------------------------------------------------------ #
     #                              Jecht's Spheres                             #
     # ------------------------------------------------------------------------ #
-    # Besaid
-    besaid_jecht_sphere = world.get_location(world.location_id_to_name[27 | OtherOffset])
-    dark_valefor = world.get_location(world.location_id_to_name[2 | BossOffset])
-    world.set_rule(besaid_jecht_sphere, CanReachLocation(dark_valefor.name))
+    if world.options.jecht_spheres.value:
+        if world.location_id_to_name[2 | BossOffset] not in world.skip_locations:
+            # Besaid
+            besaid_jecht_sphere = world.get_location(world.location_id_to_name[27 | OtherOffset])
+            dark_valefor = world.get_location(world.location_id_to_name[2 | BossOffset])
+            world.set_rule(besaid_jecht_sphere, CanReachLocation(dark_valefor.name))
 
 
     # ------------------------------------------------------------------------ #
@@ -646,6 +666,8 @@ def set_rules(world: FFXWorld) -> None:
         #214, # Airship password location
     ]
     for location_id in celestial_weapon_locations:
+        if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations:
+            continue
         location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
         world.set_rule(location, Has("Progressive Mirror", count=2))
 
@@ -656,13 +678,15 @@ def set_rules(world: FFXWorld) -> None:
     world.set_rule(world.get_location(world.location_id_to_name[111 | TreasureOffset]), Has("Progressive Mirror", count=1))
 
     # Mercury Sigil
-    world.set_rule(world.get_location(world.location_id_to_name[279 | TreasureOffset]), CanReachRegion("Airship 1st visit: Post-Evrae"))
+    if world.location_id_to_name[279 | TreasureOffset] not in world.skip_locations:
+        world.set_rule(world.get_location(world.location_id_to_name[279 | TreasureOffset]), CanReachRegion("Airship 1st visit: Post-Evrae"))
 
     # Jupiter Sigil
-    world.set_rule(world.get_location(world.location_id_to_name[244 | TreasureOffset]), 
-                   CanReachLocation("Slots: Come 1st in a Blitzball Tournament (Attack Reels)") & 
-                   CanReachLocation("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)") & 
-                   CanReachLocation("Slots: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)"))
+    if world.location_id_to_name[244 | TreasureOffset] not in world.skip_locations:
+        world.set_rule(world.get_location(world.location_id_to_name[244 | TreasureOffset]),
+                       CanReachLocation("Slots: Come 1st in a Blitzball Tournament (Attack Reels)") &
+                       CanReachLocation("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)") &
+                       CanReachLocation("Slots: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)"))
 
     # -------------------------- Celestial Upgrades -------------------------- #
     celestial_upgrades = [
@@ -674,10 +698,10 @@ def set_rules(world: FFXWorld) -> None:
         (48, 0x03, "Venus"),
         (50, 0x3d, "Mercury"),
     ]
-    for crest_id, weapon_id, celestial in celestial_upgrades:
-        world.set_rule(world.get_location(world.location_id_to_name[crest_id | OtherOffset]),
+    for other_id, weapon_id, celestial in celestial_upgrades:
+        world.set_rule(world.get_location(world.location_id_to_name[other_id | OtherOffset]),
                        Has("Progressive Mirror", count=2) & HasAll(*[world.item_id_to_name[weapon_id | equipItemOffset], f"{celestial} Crest"]))
-        world.set_rule(world.get_location(world.location_id_to_name[crest_id+1 | OtherOffset]),
+        world.set_rule(world.get_location(world.location_id_to_name[other_id+1 | OtherOffset]),
                        Has("Progressive Mirror", count=2) & HasAll(*[world.item_id_to_name[weapon_id | equipItemOffset], f"{celestial} Crest", f"{celestial} Sigil"]))
 
 
@@ -713,16 +737,20 @@ def set_rules(world: FFXWorld) -> None:
         "Omega Ruins: Pre-Ultima Weapon"
     ]
     overdrive_regions = [world.get_region(region_name) for region_name in combat_regions]
-    
-    slice_and_dice  = world.get_location(world.location_id_to_name[1 | OverdriveOffset])
-    energy_rain     = world.get_location(world.location_id_to_name[2 | OverdriveOffset])
-    blitz_ace       = world.get_location(world.location_id_to_name[3 | OverdriveOffset])
-    
+
     has_overdrive   = HasFromListUnique(*[f"Swordplay: {overdrive}" for overdrive in overdrive_names[:4]], count=1)
-    
-    world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(combat_regions, 4))
-    world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(combat_regions, 8))
-    world.set_rule(blitz_ace,      has_overdrive & CanReachMinimumRegionRule(combat_regions, 14))
+
+    if world.location_id_to_name[1 | OverdriveOffset] not in world.skip_locations:
+        slice_and_dice  = world.get_location(world.location_id_to_name[1 | OverdriveOffset])
+        world.set_rule(slice_and_dice, has_overdrive & CanReachMinimumRegionRule(combat_regions, 4))
+    if world.location_id_to_name[2 | OverdriveOffset] not in world.skip_locations:
+        energy_rain     = world.get_location(world.location_id_to_name[2 | OverdriveOffset])
+        world.set_rule(energy_rain,    has_overdrive & CanReachMinimumRegionRule(combat_regions, 8))
+    if world.location_id_to_name[3 | OverdriveOffset] not in world.skip_locations:
+        blitz_ace       = world.get_location(world.location_id_to_name[3 | OverdriveOffset])
+        world.set_rule(blitz_ace,      has_overdrive & CanReachMinimumRegionRule(combat_regions, 14))
+
+
 
     # ----------------------------------- Auron ---------------------------------- #
     shooting_star   = world.get_location(world.location_id_to_name[4 | OverdriveOffset])
@@ -734,11 +762,12 @@ def set_rules(world: FFXWorld) -> None:
     world.set_rule(tornado,         Has("Progressive Jecht's Sphere", count=10))
 
     # ----------------------------------- Wakka ---------------------------------- #
-    status_reels    = world.get_location(world.location_id_to_name[22 | OverdriveOffset])
-    aurochs_reels   = world.get_location(world.location_id_to_name[23 | OverdriveOffset])
-
-    world.set_rule(status_reels,  CanReachLocation("Slots: Come 1st in a Blitzball Tournament (Attack Reels)"))
-    world.set_rule(aurochs_reels, CanReachLocation("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)"))
+    if world.location_id_to_name[22 | OverdriveOffset] not in world.skip_locations:
+        status_reels    = world.get_location(world.location_id_to_name[22 | OverdriveOffset])
+        world.set_rule(status_reels,  CanReachLocation("Slots: Come 1st in a Blitzball Tournament (Attack Reels)"))
+    if world.location_id_to_name[23 | OverdriveOffset] not in world.skip_locations:
+        aurochs_reels   = world.get_location(world.location_id_to_name[23 | OverdriveOffset])
+        world.set_rule(aurochs_reels, CanReachLocation("Slots: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)"))
 
     # ---------------------------------------------------------------------------- #
     #                                     Todo                                     #

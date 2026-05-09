@@ -71,10 +71,15 @@ class FFXWorld(World):
     location_name_to_id = create_location_label_to_id_map()
     explicit_indirect_conditions = False
 
+
     # Universal Tracker
     tracker_world = tracker_world
     ut_can_gen_without_yaml = True
     using_ut: bool
+
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        self.skip_locations: set[str] = set()
+        super().__init__(multiworld, player)
 
     @staticmethod
     def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
@@ -222,6 +227,7 @@ class FFXWorld(World):
         slot_data = {
             "SeedId": self.multiworld.get_out_file_name_base(self.player),
             # Options
+            "goal": self.options.goal.value,
             "goal_requirement": self.options.goal_requirement.value,
             "required_party_members": self.options.required_party_members.value,
             "required_primers": self.options.required_primers.value,
