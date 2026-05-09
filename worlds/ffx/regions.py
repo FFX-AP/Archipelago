@@ -492,7 +492,7 @@ def create_regions(world: FFXWorld, player) -> None:
     # ----------------------------- Super Bosses ----------------------------- #
     if not world.options.super_bosses.value:
         super_boss_location_ids = [
-            2,  # "Besaid: Dark Valefor"
+             2, # "Besaid: Dark Valefor"
             19, # "Bikanel: Dark Ifrit"
             13, # "Thunder Plains: Dark Ixion"
             18, # "Lake Macalania: Dark Shiva"
