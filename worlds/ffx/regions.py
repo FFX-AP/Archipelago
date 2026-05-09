@@ -226,19 +226,20 @@ def create_regions(world: FFXWorld, player) -> None:
             world.skip_locations.add(location_name)
 
     # ------------------------------ Butterflies ----------------------------- #
-    if not world.options.mini_game_butterflies:
-        butterfly_location_ids = [
-            71,  # "MCWO: MP Sphere x1 (Butterfly Minigame Reward before Spherimorph)",
-            72,  # "MCWO: Ether x1 (Butterfly Minigame Reward before Spherimorph)",
-            280, # "MCWO: Megalixir x2 (Butterfly Game after defeating Spherimorph)",
-            281, # "MCWO: Elixir x2 (Butterfly Game after defeating Spherimorph)",
-            394, # "MCWO: Teleport Sphere x1 (Butterfly Game after Airship)",
-            277, # "MCWO: Finish Butterfly Minigame (Event)" (Saturn Sigil),
-        ]
+    butterfly_location_ids = [
+        71,  # "MCWO: MP Sphere x1 (Butterfly Minigame Reward before Spherimorph)",
+        72,  # "MCWO: Ether x1 (Butterfly Minigame Reward before Spherimorph)",
+        280, # "MCWO: Megalixir x2 (Butterfly Game after defeating Spherimorph)",
+        281, # "MCWO: Elixir x2 (Butterfly Game after defeating Spherimorph)",
+        394, # "MCWO: Teleport Sphere x1 (Butterfly Game after Airship)",
+    ]
+    for id in butterfly_location_ids:
+        location_name = world.location_id_to_name[id | TreasureOffset]
+        world.skip_locations.add(location_name)
 
-        for id in butterfly_location_ids:
-            location_name = world.location_id_to_name[id | TreasureOffset]
-            world.skip_locations.add(location_name)
+    if not world.options.mini_game_butterflies:
+        location_name = world.location_id_to_name[277 | TreasureOffset] # "MCWO: Finish Butterfly Minigame (Event)" (Saturn Sigil)
+        world.skip_locations.add(location_name)
 
     # --------------------------- Lightning Dodging -------------------------- #
     if not world.options.mini_game_lightning_dodging is world.options.mini_game_lightning_dodging.option_up_to_200:
