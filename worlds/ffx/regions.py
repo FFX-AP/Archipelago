@@ -566,7 +566,7 @@ def create_regions(world: FFXWorld, player) -> None:
             location_name = world.location_id_to_name[id | OverdriveOffset]
             world.skip_locations.add(location_name)
 
-            # Kimahri
+    # Kimahri
     if not world.options.kimahri_ronso_rages.value:
         overdrive_location_ids = [
             # 8,  # Ronso Rage: Jump
