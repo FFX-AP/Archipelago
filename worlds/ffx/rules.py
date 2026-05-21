@@ -644,7 +644,7 @@ def set_rules(world: FFXWorld) -> None:
     #                              Jecht's Spheres                             #
     # ------------------------------------------------------------------------ #
     if world.options.jecht_spheres.value:
-        if world.location_id_to_name[2 | BossOffset] not in world.skip_locations:
+        if world.location_id_to_name[2 | BossOffset] not in world.skip_locations and world.location_id_to_name[27 | OtherOffset] not in world.skip_locations:
             # Besaid
             besaid_jecht_sphere = world.get_location(world.location_id_to_name[27 | OtherOffset])
             dark_valefor = world.get_location(world.location_id_to_name[2 | BossOffset])
