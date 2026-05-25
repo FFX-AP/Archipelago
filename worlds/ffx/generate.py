@@ -11,6 +11,7 @@ from Options import OptionError
 from worlds.AutoWorld import World
 from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatch, APPlayerContainer
 from .locations import location_types, get_location_type
+from .items import normal_items
 
 if typing.TYPE_CHECKING:
     from .__init__ import FFXWorld
@@ -37,6 +38,9 @@ class FFXContainer(APPatch):
 
 def options_validation(world: FFXWorld) -> None:
     if world.options.goal_requirement.value == world.options.goal_requirement.option_nemesis:
+        if world.options.goal.value == world.options.goal.option_nemesis:
+            raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
+                "Goal Requirement: Nemesis cannot be chosen if Goal is also set to Nemesis.")
         if not world.options.capture_sanity.value:
             raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
                 "Goal Requirement: Nemesis cannot be chosen if Capture Sanity is disabled.")
@@ -46,7 +50,18 @@ def options_validation(world: FFXWorld) -> None:
         if not world.options.arena_bosses.value == world.options.arena_bosses.option_original:
             raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
                 "Goal Requirement: Nemesis cannot be chosen if Arena Bosses is not set to Original Creations.")
-    
+
+    if world.options.goal.value == world.options.goal.option_nemesis:
+        if not world.options.capture_sanity.value:
+            raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
+                "Goal: Nemesis cannot be chosen if Capture Sanity is disabled.")
+        if not world.options.creation_rewards.value == world.options.creation_rewards.option_original:
+            raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
+                "Goal: Nemesis cannot be chosen if Creation Rewards is not set to Original Creations.")
+        if not world.options.arena_bosses.value == world.options.arena_bosses.option_original:
+            raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
+                "Goal: Nemesis cannot be chosen if Arena Bosses is not set to Original Creations.")
+
     if not world.options.capture_sanity.value:
         if world.options.creation_rewards.value:
             raise OptionError(f"[Final Fantasy X - '{world.player_name}'] "
@@ -67,6 +82,7 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
     options_data = {
         "PlayerName":           world.player_name,
         "SeedId":               world.multiworld.get_out_file_name_base(world.player),
+        "Goal":                 world.options.goal.value,
         "GoalRequirement":      world.options.goal_requirement.value,
         "RequiredPartyMembers": world.options.required_party_members.value,
         "RequiredPrimers":      world.options.required_primers.value,
@@ -95,6 +111,15 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
                                                                "item_id": item_id,
                                                                "item_name": location.item.name,
                                                                "player_name": world.multiworld.get_player_name(location.item.player)})
+
+    skip_item = normal_items[0] # Potion
+    for location_name in world.skip_locations:
+        location_address = world.location_name_to_id[location_name]
+        locations[get_location_type(location_address)].append({"location_name": location_name,
+                                                               "location_id": location_address & 0x0FFF,
+                                                               "item_id": skip_item.itemID,
+                                                               "item_name": skip_item.itemName,
+                                                               "player_name": world.multiworld.get_player_name(player)})
 
     starting_items: list[int] = list()
 

@@ -54,15 +54,6 @@ class RegionData(dict):
 
 
 def create_regions(world: FFXWorld, player) -> None:
-    def create_region_locations(region_name, treasures):
-        region = Region(region_name, player, world.multiworld)
-        for treasure_id in treasures:
-            location = [x for x in FFXTreasureLocations if x.location_id == treasure_id][0]
-            new_location = FFXLocation(player, location.name, location.rom_address, region)
-            if location.missable:
-                world.options.exclude_locations.value.add(location.name)
-            region.locations.append(new_location)
-        return region
 
     def add_locations_by_ids(region: Region, location_ids: list[int], location_data: list[FFXLocationData], location_type: str = ""):
         for id in location_ids:
@@ -71,12 +62,20 @@ def create_regions(world: FFXWorld, player) -> None:
                 #print(f"Ambiguous or invalid location id {id} ({location_type}) in Region {region.name}. Found {locations}")
                 continue
             location = locations[0]
-            new_location = FFXLocation(player, location.name, location.rom_address, region)
-            if location.missable:
-                world.options.exclude_locations.value.add(location.name)
-            region.locations.append(new_location)
-            all_locations.append(new_location)
-    
+
+            if location.name in world.skip_locations:
+                continue
+
+            if location_type == "Boss" and ((id == 42 and world.options.goal.value == world.options.goal.option_yu_yevon)
+                                         or (id == 83 and world.options.goal.value == world.options.goal.option_nemesis )):
+                region.add_event(location.name, "Victory", location_type=FFXLocation, item_type=FFXItem)
+            else:
+                new_location = FFXLocation(player, location.name, location.rom_address, region)
+                if location.missable:
+                    world.options.exclude_locations.value.add(location.name)
+                region.locations.append(new_location)
+                all_locations.append(new_location)
+
     captureDict: dict [int, str]= {
     0:   "Mi'ihen Highroad 1st visit: Pre-Chocobo Eater",                   # Raldo
     1:   "Captures: Djose Highroad & Moonflow",                             # Bunyip
@@ -175,97 +174,14 @@ def create_regions(world: FFXWorld, player) -> None:
     94:  "Macalania Woods 1st visit: Pre-Spherimorph",                      # Xiphos
     95:  "Omega Ruins: Pre-Ultima Weapon",                                  # Puroboros
     96:  "Omega Ruins: Pre-Ultima Weapon",                                  # Spirit
-    97:  "Captures: City of Dying Dreams & Omega Ruins",                    # Wraith    
+    97:  "Captures: City of Dying Dreams & Omega Ruins",                    # Wraith
     98:  "Cavern of the Stolen Fayth 1st visit",                            # Tonberry
     99:  "Omega Ruins: Pre-Ultima Weapon",                                  # Master Tonberry
     100: "Omega Ruins: Pre-Ultima Weapon",                                  # Zaurus
     101: "Omega Ruins: Pre-Ultima Weapon",                                  # Halma
     102: "Omega Ruins: Pre-Ultima Weapon",                                  # Floating Death
     103: "Omega Ruins: Pre-Ultima Weapon",                                  # Machea
-}    
-
-    # ------------------------------------------------------------------------ #
-    #                              Region Creation                             #
-    # ------------------------------------------------------------------------ #
-    
-    menu_region = Region("Menu", player, world.multiworld)
-    world.multiworld.regions.append(menu_region)
-
-    region_file = pkgutil.get_data(__name__, "data/regions.json")
-    #region_data_list = [RegionData(x) for x in json.loads(region_file)]
-    region_data_list = json.loads(region_file)
-    region_data_list = [RegionData(x) for x in region_data_list]
-
-    region_dict: dict[int, Region] = dict()
-    region_rules: dict[int, list[str]] = dict()
-
-    all_locations = []
-
-    # ------------------------ Add Locations by Region ----------------------- #
-    for region_data in region_data_list:
-        new_region = Region(region_data.name, player, world.multiworld)
-        region_dict[region_data.id] = new_region
-        world.multiworld.regions.append(new_region)
-        if len(region_data.rules) > 0:
-            region_rules[region_data.id] = region_data.rules
-
-        add_locations_by_ids(new_region, region_data.treasures, FFXTreasureLocations, "Treasure")
-
-        add_locations_by_ids(new_region, region_data.party_members, FFXPartyMemberLocations, "Party Member")
-
-        add_locations_by_ids(new_region, region_data.bosses, FFXBossLocations, "Boss")
-
-        # TODO: Implement in client
-        add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
-
-        add_locations_by_ids(new_region, region_data.other, FFXOtherLocations, "Other")
-
-        add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
-
-    for location_id, region_name in captureDict.items():
-        add_locations_by_ids(world.get_region(region_name), [location_id], FFXCaptureLocations, "Capture")
-
-    for location_data in FFXOverdriveLocations[:6]:
-        overdrive_location = FFXLocation(player, location_data.name, location_data.rom_address, menu_region)
-        menu_region.locations.append(overdrive_location)
-
-    # ---------------------------- Entrance Rules ---------------------------- #
-    for region_data in region_data_list:
-        curr_region = region_dict[region_data.id]
-        for region_id in region_data.leads_to:
-            other_region = region_dict[region_id]
-            rules = region_rules.get(region_id)
-            entrance: Entrance = curr_region.connect(other_region)
-            new_rule: Rule = None
-            if rules is not None:
-                for rule in rules:
-                    regionRule: Rule | None = regionRuleDict.get(rule, 
-                        regionBossRuleDict.get(rule, 
-                        staticEncounterRuleDict.get(rule, None)))
-                    if new_rule is not None:
-                        new_rule &= regionRule
-                    else:
-                        new_rule = regionRule
-                world.set_rule(entrance, new_rule)
-
-    top_level_regions: list[tuple[Region, Entrance]] = []
-    for region_id, other_region in region_dict.items():
-        if len(other_region.entrances) == 0:
-            rules = region_rules.get(region_id)
-            menu_entrance: Entrance = menu_region.connect(other_region)
-            new_rule: Rule = None
-            if rules is not None:
-                for rule in rules:
-                    regionRule: Rule | None = regionRuleDict.get(rule, 
-                        regionBossRuleDict.get(rule, 
-                        staticEncounterRuleDict.get(rule, None)))
-                    if new_rule is not None:
-                        new_rule &= regionRule
-                    else:
-                        new_rule = regionRule
-                world.set_rule(menu_entrance, new_rule)
-            top_level_regions.append((other_region, menu_entrance))
-
+    }
 
     # ------------------------------------------------------------------------ #
     #                             Exclude Locations                            #
@@ -286,44 +202,45 @@ def create_regions(world: FFXWorld, player) -> None:
 
         if up_to < up_to_sigil:
             blitzball_treasure_location_ids.append(244) # "Blitzball: Obtain The Jupiter Sigil League Prize (Event)",
-        
+
         if up_to < up_to_aurochs_reels:
             blitzball_overdrive_location_ids.append(23) # Overdrive: Come 1st in a Blitzball Tournament After Obtaining both Attack & Status Reels (Aurochs Reels)
-        
+
         if up_to < up_to_status_reels:
             blitzball_overdrive_location_ids.append(22) # Overdrive: Come 1st in a Blitzball League After Obtaining Attack Reels (Status Reels)
-        
+
         if up_to < up_to_attack_reels:
             blitzball_overdrive_location_ids.append(21) # Overdrive: Come 1st in a Blitzball Tournament (Attack Reels)
 
         if up_to < up_to_world_champion:
             blitzball_treasure_location_ids.append(93) # "LUCA: Cafe - Talk to Owner After Placing at Least Third in a Tournament (Chest)" (World Champion),
-        
+
         if up_to < up_to_story:
-            blitzball_treasure_location_ids.append(497) # "LUCA: Win the Story Blitzball Tournament (Event)", 
+            blitzball_treasure_location_ids.append(497) # "LUCA: Win the Story Blitzball Tournament (Event)",
 
         for id in blitzball_treasure_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
         for id in blitzball_overdrive_location_ids:
             location_name = world.location_id_to_name[id | OverdriveOffset]
-            world.options.exclude_locations.value.add(location_name)
-    
-    # ------------------------------ Butterflies ----------------------------- #
-    if not world.options.mini_game_butterflies:
-        butterfly_location_ids = [
-            71,  # "MCWO: MP Sphere x1 (Butterfly Minigame Reward before Spherimorph)",
-            72,  # "MCWO: Ether x1 (Butterfly Minigame Reward before Spherimorph)",
-            280, # "MCWO: Megalixir x2 (Butterfly Game after defeating Spherimorph)",
-            281, # "MCWO: Elixir x2 (Butterfly Game after defeating Spherimorph)",
-            394, # "MCWO: Teleport Sphere x1 (Butterfly Game after Airship)",
-            277, # "MCWO: Finish Butterfly Minigame (Event)" (Saturn Sigil),
-        ]
+            world.skip_locations.add(location_name)
 
-        for id in butterfly_location_ids:
-            location_name = world.location_id_to_name[id | TreasureOffset]
-            world.options.exclude_locations.value.add(location_name)
-    
+    # ------------------------------ Butterflies ----------------------------- #
+    butterfly_location_ids = [
+        71,  # "MCWO: MP Sphere x1 (Butterfly Minigame Reward before Spherimorph)",
+        72,  # "MCWO: Ether x1 (Butterfly Minigame Reward before Spherimorph)",
+        280, # "MCWO: Megalixir x2 (Butterfly Game after defeating Spherimorph)",
+        281, # "MCWO: Elixir x2 (Butterfly Game after defeating Spherimorph)",
+        394, # "MCWO: Teleport Sphere x1 (Butterfly Game after Airship)",
+    ]
+    for id in butterfly_location_ids:
+        location_name = world.location_id_to_name[id | TreasureOffset]
+        world.skip_locations.add(location_name)
+
+    if not world.options.mini_game_butterflies:
+        location_name = world.location_id_to_name[277 | TreasureOffset] # "MCWO: Finish Butterfly Minigame (Event)" (Saturn Sigil)
+        world.skip_locations.add(location_name)
+
     # --------------------------- Lightning Dodging -------------------------- #
     if not world.options.mini_game_lightning_dodging is world.options.mini_game_lightning_dodging.option_up_to_200:
         lightning_dodging_location_ids = []
@@ -360,7 +277,7 @@ def create_regions(world: FFXWorld, player) -> None:
 
         for id in lightning_dodging_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
 
     # ---------------------------- Cactuar Village --------------------------- #
     if not world.options.mini_game_cactuar_village:
@@ -377,8 +294,8 @@ def create_regions(world: FFXWorld, player) -> None:
 
         for id in cactuar_village_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
-            world.options.exclude_locations.value.add(location_name)
-    
+            world.skip_locations.add(location_name)
+
     # --------------------------- Chocobo Training --------------------------- #
     if not world.options.mini_game_chocobo_training is world.options.mini_game_chocobo_training.option_up_to_sigil:
         chocobo_training_location_ids = []
@@ -392,33 +309,26 @@ def create_regions(world: FFXWorld, player) -> None:
 
         if up_to < up_to_sigil:
             chocobo_training_location_ids.append(274) # "CALM: Catcher chocobo Minigame, Time Under 0.00 (Event)",
-        
+
         if up_to < up_to_catcher:
             chocobo_training_location_ids.extend([
                 340, # "CALM: Catcher Chocobo Minigame (Event)",
                 114, # "CALM: North - NW Corner, Blocked Until Winning Catcher Chocobo (Event)" (Caladbolg),
             ])
-        
+
         if up_to < up_to_hyper_dodger:
             chocobo_training_location_ids.append(339) # "CALM: Hyper Dodger Chocobo Minigame (Event)",
-        
+
         if up_to < up_to_dodger:
             chocobo_training_location_ids.append(338) # "CALM: Dodger Chocobo Minigame (Event)",
-        
+
         if up_to < up_to_wobbly:
             chocobo_training_location_ids.append(337) # "CALM: Wobbly Chocobo Minigame (Event)",
 
-            # Change Remiem access from Wobbly Chocobo to Post-Defender X
-            calm_lands_to_remiem = world.get_region("Remiem Temple").entrances[0]
-            new_parent = world.get_region("Calm Lands 1st visit: Post-Defender X")
-            calm_lands_to_remiem.parent_region.exits.remove(calm_lands_to_remiem)
-            calm_lands_to_remiem.parent_region = new_parent
-            new_parent.exits.append(calm_lands_to_remiem)
-
         for id in chocobo_training_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
-            world.options.exclude_locations.value.add(location_name)
-    
+            world.skip_locations.add(location_name)
+
     # ----------------------------- Chocobo Race ----------------------------- #
     if not world.options.mini_game_chocobo_race == world.options.mini_game_chocobo_race.option_up_to_5:
         chocobo_race_location_ids = []
@@ -432,26 +342,26 @@ def create_regions(world: FFXWorld, player) -> None:
         up_to_5             = world.options.mini_game_chocobo_race.option_up_to_5
 
         if up_to < up_to_5:
-            chocobo_race_location_ids.append(419)   # REMI: Win the Chocobo Race With 5 Chests (Event)
+            chocobo_race_location_ids.append(419) # REMI: Win the Chocobo Race With 5 Chests (Event)
 
         if up_to < up_to_4:
-            chocobo_race_location_ids.append(420)   # REMI: Win the Chocobo Race With 4 Chests (Event)
+            chocobo_race_location_ids.append(420) # REMI: Win the Chocobo Race With 4 Chests (Event)
 
         if up_to < up_to_3:
-            chocobo_race_location_ids.append(421)   # REMI: Win the Chocobo Race With 3 Chests (Event)
+            chocobo_race_location_ids.append(421) # REMI: Win the Chocobo Race With 3 Chests (Event)
 
         if up_to < up_to_2:
-            chocobo_race_location_ids.append(418)   # REMI: Win the Chocobo Race With 2 Chests (Event)
+            chocobo_race_location_ids.append(418) # REMI: Win the Chocobo Race With 2 Chests (Event)
 
         if up_to < up_to_1:
-            chocobo_race_location_ids.append(417)   # REMI: Win the Chocobo Race With 1 Chest (Event)
+            chocobo_race_location_ids.append(417) # REMI: Win the Chocobo Race With 1 Chest (Event)
 
         if up_to < up_to_cloudy_mirror:
-            chocobo_race_location_ids.append(176)   # REMI: Win the Chocobo Race (Event)
+            chocobo_race_location_ids.append(176) # REMI: Win the Chocobo Race (Event)
 
         for id in chocobo_race_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
 
     # ---------------------------- Recruit Sanity ---------------------------- #
     if not world.options.recruit_sanity.value is world.options.recruit_sanity.option_all:
@@ -463,19 +373,19 @@ def create_regions(world: FFXWorld, player) -> None:
 
         if including < world.options.recruit_sanity.option_all:
             recruit_location_ids.extend(contracted_ids)
-        
+
         if including == world.options.recruit_sanity.option_off:
             recruit_location_ids.extend(free_agent_ids)
 
         for id in recruit_location_ids:
             location_name = world.location_id_to_name[id | RecruitOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
 
     # ---------------------------- Capture Sanity ---------------------------- #
     if not world.options.capture_sanity.value:
         for location_id, _ in captureDict.items():
             location_name = world.location_id_to_name[location_id | CaptureOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
 
     # --------------------------- Creation Rewards --------------------------- #
     if not world.options.creation_rewards.value == world.options.creation_rewards.option_original:
@@ -523,13 +433,13 @@ def create_regions(world: FFXWorld, player) -> None:
                 arena_reward_location_ids = arena_reward_location_ids[28:]
         for id in arena_reward_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
 
     # ------------------------------ Mars Sigil ------------------------------ #
     if world.options.creation_rewards.value < world.options.creation_rewards.option_area:
         location_name = world.location_id_to_name[276 | TreasureOffset]
-        world.options.exclude_locations.value.add(location_name)
-    
+        world.skip_locations.add(location_name)
+
     # ----------------------------- Arena Bosses ----------------------------- #
     if not world.options.arena_bosses.value == world.options.arena_bosses.option_original:
         arena_boss_location_ids = [
@@ -573,12 +483,12 @@ def create_regions(world: FFXWorld, player) -> None:
             case world.options.arena_bosses.option_area:
                 arena_boss_location_ids = arena_boss_location_ids[13:]
             case world.options.arena_bosses.option_species:
-                arena_boss_location_ids = arena_boss_location_ids[27:]       
+                arena_boss_location_ids = arena_boss_location_ids[27:]
         for id in arena_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
         location_name = world.location_id_to_name[496 | TreasureOffset]
-        world.options.exclude_locations.value.add(location_name)
+        world.skip_locations.add(location_name)
 
     # ----------------------------- Super Bosses ----------------------------- #
     if not world.options.super_bosses.value:
@@ -604,14 +514,14 @@ def create_regions(world: FFXWorld, player) -> None:
         ]
         for id in super_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
         for id in super_boss_treasure_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
-            world.options.exclude_locations.value.add(location_name)
+            world.skip_locations.add(location_name)
         for id in super_boss_other_ids:
             location_name = world.location_id_to_name[id | OtherOffset]
-            world.options.exclude_locations.value.add(location_name) 
-    
+            world.skip_locations.add(location_name)
+
     # ---------------------------- Jecht's Spheres --------------------------- #
     if not world.options.jecht_spheres.value:
         jecht_sphere_location_ids = [
@@ -627,9 +537,9 @@ def create_regions(world: FFXWorld, player) -> None:
         ]
         for id in jecht_sphere_location_ids:
             location_name = world.location_id_to_name[id | OtherOffset]
-            world.options.exclude_locations.value.add(location_name) 
+            world.skip_locations.add(location_name)
         location_name = world.location_id_to_name[177 | TreasureOffset]
-        world.options.exclude_locations.value.add(location_name)
+        world.skip_locations.add(location_name)
 
     # ------------------------------ Overdrives ------------------------------ #
     # Tidus
@@ -652,8 +562,8 @@ def create_regions(world: FFXWorld, player) -> None:
 
         for id in overdrive_location_ids:
             location_name = world.location_id_to_name[id | OverdriveOffset]
-            world.options.exclude_locations.value.add(location_name) 
-    
+            world.skip_locations.add(location_name)
+
     # Kimahri
     if not world.options.kimahri_ronso_rages.value:
         overdrive_location_ids = [
@@ -672,19 +582,127 @@ def create_regions(world: FFXWorld, player) -> None:
         ]
         for id in overdrive_location_ids:
             location_name = world.location_id_to_name[id | OverdriveOffset]
-            world.options.exclude_locations.value.add(location_name) 
+            world.skip_locations.add(location_name)
     # Nova
     if not world.options.arena_bosses.value == world.options.arena_bosses.option_original and not world.options.super_bosses.value:
         nova_location = world.location_id_to_name[19 | OverdriveOffset]
-        world.options.exclude_locations.value.add(nova_location)                
+        world.skip_locations.add(nova_location)
+
+    # --------------------------- Contest of Aeons --------------------------- #
+    if world.options.skip_contest_of_aeons.value:
+        aeons_location = world.location_id_to_name[41 | BossOffset]
+        world.skip_locations.add(aeons_location)
+
+    # --------------------------------- Goals -------------------------------- #
+    if world.options.goal.value == world.options.goal.option_yu_yevon:
+        bfa_location = world.location_id_to_name[40 | BossOffset]
+        aeons_location = world.location_id_to_name[41 | BossOffset]
+        world.skip_locations.add(bfa_location)
+        world.skip_locations.add(aeons_location)
+
+    # ------------------------------------------------------------------------ #
+    #                              Region Creation                             #
+    # ------------------------------------------------------------------------ #
+    
+    menu_region = Region("Menu", player, world.multiworld)
+    world.multiworld.regions.append(menu_region)
+
+    region_file = pkgutil.get_data(__name__, "data/regions.json")
+    #region_data_list = [RegionData(x) for x in json.loads(region_file)]
+    region_data_list = json.loads(region_file)
+    region_data_list = [RegionData(x) for x in region_data_list]
+
+    region_dict: dict[int, Region] = dict()
+    region_rules: dict[int, list[str]] = dict()
+
+    all_locations = []
+
+    # ------------------------ Add Locations by Region ----------------------- #
+    for region_data in region_data_list:
+        new_region = Region(region_data.name, player, world.multiworld)
+        region_dict[region_data.id] = new_region
+        world.multiworld.regions.append(new_region)
+        if len(region_data.rules) > 0:
+            region_rules[region_data.id] = region_data.rules
+
+        add_locations_by_ids(new_region, region_data.treasures, FFXTreasureLocations, "Treasure")
+
+        add_locations_by_ids(new_region, region_data.party_members, FFXPartyMemberLocations, "Party Member")
+
+        add_locations_by_ids(new_region, region_data.bosses, FFXBossLocations, "Boss")
+
+        add_locations_by_ids(new_region, region_data.overdrives, FFXOverdriveLocations, "Overdrive")
+
+        add_locations_by_ids(new_region, region_data.other, FFXOtherLocations, "Other")
+
+        add_locations_by_ids(new_region, region_data.recruits, FFXRecruitLocations, "Recruit")
+
+    for location_id, region_name in captureDict.items():
+        add_locations_by_ids(world.get_region(region_name), [location_id], FFXCaptureLocations, "Capture")
+
+    for location_data in FFXOverdriveLocations[:6]:
+        if location_data.name in world.skip_locations:
+            continue
+        overdrive_location = FFXLocation(player, location_data.name, location_data.rom_address, menu_region)
+        menu_region.locations.append(overdrive_location)
+
+    # ---------------------------- Entrance Rules ---------------------------- #
+    for region_data in region_data_list:
+        curr_region = region_dict[region_data.id]
+        for region_id in region_data.leads_to:
+            other_region = region_dict[region_id]
+            rules = region_rules.get(region_id)
+            entrance: Entrance = curr_region.connect(other_region)
+            new_rule: Rule = None
+            if rules is not None:
+                for rule in rules:
+                    regionRule: Rule | None = regionRuleDict.get(rule, 
+                        regionBossRuleDict.get(rule, 
+                        staticEncounterRuleDict.get(rule, None)))
+                    if new_rule is not None:
+                        new_rule &= regionRule
+                    else:
+                        new_rule = regionRule
+                world.set_rule(entrance, new_rule)
+
+    top_level_regions: list[tuple[Region, Entrance]] = []
+    for region_id, other_region in region_dict.items():
+        if len(other_region.entrances) == 0:
+            rules = region_rules.get(region_id)
+            menu_entrance: Entrance = menu_region.connect(other_region)
+            new_rule: Rule = None
+            if rules is not None:
+                for rule in rules:
+                    regionRule: Rule | None = regionRuleDict.get(rule, 
+                        regionBossRuleDict.get(rule, 
+                        staticEncounterRuleDict.get(rule, None)))
+                    if new_rule is not None:
+                        new_rule &= regionRule
+                    else:
+                        new_rule = regionRule
+                world.set_rule(menu_entrance, new_rule)
+            top_level_regions.append((other_region, menu_entrance))
+
+
+    if world.options.mini_game_chocobo_training < world.options.mini_game_chocobo_training.option_up_to_wobbly:
+        # Change Remiem access from Wobbly Chocobo to Post-Defender X
+        calm_lands_to_remiem = world.get_region("Remiem Temple").entrances[0]
+        new_parent = world.get_region("Calm Lands 1st visit: Post-Defender X")
+        calm_lands_to_remiem.parent_region.exits.remove(calm_lands_to_remiem)
+        calm_lands_to_remiem.parent_region = new_parent
+        new_parent.exits.append(calm_lands_to_remiem)
 
     # ------------------------------------------------------------------------ #
     #                             Victory Condition                            #
     # ------------------------------------------------------------------------ #
-   
-    final_region = world.get_region("Sin: Braska's Final Aeon")
-    final_region.add_event("Sin: Braska's Final Aeon", "Victory", location_type=FFXLocation, item_type=FFXItem)
-    final_aeon = world.get_location("Sin: Braska's Final Aeon")
-    world.set_rule(final_aeon, GoalRequirementRule() & PrimerRequirementRule())
 
-    world.set_completion_rule(Has("Victory"))   
+    match world.options.goal.value:
+        case world.options.goal.option_yu_yevon:
+            goal_location = world.get_location(world.location_id_to_name[42 | BossOffset])
+        case world.options.goal.option_nemesis:
+            goal_location = world.get_location(world.location_id_to_name[83 | BossOffset])
+
+    world.set_rule(goal_location, GoalRequirementRule() & PrimerRequirementRule())
+
+
+    world.set_completion_rule(Has("Victory"))
