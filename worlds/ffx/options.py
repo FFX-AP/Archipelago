@@ -266,8 +266,8 @@ class EncounterWeighting(NamedRange):
 class SuperBosses(Choice):
     """
     Sets whether Super Boss locations are included or not. If off they will only have filler items.
-    - Omega Weapon: Enables the Omega Weapon boss fight in Omega Ruins
-    - Dark Aeons: Enables the Dark Aeon checks around Spira, as well as the above,
+    - Omega Weapon: Enables the Omega Weapon boss fight in Omega Ruins.
+    - Dark Aeons: Enables the Dark Aeon checks around Spira, as well as the above.
     Default is off.
     """
     display_name = "Super Bosses"
