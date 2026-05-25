@@ -263,16 +263,18 @@ class EncounterWeighting(NamedRange):
     }
 
 
-class SuperBosses(Toggle):
+class SuperBosses(Choice):
     """
     Sets whether Super Boss locations are included or not. If off they will only have filler items.
-    Super Bosses include Omega Weapon, the Dark Aeons & Penance.
+    - Omega Weapon: Enables the Omega Weapon boss fight in Omega Ruins.
+    - Dark Aeons: Enables the Dark Aeon checks around Spira, as well as the above.
     Default is off.
     """
     display_name = "Super Bosses"
     default = 0
     option_off = 0
-    option_on = 1
+    option_omega_weapon = 1
+    option_dark_aeons = 2
 
 
 class JechtSpheres(Toggle):
