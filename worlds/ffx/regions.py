@@ -491,27 +491,34 @@ def create_regions(world: FFXWorld, player) -> None:
         world.skip_locations.add(location_name)
 
     # ----------------------------- Super Bosses ----------------------------- #
-    if not world.options.super_bosses.value:
-        super_boss_location_ids = [
-             2, # "Besaid: Dark Valefor"
-            19, # "Bikanel: Dark Ifrit"
-            13, # "Thunder Plains: Dark Ixion"
-            18, # "Lake Macalania: Dark Shiva"
-            38, # "Zanarkand: Dark Bahamut"
-            31, # "Cavern of the Stolen Fayth: Dark Yojimbo"
-            45, # "Mushroom Rock Road: Dark Mindy"
-            46, # "Mushroom Rock Road: Dark Sandy"
-            47, # "Mushroom Rock Road: Dark Cindy"
-            34, # "Gagazet (Outside): Dark Anima"
-          # 25, # "Airship: Penance"
-            44, # "Omega Ruins: Omega Weapon"
-        ]
-        super_boss_treasure_ids = [
-            332, # OMGR: Omega Boss Arena (Chest)
-        ]
-        super_boss_other_ids = [
-            27, # Jecht Sphere 2 - Requires Dark Valefor
-        ]
+    if not world.options.super_bosses.value == world.options.super_bosses.option_dark_aeons:
+        super_boss_location_ids = []
+        super_boss_treasure_ids = []
+        super_boss_other_ids    = []
+
+        up_to       = world.options.super_bosses
+        up_to_omega = world.options.super_bosses.option_omega_weapon
+        up_to_aeons = world.options.super_bosses.option_dark_aeons
+
+        if up_to < up_to_aeons:
+            super_boss_location_ids.extend([
+                 2, # "Besaid: Dark Valefor"
+                19, # "Bikanel: Dark Ifrit"
+                13, # "Thunder Plains: Dark Ixion"
+                18, # "Lake Macalania: Dark Shiva"
+                38, # "Zanarkand: Dark Bahamut"
+                31, # "Cavern of the Stolen Fayth: Dark Yojimbo"
+                45, # "Mushroom Rock Road: Dark Mindy"
+                46, # "Mushroom Rock Road: Dark Sandy"
+                47, # "Mushroom Rock Road: Dark Cindy"
+                34, # "Gagazet (Outside): Dark Anima"
+            ])
+            super_boss_other_ids.append(27) # Jecht Sphere 2 - Requires Dark Valefor
+        
+        if up_to < up_to_omega:
+            super_boss_location_ids.append(44) # "Omega Ruins: Omega Weapon"
+            super_boss_treasure_ids.append(332) # OMGR: Omega Boss Arena (Chest)
+
         for id in super_boss_location_ids:
             location_name = world.location_id_to_name[id | BossOffset]
             world.skip_locations.add(location_name)
