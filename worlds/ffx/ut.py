@@ -11,6 +11,7 @@ def setup_options_from_slot_data(world: FFXWorld) -> None:
             world.using_ut = True
             world.passthrough = world.multiworld.re_gen_passthrough["Final Fantasy X"]
 
+            world.options.goal.value                        = world.passthrough["goal"]
             world.options.goal_requirement.value            = world.passthrough["goal_requirement"]
             world.options.required_party_members.value      = world.passthrough["required_party_members"]
             world.options.required_primers.value            = world.passthrough["required_primers"]
