@@ -31,6 +31,7 @@ def setup_options_from_slot_data(world: FFXWorld) -> None:
             world.options.jecht_spheres.value               = world.passthrough["jecht_spheres"]
             world.options.always_capture.value              = world.passthrough["always_capture"]
             world.options.logic_difficulty.value            = world.passthrough["logic_difficulty"]
+            world.options.skip_contest_of_aeons.value       = world.passthrough["skip_contest_of_aeons"]
             
             
 

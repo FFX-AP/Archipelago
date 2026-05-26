@@ -247,7 +247,8 @@ class FFXWorld(World):
             "super_bosses": self.options.super_bosses.value,
             "jecht_spheres": self.options.jecht_spheres.value,
             "always_capture": self.options.always_capture.value,
-            "logic_difficulty": self.options.logic_difficulty.value,            
+            "logic_difficulty": self.options.logic_difficulty.value,
+            "skip_contest_of_aeons": self.options.skip_contest_of_aeons,
         }
         return slot_data
 
