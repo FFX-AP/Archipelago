@@ -94,6 +94,7 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
         "CaptureDamage":        world.options.capture_damage.value,
         "EncounterWeighting":   world.options.encounter_weighting.value,
         "SkipContestOfAeons":   world.options.skip_contest_of_aeons.value,
+        "HardcoreDreamsEnd":    world.options.hardcore_dreams_end.value,
         "OverdriveModes":       world.options.overdrive_modes.value,
     }
 
