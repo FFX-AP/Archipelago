@@ -365,10 +365,20 @@ class CaptureDamage(Choice):
 
 class SkipContestOfAeons(Toggle):
     """
-    Sets whether to skip Contest of Aeons before fighting Yu Yevon
+    Sets whether to skip Contest of Aeons before fighting Yu Yevon.
     Default is off.
     """
     display_name = "Skip Contest Of Aeons"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+class HardcoreDreamsEnd(Toggle):
+    """
+    Sets whether eternal auto-life is removed from the Contest of Aeons and Yu Yevon battles.
+    Default is off.
+    """
+    display_name = "Hardcore Dream's End"
     default = 0
     option_off = 0
     option_on = 1
@@ -425,6 +435,7 @@ class FFXOptions(PerGameCommonOptions):
     always_capture: AlwaysCapture
     capture_damage: CaptureDamage
     skip_contest_of_aeons: SkipContestOfAeons
+    hardcore_dreams_end: HardcoreDreamsEnd
     sphere_grid_randomization: SphereGridRandomization
 
 # Ethically inspired by A Hat in Time's world
@@ -455,6 +466,7 @@ ffx_option_groups: dict[str, list[Any]] = {
         JechtSpheres,
         AlwaysSensor,
         SkipContestOfAeons,
+        HardcoreDreamsEnd,
         SphereGridRandomization,
     ],
 

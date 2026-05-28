@@ -70,6 +70,7 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
         "AlwaysCapture":        world.options.always_capture.value,
         "CaptureDamage":        world.options.capture_damage.value,
         "SkipContestOfAeons":   world.options.skip_contest_of_aeons.value,
+        "HardcoreDreamsEnd":    world.options.hardcore_dreams_end.value,
         "OverdriveModes":       world.options.overdrive_modes.value,
     }
 
