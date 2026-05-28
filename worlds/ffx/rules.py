@@ -239,7 +239,7 @@ class RangedRule(Rule[FFXWorld], game="Final Fantasy X"):
     
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return (HasFromListUnique(*[f"Party Member: {name}" for name in ["Wakka", "Lulu"]], count=1) | 
+        return (HasFromListUnique(*[f"Party Member: {name}" for name in ["Wakka", "Lulu", "Seymour"]], count=1) | 
                     (Has("Party Member: Yuna") & HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names[:6]], count=1))).resolve(world)
 
 
