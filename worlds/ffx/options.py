@@ -3,7 +3,20 @@ Option definitions for Final Fantasy ¨X
 """
 from typing import Any
 from dataclasses import dataclass
-from Options import Choice, DefaultOnToggle, Option, OptionGroup, Range, Toggle, PerGameCommonOptions
+from Options import Choice, DefaultOnToggle, Option, OptionGroup, NamedRange, Range, Toggle, PerGameCommonOptions
+
+
+class Goal(Choice):
+    """
+    Sets the goal.
+    - Yu Yevon: Defeat Yu Yevon.
+    - Nemesis: Defeat Nemesis.
+    """
+    display_name = "Goal"
+    default = 0
+    option_yu_yevon = 0
+    option_nemesis = 1
+
 
 class GoalRequirement(Choice):
     """
@@ -227,16 +240,41 @@ class MonsterArenaBosses(Choice):
     option_original = 3
 
 
-class SuperBosses(Toggle):
+class EncounterWeighting(NamedRange):
+    """
+    ** Requires Capture Sanity **
+    Sets how much more likely enemy formations are to appear in encounters
+    when they contain fiends that need to be captured.
+    - Disabled: No weighting will be done. This is the default option.
+    - Low: Remaining formations will be weighted a little.
+    - Comfortable: Remaining formations will be weighted a noticeable amount.
+    - Extreme: Remaining formations will be heavily weighted.
+    """
+    default = 0
+    range_start = 0
+    range_end = 30
+    display_name = "Encounter Weighting"
+    rich_text_doc = True
+    special_range_names = {
+        "disabled": 0,
+        "low": 5,
+        "comfortable": 10,
+        "extreme": 30,
+    }
+
+
+class SuperBosses(Choice):
     """
     Sets whether Super Boss locations are included or not. If off they will only have filler items.
-    Super Bosses include Omega Weapon, the Dark Aeons & Penance.
+    - Omega Weapon: Enables the Omega Weapon boss fight in Omega Ruins.
+    - Dark Aeons: Enables the Dark Aeon checks around Spira, as well as the above.
     Default is off.
     """
     display_name = "Super Bosses"
     default = 0
     option_off = 0
-    option_on = 1
+    option_omega_weapon = 1
+    option_dark_aeons = 2
 
 
 class JechtSpheres(Toggle):
@@ -407,6 +445,7 @@ class SphereGridRandomization(Choice):
 
 @dataclass
 class FFXOptions(PerGameCommonOptions):
+    goal: Goal
     goal_requirement: GoalRequirement
     required_party_members: RequiredPartyMembers
     required_primers: RequiredPrimers
@@ -422,6 +461,7 @@ class FFXOptions(PerGameCommonOptions):
     arena_access: MonsterArenaAccess
     creation_rewards: CreationRewards
     arena_bosses: MonsterArenaBosses
+    encounter_weighting: EncounterWeighting
     super_bosses: SuperBosses
     jecht_spheres: JechtSpheres
     tidus_overdrives: TidusOverdrives
@@ -448,6 +488,7 @@ def create_option_groups() -> list[OptionGroup]:
 
 ffx_option_groups: dict[str, list[Any]] = {
     "Goal Options": [
+        Goal,
         GoalRequirement,
         RequiredPartyMembers,
         RequiredPrimers,
@@ -491,6 +532,7 @@ ffx_option_groups: dict[str, list[Any]] = {
         MonsterArenaAccess,
         CreationRewards,
         MonsterArenaBosses,
+        EncounterWeighting,
         AlwaysCapture,
         CaptureDamage,
     ],

@@ -202,8 +202,8 @@ key_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | keyItemOffset) for x in
     ("Mercury Sigil",               ItemClassification.progression, 0x0031),
     ("Blossom Crown",               ItemClassification.progression, 0x0032),
     ("Flower Scepter",              ItemClassification.progression, 0x0033),
-    # ("",                          ItemClassification.progression, 0x0034),
-    # ("",                          ItemClassification.progression, 0x0035),
+  # ("Neptune Crest",               ItemClassification.progression, 0x0034),
+  # ("Neptune Sigil",               ItemClassification.progression, 0x0035),
     # ("",                          ItemClassification.progression, 0x0036),
     # ("",                          ItemClassification.progression, 0x0037),
     # ("",                          ItemClassification.progression, 0x0038),
@@ -303,6 +303,7 @@ equip_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | equipItemOffset) for 
     ("Weapon (Rikku): Infinity",            ItemClassification.useful     , 0x0053),  # Offset=0544 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {One MP Cost [800Dh], Sensor [8000h]} }
     ("Weapon (Lulu): Wicked Cait Sith",     ItemClassification.useful     , 0x0054),  # Offset=0554 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Deathstrike [802Eh], Empty, Empty, Empty} }
     ("Weapon (Tidus): Hrunting",            ItemClassification.useful     , 0x0055),  # Offset=0564 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {SOS Overdrive [8010h]} }
+    ("Progressive Dimittis",                ItemClassification.progression, 0x0056),
 ]]
 
 party_member_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | partyMemberItemOffset) for x in [
@@ -363,7 +364,7 @@ character_names = [
     "Wakka",
     "Lulu",
     "Rikku",
-    #"Seymour",
+    "Seymour",
 ]
 
 aeon_names = [

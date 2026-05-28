@@ -3,7 +3,6 @@ Archipelago World definition for Final Fantasy X
 """
 
 from typing import ClassVar, Any, Optional
-from random import choice, Random, shuffle
 from settings import Group, FilePath
 
 from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
@@ -71,10 +70,15 @@ class FFXWorld(World):
     location_name_to_id = create_location_label_to_id_map()
     explicit_indirect_conditions = False
 
+
     # Universal Tracker
     tracker_world = tracker_world
     ut_can_gen_without_yaml = True
     using_ut: bool
+
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        self.skip_locations: set[str] = set()
+        super().__init__(multiworld, player)
 
     @staticmethod
     def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
@@ -154,7 +158,7 @@ class FFXWorld(World):
         
         if self.options.early_party_members.value > 0:
             partyMembers = party_member_items[1:8]
-            shuffle(partyMembers)
+            self.random.shuffle(partyMembers)
             for i in range(self.options.early_party_members.value):
                 self.multiworld.early_items[self.player][partyMembers.pop(0).itemName] = 1
         
@@ -163,10 +167,10 @@ class FFXWorld(World):
             required_items.append(overdrive.itemName)
         
         if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_early:
-            overdrive = choice(overdrive_items[:4])
+            overdrive = self.random.choice(overdrive_items[:4])
             self.multiworld.early_items[self.player][overdrive.itemName] = 1
         if self.options.tidus_early_overdrive_access.value is self.options.tidus_early_overdrive_access.option_start_with:
-            overdrive = choice(overdrive_items[:4])
+            overdrive = self.random.choice(overdrive_items[:4])
             self.multiworld.push_precollected(self.create_item(overdrive.itemName))
             required_items.remove(overdrive.itemName)
 
@@ -222,6 +226,7 @@ class FFXWorld(World):
         slot_data = {
             "SeedId": self.multiworld.get_out_file_name_base(self.player),
             # Options
+            "goal": self.options.goal.value,
             "goal_requirement": self.options.goal_requirement.value,
             "required_party_members": self.options.required_party_members.value,
             "required_primers": self.options.required_primers.value,
@@ -241,7 +246,8 @@ class FFXWorld(World):
             "super_bosses": self.options.super_bosses.value,
             "jecht_spheres": self.options.jecht_spheres.value,
             "always_capture": self.options.always_capture.value,
-            "logic_difficulty": self.options.logic_difficulty.value,            
+            "logic_difficulty": self.options.logic_difficulty.value,
+            "skip_contest_of_aeons": self.options.skip_contest_of_aeons.value,
         }
         return slot_data
 

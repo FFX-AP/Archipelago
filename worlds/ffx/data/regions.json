@@ -866,7 +866,7 @@
     "id": 182,
     "treasures": [],
     "party_members": [],
-    "bosses": [],
+    "bosses": [40, 41, 42],
     "overdrives": [],
     "other": [],
     "recruits": [],
