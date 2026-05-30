@@ -128,11 +128,26 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
         starting_items.append(item.code)
     locations["StartingItems"] = starting_items
 
+    gear = [
+        {
+            "id":    i,
+            "flags": g.flags,
+            "owner": g.owner,
+            "type":  g.type,
+            "dmg_formula": g.dmg_formula,
+            "power": g.power,
+            "crit_bonus": g.crit_bonus,
+            "slot_count": g.slot_count,
+            "abilities": [a.id for a in g.abilities if a is not None],
+        } for i, g in world.generated_equipment.items()
+    ]
+
     mod_name = world.multiworld.get_out_file_name_base(world.player)
     mod_dir = os.path.join(output_directory, mod_name)
     mod_files = {
         "options.json"  : json.dumps(options_data, indent=4),
         "locations.json": json.dumps(locations   , indent=4),
+        "gear.json":      json.dumps(gear        , indent=4),
     }
     mod = FFXContainer(mod_files, mod_dir, output_directory, world.player,
                        world.multiworld.get_file_safe_player_name(world.player))
