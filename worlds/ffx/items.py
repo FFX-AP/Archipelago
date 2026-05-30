@@ -3,6 +3,7 @@ from itertools import chain
 import re
 
 from BaseClasses import Item, ItemClassification
+from .equipment import gear_name_data
 
 
 class ItemData(NamedTuple):
@@ -216,95 +217,7 @@ key_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | keyItemOffset) for x in
     # ("",                          ItemClassification.progression, 0x003F),
 ]]
 
-equip_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | equipItemOffset) for x in [
-    ("Weapon (Tidus): Crystal Sword",       ItemClassification.useful     , 0x0000),  # Offset=0014 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Firestrike [801Eh], Icestrike [8022h], Lightningstrike [8026h], Waterstrike [802Ah]} }
-    ("Progressive Brotherhood",             ItemClassification.progression, 0x0001),  # Offset=0024 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Strength +5% [8063h], Strength +10% [8064h], Waterstrike [802Ah], Sensor [8000h]}, Brotherhood }
-    ("Weapon (Yuna): Astral Rod",           ItemClassification.useful     , 0x0002),  # Offset=0034 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {One MP Cost [800Dh], Empty, Empty, Empty} }
-    ("Progressive Onion Knight",            ItemClassification.progression, 0x0003),  # Offset=0044 Weapon [00h], Formula=Celestial MP-based [12h], Power=16, Crit=3%, Slots=4 {No AP [8014h], Empty, Empty, Empty}, Celestial }
-    ("Weapon (Tidus): Flametongue",         ItemClassification.useful     , 0x0004),  # Offset=0054 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Firestrike [801Eh]} }
-    ("Weapon (Yuna): Rod of Wisdom",        ItemClassification.useful     , 0x0005),  # Offset=0064 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Magic +5% [8067h], !Magic +3% [8066h], !Sensor [8000h]} }
-    ("Armor (Kimahri): Red Armlet",         ItemClassification.useful     , 0x0006),  # Offset=0074 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=3 {Fire Ward [801Fh], Ice Ward [8023h], Lightning Ward [8027h]} }
-    ("Armor (Lulu): Serene Bangle",         ItemClassification.useful     , 0x0007),  # Offset=0084 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Berserk Ward [8051h]} }
-    ("Weapon (Wakka): Scout I",             ItemClassification.useful     , 0x0008),  # Offset=0094 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Icestrike [8022h], Sensor [8000h]} }
-    ("Armor (Tidus): NulBlaze Shield",      ItemClassification.useful     , 0x0009),  # Offset=00A4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {SOS NulBlaze [8061h]} }
-    ("Weapon (Kimahri): Tidal Spear",       ItemClassification.useful     , 0x000a),  # Offset=00B4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Piercing [800Bh], Waterstrike [802Ah]} }
-    ("Weapon (Tidus): Ice Brand",           ItemClassification.useful     , 0x000b),  # Offset=00C4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Icestrike [8022h]} }
-    ("Weapon (Auron): Thunder Blade",       ItemClassification.useful     , 0x000c),  # Offset=00D4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Piercing [800Bh], Lightningstrike [8026h]} }
-    ("Weapon (Wakka): Scout II",            ItemClassification.useful     , 0x000d),  # Offset=00E4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Lightningstrike [8026h], Sensor [8000h]} }
-    ("Weapon (Kimahri): Heat Lance",        ItemClassification.useful     , 0x000e),  # Offset=00F4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Piercing [800Bh], Firestrike [801Eh]} }
-    ("Armor (Auron): Serene Bracer",        ItemClassification.useful     , 0x000f),  # Offset=0104 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {HP +5% [8072h], Berserk Ward [8051h]} }
-    ("Armor (Lulu): Bright Bangle",         ItemClassification.useful     , 0x0010),  # Offset=0114 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Dark Ward [8049h], Empty} }
-    ("Armor (Yuna): Serum Ring",            ItemClassification.useful     , 0x0011),  # Offset=0124 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Lightning Ward [8027h], Poison Ward [803Dh]} }
-    ("Armor (Kimahri): Serene Armlet",      ItemClassification.useful     , 0x0012),  # Offset=0134 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Dark Ward [8049h], Berserk Ward [8051h]} }
-    ("Weapon (Wakka): All-Rounder",         ItemClassification.useful     , 0x0013),  # Offset=0144 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Strength +3% [8062h], Strength +5% [8063h]} }
-    ("Weapon (Lulu): Sleepy Cait Sith",     ItemClassification.useful     , 0x0014),  # Offset=0154 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Sleeptouch [803Fh]} }
-    ("Armor (Yuna): Lucid Ring I",          ItemClassification.useful     , 0x0015),  # Offset=0164 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Silence Ward [8045h], Confuse Ward [804Fh]} }
-    ("Weapon (Tidus): Avenger I",           ItemClassification.useful     , 0x0016),  # Offset=0174 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Counterattack [8003h]} }
-    ("Weapon (Lulu): Quiet Cait Sith",      ItemClassification.useful     , 0x0017),  # Offset=0184 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Silencetouch [8043h], Magic +5% [8067h]} }
-    ("Armor (Rikku): Shell Targe",          ItemClassification.useful     , 0x0018),  # Offset=0194 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {SOS Shell [8059h]} }
-    ("Armor (Kimahri): Lucid Armlet",       ItemClassification.useful     , 0x0019),  # Offset=01A4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Poison Ward [803Dh], Confuse Ward [804Fh], Silence Ward [8045h], Empty} }
-    ("Progressive World Champion",          ItemClassification.progression, 0x001a),  # Offset=01B4 Weapon [00h], Formula=Celestial HP-based [11h], Power=16, Crit=3%, Slots=4 {No AP [8014h], Empty, Empty, Empty}, Celestial }
-    ("Weapon (Wakka): Scout III",           ItemClassification.useful     , 0x001b),  # Offset=01C4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Sensor [8000h]} }
-    ("Weapon (Kimahri): Ice Lance",         ItemClassification.useful     , 0x001c),  # Offset=01D4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Piercing [800Bh], Icestrike [8022h]} }
-    ("Armor (Yuna): Moon Ring",             ItemClassification.useful     , 0x001d),  # Offset=01E4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {SOS Shell [8059h], SOS Protect [805Ah]} }
-    ("Progressive Masamune",                ItemClassification.progression, 0x001e),  # Offset=01F4 Weapon [00h], Formula=Celestial Auron [13h], Power=16, Crit=3%, Slots=4 {No AP [8014h], Empty, Empty, Empty}, Celestial }
-    ("Weapon (Tidus): Avenger II",          ItemClassification.useful     , 0x001f),  # Offset=0204 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Counterattack [8003h]} }
-    ("Weapon (Wakka): Rematch",             ItemClassification.useful     , 0x0020),  # Offset=0214 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Evade & Counter [8004h]} }
-    ("Weapon (Kimahri): Knight Lance I",    ItemClassification.useful     , 0x0021),  # Offset=0224 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=3 {Strength +3% [8062h], Strength +5% [8063h], Strength +10% [8064h]} }
-    ("Armor (Yuna): Lucid Ring II",         ItemClassification.useful     , 0x0022),  # Offset=0234 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=3 {Silence Ward [8045h], Confuse Ward [804Fh], Poison Ward [803Dh]} }
-    ("Armor (Wakka): Bright Armguard",      ItemClassification.useful     , 0x0023),  # Offset=0244 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Fire Ward [801Fh], Dark Ward [8049h]} }
-    ("Progressive Nirvana",                 ItemClassification.progression, 0x0024),  # Offset=0254 Weapon [00h], Formula=Celestial MP-based [12h], Power=16, Crit=3%, Slots=4 {No AP [8014h], Empty, Empty, Empty}, Celestial }
-    ("Progressive Caladbolg",               ItemClassification.progression, 0x0025),  # Offset=0264 Weapon [00h], Formula=Celestial HP-based [11h], Power=16, Crit=3%, Slots=4 {No AP [8014h], Empty, Empty, Empty}, Celestial }
-    ("Armor (Kimahri): Tetra Armlet",       ItemClassification.useful     , 0x0026),  # Offset=0274 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {HP +10% [8073h], Empty, Empty, Empty} }
-    ("Weapon (Rikku): Flexible Arm",        ItemClassification.useful     , 0x0027),  # Offset=0284 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Empty, Empty, Empty, Empty} }
-    ("Armor (Auron): Defending Bracer I",   ItemClassification.useful     , 0x0028),  # Offset=0294 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Stoneproof [8038h], Poisonproof [803Ch]} }
-    ("Weapon (Wakka): Pep Talk",            ItemClassification.useful     , 0x0029),  # Offset=02A4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=3 {SOS NulFrost [805Fh], SOS NulShock [8060h], SOS NulBlaze [8061h]} }
-    ("Armor (Yuna): Recovery Ring",         ItemClassification.useful     , 0x002a),  # Offset=02B4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {HP Stroll [801Bh]} }
-    ("Armor (Rikku): Spiritual Targe",      ItemClassification.useful     , 0x002b),  # Offset=02C4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {MP Stroll [801Ch]} }
-    ("Armor (Auron): Defending Bracer II",  ItemClassification.useful     , 0x002c),  # Offset=02D4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Silenceproof [8044h], Darkproof [8048h]} }
-    ("Weapon (Wakka): Turnover",            ItemClassification.useful     , 0x002d),  # Offset=02E4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Magic Counter [8005h], Counterattack [8003h]} }
-    ("Armor (Kimahri): Defending Armlet",   ItemClassification.useful     , 0x002e),  # Offset=02F4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Stoneproof [8038h], Poisonproof [803Ch], Empty, Empty} }
-    ("Armor (Yuna): Phantom Ring I",        ItemClassification.useful     , 0x002f),  # Offset=0304 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Ice Eater [8025h], Fire Eater [8021h], Lightning Eater [8029h], Empty} }
-    ("Weapon (Lulu): Cactuar Wizard",       ItemClassification.useful     , 0x0030),  # Offset=0314 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Half MP Cost [800Ch]} }
-    ("Weapon (Rikku): Warmonger",           ItemClassification.useful     , 0x0031),  # Offset=0324 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Double AP [8012h], !Double Overdrive [800Eh]} }
-    ("Weapon (Kimahri): Wizard Lance",      ItemClassification.useful     , 0x0032),  # Offset=0334 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Magic +3% [8066h], Magic +5% [8067h], Magic +10% [8068h], Empty} }
-    ("Armor (Yuna): Phantom Ring II",       ItemClassification.useful     , 0x0033),  # Offset=0344 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Water Eater [802Dh], Fire Eater [8021h], Lightning Eater [8029h], Empty} }
-    ("Weapon (Wakka): Four-on-One",         ItemClassification.useful     , 0x0034),  # Offset=0354 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Waterstrike [802Ah], Firestrike [801Eh], Lightningstrike [8026h], Icestrike [8022h]} }
-    ("Armor (Auron): Defending Bracer III", ItemClassification.useful     , 0x0035),  # Offset=0364 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Darkproof [8048h], Deathproof [8030h], Empty, Empty} }
-    ("Weapon (Yuna): Laevatein",            ItemClassification.useful     , 0x0036),  # Offset=0374 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {SOS Overdrive [8010h]} }
-    ("Weapon (Wakka): Water Ball",          ItemClassification.useful     , 0x0037),  # Offset=0384 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Waterstrike [802Ah], Empty} }
-    ("Progressive Spirit Lance",            ItemClassification.progression, 0x0038),  # Offset=0394 Weapon [00h], Formula=Celestial HP-based [11h], Power=16, Crit=3%, Slots=4 {No AP [8014h], Empty, Empty, Empty}, Celestial }
-    ("Armor (Yuna): Soft Ring I",           ItemClassification.useful     , 0x0039),  # Offset=03A4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Stone Ward [8039h], HP +5% [8072h]} }
-    ("Weapon (Tidus): Variable Steel I",    ItemClassification.useful     , 0x003a),  # Offset=03B4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Strength +3% [8062h], Strength +5% [8063h]} }
-    ("Weapon (Lulu): Magician Mog",         ItemClassification.useful     , 0x003b),  # Offset=03C4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Magic +3% [8066h], Magic +5% [8067h], Magic +20% [8069h], Empty} }
-    ("Weapon (Yuna): Magistral Rod",        ItemClassification.useful     , 0x003c),  # Offset=03D4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=3 {Half MP Cost [800Ch], Empty, Empty} }
-    ("Progressive Godhand",                 ItemClassification.progression, 0x003d),  # Offset=03E4 Weapon [00h], Formula=Celestial HP-based [11h], Power=16, Crit=3%, Slots=4 {No AP [8014h], Empty, Empty, Empty}, Celestial }
-    ("Armor (Yuna): Tetra Ring I",          ItemClassification.useful     , 0x003e),  # Offset=03F4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {HP +10% [8073h]} }
-    ("Weapon (Tidus): Variable Steel II",   ItemClassification.useful     , 0x003f),  # Offset=0404 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Strength +3% [8062h], Empty, Empty, Empty} }
-    ("Armor (Yuna): Soft Ring II",          ItemClassification.useful     , 0x0040),  # Offset=0414 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Stoneproof [8038h], Empty} }
-    ("Weapon (Kimahri): Shapeshifter",      ItemClassification.useful     , 0x0041),  # Offset=0424 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Magic +20% [8069h], Empty} }
-    ("Weapon (Kimahri): Hunter's Spear",    ItemClassification.useful     , 0x0042),  # Offset=0434 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=3 {Piercing [800Bh], Sensor [8000h], Strength +10% [8064h]} }
-    ("Armor (Yuna): Red Ring",              ItemClassification.useful     , 0x0043),  # Offset=0444 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {HP +10% [8073h], Fire Ward [801Fh]} }
-    ("Armor (Lulu): Tetra Bangle",          ItemClassification.useful     , 0x0044),  # Offset=0454 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {HP +20% [8074h], Empty} }
-    ("Armor (Tidus): Yellow Shield",        ItemClassification.useful     , 0x0045),  # Offset=0464 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Lightningproof [8028h], Empty} }
-    ("Weapon (Wakka): Ace Wizard",          ItemClassification.useful     , 0x0046),  # Offset=0474 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Magic +20% [8069h], Magic +10% [8068h], Magic +5% [8067h], Magic +3% [8066h]} }
-    ("Armor (Yuna): Tetra Ring II",         ItemClassification.useful     , 0x0047),  # Offset=0484 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {HP +10% [8073h], Empty} }
-    ("Armor (Rikku): Victorious",           ItemClassification.useful     , 0x0048),  # Offset=0494 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Lightningproof [8028h], Fireproof [8020h], Iceproof [8024h], Empty} }
-    ("Weapon (Auron): Murasame",            ItemClassification.useful     , 0x0049),  # Offset=04A4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Piercing [800Bh], One MP Cost [800Dh], Empty, Empty} }
-    ("Armor (Yuna): Echo Ring",             ItemClassification.useful     , 0x004a),  # Offset=04B4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {HP +10% [8073h], Silence Ward [8045h]} }
-    ("Weapon (Kimahri): Dragoon Lance",     ItemClassification.useful     , 0x004b),  # Offset=04C4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Magic Counter [8005h], Evade & Counter [8004h], Empty, Empty} }
-    ("Weapon (Rikku): Sonar",               ItemClassification.useful     , 0x004c),  # Offset=04D4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=3 {Initiative [8002h], Poisonstrike [803Ah], Empty} }
-    ("Armor (Lulu): Phantom Bangle",        ItemClassification.useful     , 0x004d),  # Offset=04E4 Armor [01h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Ice Eater [8025h], Fire Eater [8021h], !Water Eater [802Dh]} }
-    ("Weapon (Tidus): Ascalon",             ItemClassification.useful     , 0x004e),  # Offset=04F4 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {Double AP [8012h]} }
-    ("Weapon (Wakka): Prism Ball",          ItemClassification.useful     , 0x004f),  # Offset=0504 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {Magic Counter [8005h], Empty} }
-    ("Weapon (Auron): Stillblade",          ItemClassification.useful     , 0x0050),  # Offset=0514 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=3 {Silencestrike [8042h], Stonestrike [8036h], Empty} }
-    ("Weapon (Yuna): Mage's Staff",         ItemClassification.useful     , 0x0051),  # Offset=0524 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Magic +10% [8068h], Magic +5% [8067h], Magic +3% [8066h], Empty} }
-    ("Weapon (Kimahri): Knight Lance II",   ItemClassification.useful     , 0x0052),  # Offset=0534 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Strength +10% [8064h], Strength +5% [8063h], Strength +3% [8062h], Empty} }
-    ("Weapon (Rikku): Infinity",            ItemClassification.useful     , 0x0053),  # Offset=0544 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=2 {One MP Cost [800Dh], Sensor [8000h]} }
-    ("Weapon (Lulu): Wicked Cait Sith",     ItemClassification.useful     , 0x0054),  # Offset=0554 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=4 {Deathstrike [802Eh], Empty, Empty, Empty} }
-    ("Weapon (Tidus): Hrunting",            ItemClassification.useful     , 0x0055),  # Offset=0564 Weapon [00h], Formula=STR vs DEF [01h], Power=16, Crit=3%, Slots=1 {SOS Overdrive [8010h]} }
-    ("Progressive Dimittis",                ItemClassification.progression, 0x0056),
-]]
+equip_items: list[ItemData] = [ItemData(x.name, x.progression, x.itemID | equipItemOffset) for x in gear_name_data]
 
 party_member_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | partyMemberItemOffset) for x in [
     ("Party Member: Tidus",         ItemClassification.progression, 0x0000),

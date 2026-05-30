@@ -690,13 +690,13 @@ def set_rules(world: FFXWorld) -> None:
 
     # -------------------------- Celestial Upgrades -------------------------- #
     celestial_upgrades = [
-        (38, 0x25, "Sun"),
-        (40, 0x24, "Moon"),
-        (42, 0x1e, "Mars"),
-        (44, 0x38, "Saturn"),
-        (46, 0x1a, "Jupiter"),
-        (48, 0x03, "Venus"),
-        (50, 0x3d, "Mercury"),
+        (38, 0, "Sun"),
+        (40, 1, "Moon"),
+        (42, 2, "Mars"),
+        (44, 3, "Saturn"),
+        (46, 4, "Jupiter"),
+        (48, 5, "Venus"),
+        (50, 6, "Mercury"),
     ]
     for other_id, weapon_id, celestial in celestial_upgrades:
         world.set_rule(world.get_location(world.location_id_to_name[other_id | OtherOffset]),

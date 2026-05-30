@@ -2,15 +2,14 @@
 Archipelago World definition for Final Fantasy X
 """
 
-from typing import ClassVar, Any, Optional
+from typing import ClassVar, Any
 from settings import Group, FilePath
 
-from BaseClasses import Tutorial, Item, ItemClassification, LocationProgressType
+from BaseClasses import Tutorial, Item, ItemClassification
 from worlds.AutoWorld import WebWorld, World
-from Options import OptionGroup
-from Utils import visualize_regions
 
 from .client import FFXClient
+from .equipment import gear_name_data, PlySaveId, GearType, generate_equipment, generate_and_verify, Gear
 
 from .items import create_item_label_to_code_map, item_table, key_items, filler_items, AllItems, FFXItem, \
     party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items, \
@@ -78,6 +77,7 @@ class FFXWorld(World):
 
     def __init__(self, multiworld: "MultiWorld", player: int):
         self.skip_locations: set[str] = set()
+        self.generated_equipment: dict[int, Gear] = {}
         super().__init__(multiworld, player)
 
     @staticmethod
@@ -112,14 +112,12 @@ class FFXWorld(World):
                     required_items.append(item.itemName)
             
         # ------------------ Celestial Weapons & Brotherhood ----------------- #
-        for item in equip_items:
-            if item.progression == ItemClassification.progression:
-                if item.itemID & 0x0FFF == 0x0001:
-                    # Brotherhood
-                    required_items.extend([item.itemName]*2)
-                else:
-                    # Celestial
-                    required_items.extend([item.itemName]*3)
+        # Celestial
+        for item in gear_name_data[:8]:
+            required_items.extend([item.name]*3)
+
+        # Brotherhood
+        required_items.extend([gear_name_data[8].name] * 2)
 
         # ----------------------------- Abilities ---------------------------- #
         # for item in skill_abilities:
@@ -194,8 +192,22 @@ class FFXWorld(World):
         # ------------------------ Set up Useful Items ----------------------- #
         useful_items = []
         for item in AllItems:
+            if item in equip_items:
+                continue
             if item.progression == ItemClassification.useful:
                 useful_items += [item.itemName]
+
+        for i in range(8):
+            character_gear = [item for item in gear_name_data[9:] if item.owner == PlySaveId(i)]
+            weapons = [item for item in character_gear if item.type == GearType.WEAPON]
+            armors = [item for item in character_gear if item.type == GearType.ARMOR]
+            for item in self.random.sample(weapons, k=5):
+                useful_items += [item.name]
+            for item in self.random.sample(armors, k=5):
+                useful_items += [item.name]
+
+        for item in gear_name_data:
+            self.generated_equipment[item.itemID] = generate_and_verify(self, item)
 
         self.random.shuffle(useful_items)
 
