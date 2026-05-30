@@ -607,6 +607,10 @@ def create_regions(world: FFXWorld, player) -> None:
         world.skip_locations.add(bfa_location)
         world.skip_locations.add(aeons_location)
 
+    if world.options.goal.value == world.options.goal.option_nemesis:
+        moc_location = world.location_id_to_name[496 | TreasureOffset]
+        world.skip_locations.add(moc_location)
+
     # ------------------------------------------------------------------------ #
     #                              Region Creation                             #
     # ------------------------------------------------------------------------ #
