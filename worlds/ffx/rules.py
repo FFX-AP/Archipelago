@@ -562,7 +562,8 @@ def set_rules(world: FFXWorld) -> None:
             (454, 79, species_conquest, 6), # Th'uban
         ]
         for location_id, boss_id, arena_type, creations_required in original_creation_conquests:
-            capture_locations = [world.get_location(world.location_id_to_name[arena_id | TreasureOffset]) for arena_id, _, _ in arena_type]        
+            if world.location_id_to_name[location_id | TreasureOffset] not in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] not in world.skip_locations:
+                capture_locations = [world.get_location(world.location_id_to_name[arena_id | TreasureOffset]) for arena_id, _, _ in arena_type]
 
             if world.location_id_to_name[location_id | TreasureOffset] not in world.skip_locations:
                 location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
