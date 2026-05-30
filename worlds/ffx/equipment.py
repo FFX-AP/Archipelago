@@ -259,7 +259,7 @@ gear_abilities: list[GearAbility] = [
     GearAbility("Berserkproof",       0x50,  85, 2,  254),
     GearAbility("Berserk Ward",       0x51,  85, 1,  254),
     GearAbility("Curseproof",         0x52,  87, 2, None),
-    GearAbility("Curse Ward",         0x53,  87, 1, None),
+    #GearAbility("Curse Ward",         0x53,  87, 1, None),
     GearAbility("Auto-Shell",         0x54,  89, 2, None),
     GearAbility("Auto-Protect",       0x55,  90, 2, None),
     GearAbility("Auto-Haste",         0x56,  91, 2, None),
@@ -1453,15 +1453,15 @@ gear_name_data: list[GearData] = [GearData(x[0], x[1], x[2], x[3], x[4], x[5], x
     ("Rikku: Cerulean Targe",        ItemClassification.useful     , GearFlag.NONE       , PlySaveId.RIKKU  , GearType.ARMOR , 1, [id_to_ability[0x2D]], 0x0377),
     ("Seymour: Cerulean Circlet",    ItemClassification.useful     , GearFlag.NONE       , PlySaveId.SEYMOUR, GearType.ARMOR , 1, [id_to_ability[0x2D]], 0x0378),
 
-    # Curseproof or Curse Ward
-    ("Tidus: Medical Shield",        ItemClassification.useful     , GearFlag.NONE       , PlySaveId.TIDUS  , GearType.ARMOR , 1, [id_to_ability[0x52], id_to_ability[0x53]], 0x0379),
-    ("Yuna: Medical Ring",           ItemClassification.useful     , GearFlag.NONE       , PlySaveId.YUNA   , GearType.ARMOR , 1, [id_to_ability[0x52], id_to_ability[0x53]], 0x037A),
-    ("Auron: Medical Bracer",        ItemClassification.useful     , GearFlag.NONE       , PlySaveId.AURON  , GearType.ARMOR , 1, [id_to_ability[0x52], id_to_ability[0x53]], 0x037B),
-    ("Kimahri: Medical Armlet",      ItemClassification.useful     , GearFlag.NONE       , PlySaveId.KIMAHRI, GearType.ARMOR , 1, [id_to_ability[0x52], id_to_ability[0x53]], 0x037C),
-    ("Wakka: Medical Armguard",      ItemClassification.useful     , GearFlag.NONE       , PlySaveId.WAKKA  , GearType.ARMOR , 1, [id_to_ability[0x52], id_to_ability[0x53]], 0x037D),
-    ("Lulu: Medical Bangle",         ItemClassification.useful     , GearFlag.NONE       , PlySaveId.LULU   , GearType.ARMOR , 1, [id_to_ability[0x52], id_to_ability[0x53]], 0x037E),
-    ("Rikku: Medical Targe",         ItemClassification.useful     , GearFlag.NONE       , PlySaveId.RIKKU  , GearType.ARMOR , 1, [id_to_ability[0x52], id_to_ability[0x53]], 0x037F),
-    ("Seymour: Medical Circlet",     ItemClassification.useful     , GearFlag.NONE       , PlySaveId.SEYMOUR, GearType.ARMOR , 1, [id_to_ability[0x52], id_to_ability[0x53]], 0x0380),
+    # Curseproof or Curse Ward (Ward is invalid)
+    ("Tidus: Medical Shield",        ItemClassification.useful     , GearFlag.NONE       , PlySaveId.TIDUS  , GearType.ARMOR , 1, [id_to_ability[0x52]], 0x0379),
+    ("Yuna: Medical Ring",           ItemClassification.useful     , GearFlag.NONE       , PlySaveId.YUNA   , GearType.ARMOR , 1, [id_to_ability[0x52]], 0x037A),
+    ("Auron: Medical Bracer",        ItemClassification.useful     , GearFlag.NONE       , PlySaveId.AURON  , GearType.ARMOR , 1, [id_to_ability[0x52]], 0x037B),
+    ("Kimahri: Medical Armlet",      ItemClassification.useful     , GearFlag.NONE       , PlySaveId.KIMAHRI, GearType.ARMOR , 1, [id_to_ability[0x52]], 0x037C),
+    ("Wakka: Medical Armguard",      ItemClassification.useful     , GearFlag.NONE       , PlySaveId.WAKKA  , GearType.ARMOR , 1, [id_to_ability[0x52]], 0x037D),
+    ("Lulu: Medical Bangle",         ItemClassification.useful     , GearFlag.NONE       , PlySaveId.LULU   , GearType.ARMOR , 1, [id_to_ability[0x52]], 0x037E),
+    ("Rikku: Medical Targe",         ItemClassification.useful     , GearFlag.NONE       , PlySaveId.RIKKU  , GearType.ARMOR , 1, [id_to_ability[0x52]], 0x037F),
+    ("Seymour: Medical Circlet",     ItemClassification.useful     , GearFlag.NONE       , PlySaveId.SEYMOUR, GearType.ARMOR , 1, [id_to_ability[0x52]], 0x0380),
 
     # Confuseproof or Confuse Ward
     ("Tidus: Lucid Shield",          ItemClassification.useful     , GearFlag.NONE       , PlySaveId.TIDUS  , GearType.ARMOR , 1, [id_to_ability[0x4E], id_to_ability[0x4F]], 0x0381),
