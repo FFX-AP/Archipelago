@@ -630,7 +630,8 @@ def set_rules(world: FFXWorld) -> None:
                 else:
                     creation_bosses_rule = rule
             world.set_rule(nemesis, creation_bosses_rule)
-            world.set_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), CanReachLocation(nemesis.name))
+            if world.location_id_to_name[496 | TreasureOffset] not in world.skip_locations:
+                world.set_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), CanReachLocation(nemesis.name))
 
 
     # ------------------------------------------------------------------------ #
