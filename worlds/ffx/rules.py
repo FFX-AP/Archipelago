@@ -493,11 +493,6 @@ def set_rules(world: FFXWorld) -> None:
             (436, 61, (67, 74, 82, 95, 96, 99, 100, 101, 102, 103,    )),  # Vorban
         ]
         for location_id, boss_id, fiend_ids in area_conquest:
-            if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
-                continue
-            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-
             fiend_rule: Rule = None
             for fiend_id in fiend_ids:
                 fiend = world.get_location(world.location_id_to_name[fiend_id | CaptureOffset])
@@ -505,9 +500,14 @@ def set_rules(world: FFXWorld) -> None:
                     fiend_rule &= CanReachLocation(fiend.name)
                 else:
                     fiend_rule = CanReachLocation(fiend.name)
+            
+            if world.location_id_to_name[location_id | TreasureOffset] not in world.skip_locations:
+                location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+                world.set_rule(location, fiend_rule)
 
-            world.set_rule(location, fiend_rule)
-            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+            if world.location_id_to_name[boss_id | BossOffset] not in world.skip_locations:
+                boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+                world.set_rule(boss, fiend_rule & arenaBossRuleDict[boss_id])
 
         # --------------------------- Species Conquest --------------------------- #
         species_conquest = [
@@ -527,11 +527,6 @@ def set_rules(world: FFXWorld) -> None:
             (450, 75, (76, 77, 78,                 )), # Ironclad
         ]
         for location_id, boss_id, fiend_ids in species_conquest:
-            if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
-                continue
-            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-
             fiend_rule: Rule = None
             for fiend_id in fiend_ids:
                 fiend = world.get_location(world.location_id_to_name[fiend_id | CaptureOffset])
@@ -540,8 +535,13 @@ def set_rules(world: FFXWorld) -> None:
                 else:
                     fiend_rule = CanReachLocation(fiend.name)
 
-            world.set_rule(location, fiend_rule)
-            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+            if world.location_id_to_name[location_id | TreasureOffset] not in world.skip_locations:
+                location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+                world.set_rule(location, fiend_rule)
+
+            if world.location_id_to_name[boss_id | BossOffset] not in world.skip_locations:
+                boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+                world.set_rule(boss, fiend_rule & arenaBossRuleDict[boss_id])
 
         # ------------------------------ Mars Sigil ------------------------------ #
         if world.location_id_to_name[276 | TreasureOffset] not in world.skip_locations:
@@ -562,14 +562,15 @@ def set_rules(world: FFXWorld) -> None:
             (454, 79, species_conquest, 6), # Th'uban
         ]
         for location_id, boss_id, arena_type, creations_required in original_creation_conquests:
-            if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
-                continue
-            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-            capture_locations = [world.get_location(world.location_id_to_name[arena_id | TreasureOffset]) for arena_id, _, _ in arena_type]
+            capture_locations = [world.get_location(world.location_id_to_name[arena_id | TreasureOffset]) for arena_id, _, _ in arena_type]        
 
-            world.set_rule(location, CanReachMinimumLocationRule(capture_locations, creations_required))
-            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+            if world.location_id_to_name[location_id | TreasureOffset] not in world.skip_locations:
+                location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+                world.set_rule(location, CanReachMinimumLocationRule(capture_locations, creations_required))
+
+            if world.location_id_to_name[boss_id | BossOffset] not in world.skip_locations:
+                boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+                world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
 
         # --------------------- Original Creations - Captures -------------------- #
         original_creation_captures = [
@@ -594,10 +595,6 @@ def set_rules(world: FFXWorld) -> None:
             "Omega Ruins: Pre-Ultima Weapon"
         ]
         for location_id, boss_id in original_creation_captures:
-            if world.location_id_to_name[location_id | TreasureOffset] in world.skip_locations or world.location_id_to_name[boss_id | BossOffset] in world.skip_locations:
-                continue
-            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
-            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
             capture_region_rule: Rule = None
             for region in capture_regions:
                 if capture_region_rule is not None:
@@ -605,16 +602,22 @@ def set_rules(world: FFXWorld) -> None:
                 else:
                     capture_region_rule = CanReachRegion(region)
 
-            world.set_rule(location, capture_region_rule)
-            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[boss_id])
+            if world.location_id_to_name[location_id | TreasureOffset] not in world.skip_locations:
+                location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+                world.set_rule(location, capture_region_rule)
+            
+            if world.location_id_to_name[boss_id | BossOffset] not in world.skip_locations:
+                boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+                world.set_rule(boss, capture_region_rule & arenaBossRuleDict[boss_id])
 
         # --------------- Shinryu (Underwater Captures in Gagazet) --------------- #
-        if world.location_id_to_name[457 | TreasureOffset] not in world.skip_locations and world.location_id_to_name[82 | BossOffset] not in world.skip_locations:
-            location = world.get_location(world.location_id_to_name[457 | TreasureOffset])
-            boss = world.get_location(world.location_id_to_name[82 | BossOffset])
-
+        if world.location_id_to_name[457 | TreasureOffset] not in world.skip_locations:
+            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
             world.set_rule(location, CanReachRegion("Mt. Gagazet 1st visit: Post-Seymour Flux"))
-            world.set_rule(boss, CanReachLocation(location.name) & arenaBossRuleDict[82])
+        
+        if world.location_id_to_name[82 | BossOffset] not in world.skip_locations:
+            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
+            world.set_rule(boss, CanReachRegion("Mt. Gagazet 1st visit: Post-Seymour Flux") & arenaBossRuleDict[boss_id])
 
         # ------------- Nemesis requires killing all other creations ------------- #
         if world.location_id_to_name[83 | BossOffset] not in world.skip_locations:
