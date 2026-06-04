@@ -143,7 +143,6 @@ class GoalRequirementRule(Rule[FFXWorld], game="Final Fantasy X"):
             case world.options.goal_requirement.option_none:
                 return True_().resolve(world)
             case world.options.goal_requirement.option_party_members:
-                print([character.itemName for character in party_member_items[:8]])
                 return HasFromListUnique(*[character.itemName for character in party_member_items[:8]], count=min(world.options.required_party_members.value, 8)).resolve(world)
             case world.options.goal_requirement.option_party_members_and_aeons:
                 return HasFromListUnique(*[character.itemName for character in party_member_items], count=world.options.required_party_members.value).resolve(world)
