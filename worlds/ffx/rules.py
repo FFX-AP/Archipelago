@@ -417,6 +417,21 @@ superBossRuleDict: dict[int, Rule] = {
 
 def set_rules(world: FFXWorld) -> None:
     # ------------------------------------------------------------------------ #
+    #                             Victory Condition                            #
+    # ------------------------------------------------------------------------ #
+    nemesis_rule = True_()
+
+    match world.options.goal.value:
+        case world.options.goal.option_yu_yevon:
+            goal_location = world.get_location(world.location_id_to_name[42 | BossOffset])
+            world.set_rule(goal_location, GoalRequirementRule() & PrimerRequirementRule())
+        case world.options.goal.option_nemesis:
+            nemesis_rule &= GoalRequirementRule() & PrimerRequirementRule()
+
+    world.set_completion_rule(Has("Victory"))
+
+
+    # ------------------------------------------------------------------------ #
     #                          Aeon Related Locations                          #
     # ------------------------------------------------------------------------ #
     
@@ -608,6 +623,9 @@ def set_rules(world: FFXWorld) -> None:
                 world.set_rule(location, capture_region_rule)
             
             if world.location_id_to_name[boss_id | BossOffset] not in world.skip_locations:
+                if boss_id == 83:
+                    nemesis_rule &= capture_region_rule & arenaBossRuleDict[boss_id]
+                    continue
                 boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
                 world.set_rule(boss, capture_region_rule & arenaBossRuleDict[boss_id])
 
@@ -629,7 +647,7 @@ def set_rules(world: FFXWorld) -> None:
                     creation_bosses_rule &= rule
                 else:
                     creation_bosses_rule = rule
-            world.set_rule(nemesis, creation_bosses_rule)
+            world.set_rule(nemesis, nemesis_rule & creation_bosses_rule)
             if world.location_id_to_name[496 | TreasureOffset] not in world.skip_locations:
                 world.set_rule(world.get_location(world.location_id_to_name[496 | TreasureOffset]), CanReachLocation(nemesis.name))
 
@@ -644,7 +662,7 @@ def set_rules(world: FFXWorld) -> None:
             boss: Location = world.get_location(world.location_id_to_name[boss_id | BossOffset])
             world.set_rule(boss, rule)
 
-    
+
     # ------------------------------------------------------------------------ #
     #                              Jecht's Spheres                             #
     # ------------------------------------------------------------------------ #
