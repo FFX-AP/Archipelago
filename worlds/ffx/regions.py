@@ -702,18 +702,3 @@ def create_regions(world: FFXWorld, player) -> None:
         calm_lands_to_remiem.parent_region.exits.remove(calm_lands_to_remiem)
         calm_lands_to_remiem.parent_region = new_parent
         new_parent.exits.append(calm_lands_to_remiem)
-
-    # ------------------------------------------------------------------------ #
-    #                             Victory Condition                            #
-    # ------------------------------------------------------------------------ #
-
-    match world.options.goal.value:
-        case world.options.goal.option_yu_yevon:
-            goal_location = world.get_location(world.location_id_to_name[42 | BossOffset])
-        case world.options.goal.option_nemesis:
-            goal_location = world.get_location(world.location_id_to_name[83 | BossOffset])
-
-    world.set_rule(goal_location, GoalRequirementRule() & PrimerRequirementRule())
-
-
-    world.set_completion_rule(Has("Victory"))
