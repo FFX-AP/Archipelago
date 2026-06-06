@@ -252,11 +252,17 @@ class MinPartyRule(Rule[FFXWorld], game="Final Fantasy X"):
 @dataclass()
 class MinSummonRule(Rule[FFXWorld], game="Final Fantasy X"):
     num_aeons: int
+    exceptions: typing.Optional[list[str]] = None
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return (HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names], count=self.num_aeons) &
-                Has(f"Party Member: Yuna")).resolve(world)
+        if self.exceptions is not None:
+            valid_aeons = [aeon for aeon in aeon_names if aeon not in self.exceptions]
+            return (HasFromListUnique(*[f"Party Member: {name}" for name in valid_aeons], count=self.num_aeons) &
+                    Has(f"Party Member: Yuna")).resolve(world)
+        else:
+            return (HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names], count=self.num_aeons) &
+                    Has(f"Party Member: Yuna")).resolve(world)
                 
 
 @dataclass()
@@ -558,15 +564,15 @@ def set_rules(world: FFXWorld) -> None:
     
     # -------------------------------- Remiem -------------------------------- #
     # Valefor fight
-    world.set_rule(world.get_location(world.location_id_to_name[379 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Valefor"))))
+    world.set_rule(world.get_location(world.location_id_to_name[379 | TreasureOffset]), MinSummonRule(1, exceptions=["Valefor"]))
     # Ifrit fight
-    world.set_rule(world.get_location(world.location_id_to_name[381 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ifrit"))))
+    world.set_rule(world.get_location(world.location_id_to_name[381 | TreasureOffset]), MinSummonRule(1, exceptions=["Ifrit"]))
     # Ixion fight
-    world.set_rule(world.get_location(world.location_id_to_name[383 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ixion"))))
+    world.set_rule(world.get_location(world.location_id_to_name[383 | TreasureOffset]), MinSummonRule(1, exceptions=["Ixion"]))
     # Shiva fight
-    world.set_rule(world.get_location(world.location_id_to_name[385 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Shiva"))))
+    world.set_rule(world.get_location(world.location_id_to_name[385 | TreasureOffset]), MinSummonRule(1, exceptions=["Shiva"]))
     # Bahamut fight
-    world.set_rule(world.get_location(world.location_id_to_name[334 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Bahamut"))))
+    world.set_rule(world.get_location(world.location_id_to_name[334 | TreasureOffset]), MinSummonRule(1, exceptions=["Bahamut"]))
     # Yojimbo fight
     world.set_rule(world.get_location(world.location_id_to_name[388 | TreasureOffset]), MinSummonRule(2) & Has(f"Party Member: Yojimbo"))
     # Anima fight
@@ -578,11 +584,11 @@ def set_rules(world: FFXWorld) -> None:
 
     # ------------------------------- Belgemine ------------------------------ #
     # Mi'ihen fight
-    world.set_rule(world.get_location(world.location_id_to_name[186 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ifrit"))))
+    world.set_rule(world.get_location(world.location_id_to_name[186 | TreasureOffset]), MinSummonRule(1, exceptions=["Ifrit"]))
     # Moonflow fight
-    world.set_rule(world.get_location(world.location_id_to_name[372 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Ixion"))))
+    world.set_rule(world.get_location(world.location_id_to_name[372 | TreasureOffset]), MinSummonRule(1, exceptions=["Ixion"]))
     # Calm Lands fight
-    world.set_rule(world.get_location(world.location_id_to_name[187 | TreasureOffset]), MinSummonRule(2) | (MinSummonRule(1) & NotRule(Has(f"Party Member: Shiva"))))
+    world.set_rule(world.get_location(world.location_id_to_name[187 | TreasureOffset]), MinSummonRule(1, exceptions=["Shiva"]))
 
     # --------------------------------- Aeons -------------------------------- #
     # Anima
