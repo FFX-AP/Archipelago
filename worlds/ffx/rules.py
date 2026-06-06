@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing_extensions import override
 
 from BaseClasses import CollectionState, Location
+from NetUtils import JSONMessagePart
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
 from worlds.generic.Rules import CollectionRule
 from . import key_items
@@ -100,15 +101,44 @@ class CanReachMinimumLocationRule(Rule[FFXWorld], game="Final Fantasy X"):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            sum = 0
+            count = 0
             for location in self.locations:
                 if state.can_reach_location(location, self.player):
-                    sum += 1
-                    if sum >= self.locations_required:
+                    count += 1
+                    if count >= self.locations_required:
                         return True
             return False
 
-      
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return f"Can reach 0 of {len(self.locations)} locations, where {self.locations_required} is required"
+            reached = 0
+            for location in self.locations:
+                if state.can_reach_location(location, self.player):
+                    reached += 1
+            return f"Can reach {reached} of {len(self.locations)} locations ({self.locations_required} required)"
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is None:
+                return [
+                    {"type": "text", "text": "Can reach "},
+                    {"type": "color", "color": "yellow", "text": "0"},
+                    {"type": "text", "text": f" of {len(self.locations)} locations, where {self.locations_required} is required"},
+                ]
+            reached = 0
+            for location in self.locations:
+                if state.can_reach_location(location, self.player):
+                    reached += 1
+            color = "green" if reached >= self.locations_required else "salmon"
+            return [
+                {"type": "text", "text": "Can reach "},
+                {"type": "color", "color": color, "text": str(reached)},
+                {"type": "text", "text": f" of {len(self.locations)} locations ({self.locations_required} required)"},
+            ]
+
+
 @dataclass()
 class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
     """A rule that checks if a required number of regions are reachable from a given list of regions"""
@@ -125,13 +155,42 @@ class CanReachMinimumRegionRule(Rule[FFXWorld], game="Final Fantasy X"):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            sum = 0
+            count = 0
             for region in self.regions:
                 if state.can_reach_region(region, self.player):
-                    sum += 1
-                    if sum >= self.regions_required:
+                    count += 1
+                    if count >= self.regions_required:
                         return True
             return False
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return f"Can reach 0 of {len(self.regions)} regions, where {self.regions_required} is required"
+            reached = 0
+            for region in self.regions:
+                if state.can_reach_region(region, self.player):
+                    reached += 1
+            return f"Can reach {reached} of {len(self.regions)} regions ({self.regions_required} required)"
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is None:
+                return [
+                    {"type": "text", "text": "Can reach "},
+                    {"type": "color", "color": "yellow", "text": "0"},
+                    {"type": "text", "text": f" of {len(self.regions)} regions, where {self.regions_required} is required"},
+                ]
+            reached = 0
+            for region in self.regions:
+                if state.can_reach_region(region, self.player):
+                    reached += 1
+            color = "green" if reached >= self.regions_required else "salmon"
+            return [
+                {"type": "text", "text": "Can reach "},
+                {"type": "color", "color": color, "text": str(reached)},
+                {"type": "text", "text": f" of {len(self.regions)} regions ({self.regions_required} required)"},
+            ]
 
 
 @dataclass()
@@ -213,13 +272,29 @@ class MinSwimmerRule(Rule[FFXWorld], game="Final Fantasy X"):
 @dataclass()
 class NotRule(Rule[FFXWorld], game="Final Fantasy X"):
     rule: Rule
-    
+
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        if self.rule.resolve(world):
-            return False_().resolve(world)
-        else:
-            return True_().resolve(world)
+        return self.Resolved(self.rule.resolve(world), player=world.player)
+
+    class Resolved(Rule.Resolved):
+        inner: Rule.Resolved
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            return not self.inner(state)
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            return f"NOT ({self.inner.explain_str(state)})"
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            return [
+                {"type": "text", "text": "NOT ("},
+                *self.inner.explain_json(state),
+                {"type": "text", "text": ")"},
+            ]
 
 
 @dataclass()
@@ -276,17 +351,64 @@ class StatTotalRule(Rule[FFXWorld], game="Final Fantasy X"):
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        player_prog_items = world.multiworld.state.prog_items[world.player]
-        totals = Counter()
-        for item, count in player_prog_items.items():
-            if item in stat_abilities:
-                character, value = item_to_stat_value[item]
-                totals[character] += value*count
+        return self.Resolved(self.num_party_members, self.stat_total, player=world.player)
 
-        if len([total for total in totals.values() if total > self.stat_total]) >= self.num_party_members:
-            return True_().resolve(world)
-        else:
-            return False_().resolve(world)
+    class Resolved(Rule.Resolved):
+        num_party_members: int
+        stat_total: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            player_prog_items = state.prog_items[self.player]
+            totals = Counter()
+            for item, count in player_prog_items.items():
+                if item in stat_abilities:
+                    character, value = item_to_stat_value[item]
+                    totals[character] += value * count
+            qualifying_members = len([total for total in totals.values() if total > self.stat_total])
+            if qualifying_members >= self.num_party_members:
+                return True
+            else:
+                return False
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return f"{self.num_party_members} party member(s) with stat total > {self.stat_total}"
+            player_prog_items = state.prog_items[self.player]
+            totals = Counter()
+            for item, count in player_prog_items.items():
+                if item in stat_abilities:
+                    character, value = item_to_stat_value[item]
+                    totals[character] += value * count
+            qualifying = 0
+            for total in totals.values():
+                if total > self.stat_total:
+                    qualifying += 1
+            return f"{qualifying}/{self.num_party_members} party member(s) have stat total > {self.stat_total}"
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is None:
+                return [
+                    {"type": "color", "color": "yellow", "text": str(self.num_party_members)},
+                    {"type": "text", "text": f" party member(s) with stat total > {self.stat_total}"},
+                ]
+            player_prog_items = state.prog_items[self.player]
+            totals = Counter()
+            for item, count in player_prog_items.items():
+                if item in stat_abilities:
+                    character, value = item_to_stat_value[item]
+                    totals[character] += value * count
+            qualifying = 0
+            for total in totals.values():
+                if total > self.stat_total:
+                    qualifying += 1
+            color = "green" if qualifying >= self.num_party_members else "salmon"
+            return [
+                {"type": "color", "color": color, "text": str(qualifying)},
+                {"type": "text", "text": f"/{self.num_party_members} party member(s) have stat total > {self.stat_total}"},
+            ]
 
 # ---------------------------------------------------------------------------- #
 #                               Rule Dictionaries                              #
