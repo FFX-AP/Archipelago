@@ -6,6 +6,7 @@ from typing_extensions import override
 from BaseClasses import CollectionState, Location
 from NetUtils import JSONMessagePart
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
+from test.hosting import world
 from worlds.generic.Rules import CollectionRule
 from . import key_items
 from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, overdrive_names, party_member_items, region_unlock_items, equipItemOffset
@@ -256,13 +257,10 @@ class MinSummonRule(Rule[FFXWorld], game="Final Fantasy X"):
 
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        if self.exceptions is not None:
-            valid_aeons = [aeon for aeon in aeon_names if aeon not in self.exceptions]
-            return (HasFromListUnique(*[f"Party Member: {name}" for name in valid_aeons], count=self.num_aeons) &
-                    Has(f"Party Member: Yuna")).resolve(world)
-        else:
-            return (HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names], count=self.num_aeons) &
-                    Has(f"Party Member: Yuna")).resolve(world)
+        if self.exceptions is None:
+            self.exceptions = []
+        return (HasFromListUnique(*[f"Party Member: {name}" for name in aeon_names if name not in self.exceptions], count=self.num_aeons) &
+                Has("Party Member: Yuna")).resolve(world)
                 
 
 @dataclass()
