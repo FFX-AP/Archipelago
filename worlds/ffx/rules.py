@@ -630,12 +630,12 @@ def set_rules(world: FFXWorld) -> None:
 
         # --------------- Shinryu (Underwater Captures in Gagazet) --------------- #
         if world.location_id_to_name[457 | TreasureOffset] not in world.skip_locations:
-            location = world.get_location(world.location_id_to_name[location_id | TreasureOffset])
+            location = world.get_location(world.location_id_to_name[457 | TreasureOffset])
             world.set_rule(location, CanReachRegion("Mt. Gagazet 1st visit: Post-Seymour Flux"))
-        
+
         if world.location_id_to_name[82 | BossOffset] not in world.skip_locations:
-            boss = world.get_location(world.location_id_to_name[boss_id | BossOffset])
-            world.set_rule(boss, CanReachRegion("Mt. Gagazet 1st visit: Post-Seymour Flux") & arenaBossRuleDict[boss_id])
+            boss = world.get_location(world.location_id_to_name[82 | BossOffset])
+            world.set_rule(boss, CanReachRegion("Mt. Gagazet 1st visit: Post-Seymour Flux") & arenaBossRuleDict[82])
 
         # ------------- Nemesis requires killing all other creations ------------- #
         if world.location_id_to_name[83 | BossOffset] not in world.skip_locations:
