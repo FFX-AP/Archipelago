@@ -5,14 +5,12 @@ from typing_extensions import override
 
 from BaseClasses import CollectionState, Location
 from NetUtils import JSONMessagePart
-from rule_builder.options import OptionFilter
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
 from test.hosting import world
 from worlds.generic.Rules import CollectionRule
 from . import key_items
 from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, overdrive_names, party_member_items, region_unlock_items, equipItemOffset
 from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset, OverdriveOffset
-from .options import SuperBosses, MonsterArenaBosses
 
 if typing.TYPE_CHECKING:
     from .__init__ import FFXWorld
@@ -473,8 +471,8 @@ regionBossRuleDict: dict[str, Rule] = {
     "Seymour Omnis":       LogicDifficultyRule(16) & MinPartyRule  (3),
     "Braska's Final Aeon": LogicDifficultyRule(16) & MinPartyRule  (3),
     "Ultima Weapon":       LogicDifficultyRule(17) & MinPartyRule  (3),
-    "Omega Weapon":        LogicDifficultyRule(18) & MinPartyRule  (3) & OptionFilter(SuperBosses, SuperBosses.option_omega_weapon, operator="ge"),
-    "Nemesis":             LogicDifficultyRule(18) & MinPartyRule  (3) & OptionFilter(MonsterArenaBosses, MonsterArenaBosses.option_original, operator="ge"),
+    "Omega Weapon":        LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Nemesis":             LogicDifficultyRule(18) & MinPartyRule  (3),
 }
 
 staticEncounterRuleDict: dict[str, Rule] = {
