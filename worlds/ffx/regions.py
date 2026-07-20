@@ -702,13 +702,3 @@ def create_regions(world: FFXWorld, player) -> None:
         calm_lands_to_remiem.parent_region.exits.remove(calm_lands_to_remiem)
         calm_lands_to_remiem.parent_region = new_parent
         new_parent.exits.append(calm_lands_to_remiem)
-
-    if world.options.super_bosses.value < world.options.super_bosses.option_omega_weapon:
-        post_omega_to_nova = world.get_entrance("Omega Ruins: Post-Omega Weapon -> Nova")
-        post_omega_to_nova.connected_region.entrances.remove(post_omega_to_nova)
-        post_omega_to_nova.parent_region.exits.remove(post_omega_to_nova)
-
-    if world.options.arena_bosses.value < world.options.arena_bosses.option_original:
-        post_nemesis_to_nova = world.get_entrance("Monster Arena: Post-Nemesis -> Nova")
-        post_nemesis_to_nova.connected_region.entrances.remove(post_nemesis_to_nova)
-        post_nemesis_to_nova.parent_region.exits.remove(post_nemesis_to_nova)
