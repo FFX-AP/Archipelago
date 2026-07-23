@@ -299,7 +299,7 @@ gear_abilities: list[GearAbility] = [
     GearAbility("MP +20%",            0x78, 125, 0, None),
     GearAbility("MP +30%",            0x79, 126, 0, None),
     GearAbility("Capture",            0x7A, 127, 0, None),
-    GearAbility("",                   0x7B, 128, 0, None),
+    #GearAbility("",                   0x7B, 128, 0, None),
     #GearAbility("Distill Power",      0x7C, 129, 1,    1),
     #GearAbility("Distill Mana",       0x7D, 129, 1,    2),
     #GearAbility("Distill Speed",      0x7E, 129, 1,    3),
