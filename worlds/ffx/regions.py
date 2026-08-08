@@ -428,9 +428,9 @@ def create_regions(world: FFXWorld, player) -> None:
         ]
         match world.options.creation_rewards.value:
             case world.options.creation_rewards.option_area:
-                arena_reward_location_ids = arena_reward_location_ids[14:]
+                arena_reward_location_ids = arena_reward_location_ids[13:]
             case world.options.creation_rewards.option_species:
-                arena_reward_location_ids = arena_reward_location_ids[28:]
+                arena_reward_location_ids = arena_reward_location_ids[27:]
         for id in arena_reward_location_ids:
             location_name = world.location_id_to_name[id | TreasureOffset]
             world.skip_locations.add(location_name)
