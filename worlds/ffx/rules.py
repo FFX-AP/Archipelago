@@ -6,7 +6,6 @@ from typing_extensions import override
 from BaseClasses import CollectionState, Location
 from NetUtils import JSONMessagePart
 from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
-from test.hosting import world
 from worlds.generic.Rules import CollectionRule
 from . import key_items
 from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, overdrive_names, party_member_items, region_unlock_items, equipItemOffset
