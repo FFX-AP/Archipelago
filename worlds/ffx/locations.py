@@ -246,7 +246,7 @@ FFXOtherLocations: List[FFXLocationData] = [ FFXLocationData(location[1]+OtherOf
     ("MIHN: Agency - Exit After Resting (Event) (2)",                             8, False), # Al Bhed Primer VIII
     ("MIHN: Newroad, North - Peak of South Bend Before Shelinda (Primer)",        9, False), # Al Bhed Primer IX
     ("MUSH: Precipice - End of Curved Path West of North Elevator (Primer)",     10, False), # Al Bhed Primer X
-    ("DJOS: Highroad - South End, Behind Left Pillar (Primer)",                  11, False), # Al Bhed Primer XI
+    ("DJOS: Highroad - South End, Behind Right Pillar (Primer)",                 11, False), # Al Bhed Primer XI
     ("MOON: North Wharf - Up Slope Right of Hypello (Primer)",                   12, False), # Al Bhed Primer XII
     ("GUAD: House - On Floor (Primer)",                                          13, False), # Al Bhed Primer XIII
     ("THPL: Agency & BIKA: Desert, East (Primer)",                               14, False), # Al Bhed Primer XIV
