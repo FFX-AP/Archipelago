@@ -422,6 +422,47 @@ class HardcoreDreamsEnd(Toggle):
     option_on = 1
 
 
+class Deathlink(Toggle):
+    """
+    Sets whether deathlink is enabled when you start a new game.
+    Default is off.
+    """
+    display_name = "Deathlink"
+    default = 0
+    option_off = 0
+    option_on = 1
+
+class DeathlinkSendType(Choice):
+    """
+    Sets when a deathlink should be sent.
+    - Game Over: A deathlink will be sent when you game over.
+    - KO: A deathlink will be sent whenever a party member or aeon is KO'd.
+    Default is Game Over.
+    """
+    display_name = "Deathlink Send Type"
+    default = 0
+    option_game_over = 0
+    option_ko = 1
+
+class DeathlinkReceiveType(Choice):
+    """
+    Sets what effect should occur at the start of the next battle after receiving a deathlink.
+    - Doom (Strict): All characters will start with a doom counter set to 1.
+    - Doom (Lenient): All characters will start with a doom counter set to 3.
+    - Grave HP: All characters will have their HP set to a random single-digit number.
+    - Bad Breath: All characters will start poisoned, silenced, blinded, and slowed.
+    - Random Type: A random effect will be applied for each deathlink received.
+    Default is Doom (Strict).
+    """
+    display_name = "Deathlink Receive Type"
+    default = 0
+    option_doom_strict = 0
+    option_doom_lenient = 1
+    option_grave_hp = 2
+    option_bad_breath = 3
+    option_random_type = 4
+
+
 class TrapPercentage(Range):
     """
     Sets the percentage of non-progression items that will be traps.
@@ -476,6 +517,9 @@ class FFXOptions(PerGameCommonOptions):
     capture_damage: CaptureDamage
     skip_contest_of_aeons: SkipContestOfAeons
     hardcore_dreams_end: HardcoreDreamsEnd
+    deathlink: Deathlink
+    deathlink_send_type: DeathlinkSendType
+    deathlink_receive_type: DeathlinkReceiveType
     sphere_grid_randomization: SphereGridRandomization
 
 # Ethically inspired by A Hat in Time's world
@@ -525,6 +569,12 @@ ffx_option_groups: dict[str, list[Any]] = {
         TidusEarlyOverdriveAccess,
         KimahriRonsoRages,
         OverdriveModes,
+    ],
+
+    "Deathlink Options": [
+        Deathlink,
+        DeathlinkSendType,
+        DeathlinkReceiveType,
     ],
 
     "Monster Arena Options": [

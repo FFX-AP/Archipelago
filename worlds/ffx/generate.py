@@ -95,6 +95,9 @@ def generate_output(world: FFXWorld, player: int, output_directory: str) -> None
         "EncounterWeighting":   world.options.encounter_weighting.value,
         "SkipContestOfAeons":   world.options.skip_contest_of_aeons.value,
         "HardcoreDreamsEnd":    world.options.hardcore_dreams_end.value,
+        "Deathlink":            world.options.deathlink.value,
+        "DeathlinkSendType":    world.options.deathlink_send_type.value,
+        "DeathlinkReceiveType": world.options.deathlink_receive_type.value,
         "OverdriveModes":       world.options.overdrive_modes.value,
     }
 
