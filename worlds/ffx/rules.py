@@ -348,6 +348,40 @@ class RegionAccessRule(Rule[FFXWorld], game="Final Fantasy X"):
 
 
 @dataclass()
+class HasOffensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        return ( \
+            HasAll(
+                "Gear Customization: First Strike",
+                "Gear Customization: Auto-Haste",
+                "Gear Customization: Break Damage Limit"
+            ) &
+            HasAny("Gear Customization: Evade & Counter", "Gear Customization: Magic Counter")
+        ).resolve(world)
+
+
+@dataclass()
+class HasDefensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        return ( \
+            (Has("Gear Customization: Ribbon") |
+                HasAll("Gear Customization: Stoneproof", "Gear Customization: Confuseproof")) &
+            (Has("Gear Customization: Auto-Phoenix") |
+                HasAll("Gear Customization: Break HP Limit", "Gear Customization: Auto-Potion")) &
+            HasAll("Gear Customization: Auto-Protect", "Gear Customization: Auto-Shell")
+        ).resolve(world)
+
+
+@dataclass()
+class HasLategameRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
+    @override
+    def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
+        return (HasOffensiveRecipesRule() & HasDefensiveRecipesRule()).resolve(world)
+
+
+@dataclass()
 class StatTotalRule(Rule[FFXWorld], game="Final Fantasy X"):
     num_party_members: int
     stat_total: int
@@ -470,8 +504,8 @@ regionBossRuleDict: dict[str, Rule] = {
     "Seymour Omnis":       LogicDifficultyRule(16) & MinPartyRule  (3),
     "Braska's Final Aeon": LogicDifficultyRule(16) & MinPartyRule  (3),
     "Ultima Weapon":       LogicDifficultyRule(17) & MinPartyRule  (3),
-    "Omega Weapon":        LogicDifficultyRule(18) & MinPartyRule  (3),
-    "Nemesis":             LogicDifficultyRule(18) & MinPartyRule  (3),
+    "Omega Weapon":        LogicDifficultyRule(18) & MinPartyRule  (3) & HasOffensiveRecipesRule(),
+    "Nemesis":             LogicDifficultyRule(18) & MinPartyRule  (3) & HasLategameRecipesRule(),
 }
 
 staticEncounterRuleDict: dict[str, Rule] = {
@@ -480,58 +514,58 @@ staticEncounterRuleDict: dict[str, Rule] = {
 }
 
 arenaBossRuleDict: dict[int, Rule] = {
-    49: LogicDifficultyRule(17) & MinPartyRule  (3), # Stratoavis
-    50: LogicDifficultyRule(17) & MinPartyRule  (3), # Malboro Menace
-    51: LogicDifficultyRule(17) & MinPartyRule  (3), # Kottos
-    52: LogicDifficultyRule(17) & MinPartyRule  (3), # Coeurlregina
-    53: LogicDifficultyRule(17) & MinPartyRule  (3), # Jormungand
-    54: LogicDifficultyRule(17) & MinPartyRule  (3), # Cactuar King
-    55: LogicDifficultyRule(17) & MinPartyRule  (3), # Espada
-    56: LogicDifficultyRule(17) & MinPartyRule  (3), # Abyss Worm
-    57: LogicDifficultyRule(17) & MinPartyRule  (3), # Chimerageist
-    58: LogicDifficultyRule(17) & MinPartyRule  (3), # Don Tonberry
-    59: LogicDifficultyRule(17) & MinPartyRule  (3), # Catoblepas
-    60: LogicDifficultyRule(17) & MinPartyRule  (3), # Abaddon
-    61: LogicDifficultyRule(17) & MinPartyRule  (3), # Vorban
+    49: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # Stratoavis
+    50: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Malboro Menace
+    51: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Kottos
+    52: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # Coeurlregina
+    53: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Jormungand
+    54: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # Cactuar King
+    55: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # Espada
+    56: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Abyss Worm
+    57: LogicDifficultyRule(17) & MinPartyRule  (3),                             # Chimerageist
+    58: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Don Tonberry
+    59: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Catoblepas
+    60: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # Abaddon
+    61: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Vorban
 
-    62: LogicDifficultyRule(17) & MinPartyRule  (3), # Fenrir
-    63: LogicDifficultyRule(17) & MinPartyRule  (3), # Ornitholestes
-    64: LogicDifficultyRule(17) & MinPartyRule  (3), # Pteryx
-    65: LogicDifficultyRule(17) & MinPartyRule  (3), # Hornet
-    66: LogicDifficultyRule(17) & MinPartyRule  (3), # Vidatu
-    67: LogicDifficultyRule(17) & MinPartyRule  (3), # One-Eye
-    68: LogicDifficultyRule(17) & MinPartyRule  (3), # Jumbo Flan
-    69: LogicDifficultyRule(17) & MinPartyRule  (3), # Nega Elemental
-    70: LogicDifficultyRule(17) & MinPartyRule  (3), # Tanket
-    71: LogicDifficultyRule(17) & MinPartyRule  (3), # Fafnir
-    72: LogicDifficultyRule(17) & MinPartyRule  (3), # Sleep Sprout
-    73: LogicDifficultyRule(17) & MinPartyRule  (3), # Bomb King
-    74: LogicDifficultyRule(17) & MinPartyRule  (3), # Juggernaut
-    75: LogicDifficultyRule(17) & MinPartyRule  (3), # Ironclad
+    62: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Fenrir
+    63: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Ornitholestes
+    64: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # Pteryx
+    65: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Hornet
+    66: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # Vidatu
+    67: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # One-Eye
+    68: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Jumbo Flan
+    69: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Nega Elemental
+    70: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Tanket
+    71: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Fafnir
+    72: LogicDifficultyRule(17) & MinPartyRule  (3) & HasOffensiveRecipesRule(), # Sleep Sprout
+    73: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Bomb King
+    74: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Juggernaut
+    75: LogicDifficultyRule(17) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Ironclad
     
-    76: LogicDifficultyRule(18) & MinPartyRule  (3), # Earth Eater
-    77: LogicDifficultyRule(18) & MinPartyRule  (3), # Greater Sphere
-    78: LogicDifficultyRule(18) & MinPartyRule  (3), # Catastrophe
-    79: LogicDifficultyRule(18) & MinPartyRule  (3), # Th'uban
-    80: LogicDifficultyRule(18) & MinPartyRule  (3), # Neslug
-    81: LogicDifficultyRule(18) & MinPartyRule  (3), # Ultima Buster
-    82: LogicDifficultyRule(18) & MinSwimmerRule(3), # Shinryu
-    83: LogicDifficultyRule(18) & MinPartyRule  (3), # Nemesis
+    76: LogicDifficultyRule(18) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Earth Eater
+    77: LogicDifficultyRule(18) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Greater Sphere
+    78: LogicDifficultyRule(18) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Catastrophe
+    79: LogicDifficultyRule(18) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Th'uban
+    80: LogicDifficultyRule(18) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Neslug
+    81: LogicDifficultyRule(18) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Ultima Buster
+    82: LogicDifficultyRule(18) & MinSwimmerRule(3) & HasLategameRecipesRule(),  # Shinryu
+    83: LogicDifficultyRule(18) & MinPartyRule  (3) & HasLategameRecipesRule(),  # Nemesis
 }
 
 superBossRuleDict: dict[int, Rule] = {
-    44: LogicDifficultyRule(18) & MinPartyRule(3),                             # Omega Weapon
-     2: LogicDifficultyRule(18) & MinPartyRule(3) & Has("Party Member: Yuna"), # Dark Valefor
-    19: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Ifrit
-    13: LogicDifficultyRule(18) & MinPartyRule(3) & Has("Party Member: Yuna"), # Dark Ixion
-    18: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Shiva
-    38: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Bahamut
-    34: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Anima
-    31: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Yojimbo
-    45: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Mindy
-    46: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Sandy
-    47: LogicDifficultyRule(18) & MinPartyRule(3),                             # Dark Cindy
-  # 25: LogicDifficultyRule(18) & MinPartyRule(3),                             # Penance
+    44: LogicDifficultyRule(18) & MinPartyRule(3) & HasOffensiveRecipesRule(),                             # Omega Weapon
+     2: LogicDifficultyRule(18) & MinPartyRule(3) & HasOffensiveRecipesRule() & Has("Party Member: Yuna"), # Dark Valefor
+    19: LogicDifficultyRule(18) & MinPartyRule(3) & HasOffensiveRecipesRule(),                             # Dark Ifrit
+    13: LogicDifficultyRule(18) & MinPartyRule(3) & HasOffensiveRecipesRule() & Has("Party Member: Yuna"), # Dark Ixion
+    18: LogicDifficultyRule(18) & MinPartyRule(3) & HasOffensiveRecipesRule(),                             # Dark Shiva
+    38: LogicDifficultyRule(18) & MinPartyRule(3) & HasLategameRecipesRule(),                              # Dark Bahamut
+    34: LogicDifficultyRule(18) & MinPartyRule(3) & HasLategameRecipesRule(),                              # Dark Anima
+    31: LogicDifficultyRule(18) & MinPartyRule(3) & HasLategameRecipesRule(),                              # Dark Yojimbo
+    45: LogicDifficultyRule(18) & MinPartyRule(3) & HasLategameRecipesRule(),                              # Dark Mindy
+    46: LogicDifficultyRule(18) & MinPartyRule(3) & HasLategameRecipesRule(),                              # Dark Sandy
+    47: LogicDifficultyRule(18) & MinPartyRule(3) & HasLategameRecipesRule(),                              # Dark Cindy
+  # 25: LogicDifficultyRule(18) & MinPartyRule(3) & HasLategameRecipesRule(),                              # Penance
 }
 
 
