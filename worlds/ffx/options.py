@@ -422,17 +422,27 @@ class HardcoreDreamsEnd(Toggle):
     option_on = 1
 
 
-class CustomizationRecipes(Toggle):
+class CustomizationRecipes(Choice):
     """
-    Sets whether
-    - Gear Customization items are required to be able to customize their respective auto-abilities.
-    - Aeon Customization items are required to be able to teach their respective abilities.
+    Sets whether gear 
+    - Gear Customization items are required to be able to customize gear with their respective auto-abilities.
+    - Aeon Customization items are required to be able to teach aeons their respective abilities.
+    
+    - Off:
+        Customizations are always available. Gear/Aeon Customization items make one free.
+    - On:
+        Customizations are only available after receiving the respective Gear/Aeon Customization item.
+        Afterwards, the first customization is free.
+    - Always Free:
+        Customizations are only available after receiving the respective Gear/Aeon Customization item.
+        From then on, they are always free.
     Default is off.
     """
     display_name = "Customization Recipes"
     default = 0
     option_off = 0
     option_on = 1
+    option_always_free = 2
 
 
 class Deathlink(Toggle):
