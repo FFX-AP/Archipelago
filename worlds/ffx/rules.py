@@ -351,34 +351,43 @@ class RegionAccessRule(Rule[FFXWorld], game="Final Fantasy X"):
 class HasOffensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return ( \
-            HasAll(
-                "Gear Customization: First Strike",
-                "Gear Customization: Auto-Haste",
-                "Gear Customization: Break Damage Limit"
-            ) &
-            HasAny("Gear Customization: Evade & Counter", "Gear Customization: Magic Counter")
-        ).resolve(world)
+        if world.options.customization_recipes == 0:
+            return True_().resolve(world)
+        else:
+            return ( \
+                HasAll(
+                    "Gear Customization: First Strike",
+                    "Gear Customization: Auto-Haste",
+                    "Gear Customization: Break Damage Limit"
+                ) &
+                HasAny("Gear Customization: Evade & Counter", "Gear Customization: Magic Counter")
+            ).resolve(world)
 
 
 @dataclass()
 class HasDefensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return ( \
-            (Has("Gear Customization: Ribbon") |
-                HasAll("Gear Customization: Stoneproof", "Gear Customization: Confuseproof")) &
-            (Has("Gear Customization: Auto-Phoenix") |
-                HasAll("Gear Customization: Break HP Limit", "Gear Customization: Auto-Potion")) &
-            HasAll("Gear Customization: Auto-Protect", "Gear Customization: Auto-Shell")
-        ).resolve(world)
+        if world.options.customization_recipes == 0:
+            return True_().resolve(world)
+        else:
+            return ( \
+                (Has("Gear Customization: Ribbon") |
+                    HasAll("Gear Customization: Stoneproof", "Gear Customization: Confuseproof")) &
+                (Has("Gear Customization: Auto-Phoenix") |
+                    HasAll("Gear Customization: Break HP Limit", "Gear Customization: Auto-Potion")) &
+                HasAll("Gear Customization: Auto-Protect", "Gear Customization: Auto-Shell")
+            ).resolve(world)
 
 
 @dataclass()
 class HasLategameRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        return (HasOffensiveRecipesRule() & HasDefensiveRecipesRule()).resolve(world)
+        if world.options.customization_recipes == 0:
+            return True_().resolve(world)
+        else:
+            return (HasOffensiveRecipesRule() & HasDefensiveRecipesRule()).resolve(world)
 
 
 @dataclass()
