@@ -352,7 +352,7 @@ class RegionAccessRule(Rule[FFXWorld], game="Final Fantasy X"):
 class HasOffensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off) ]
+        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off, operator="ne") ]
         filtered_resolution = True
 
         return (
@@ -372,7 +372,7 @@ class HasOffensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
 class HasDefensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off) ]
+        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off, operator="ne") ]
         filtered_resolution = True
 
         return (
@@ -388,7 +388,7 @@ class HasDefensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
 class HasLategameRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off) ]
+        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off, operator="ne") ]
         filtered_resolution = True
 
         return (HasOffensiveRecipesRule() & HasDefensiveRecipesRule()).resolve(world)
