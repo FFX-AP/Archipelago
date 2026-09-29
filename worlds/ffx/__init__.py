@@ -236,6 +236,7 @@ class FFXWorld(World):
 
     def fill_slot_data(self) -> dict[str, Any]:
         slot_data = {
+            "WorldVersion": self.world_version.as_simple_string(),
             "SeedId": self.multiworld.get_out_file_name_base(self.player),
             # Options
             "goal": self.options.goal.value,
