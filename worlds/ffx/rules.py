@@ -5,11 +5,12 @@ from typing_extensions import override
 
 from BaseClasses import CollectionState, Location
 from NetUtils import JSONMessagePart
-from rule_builder.rules import Rule, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
+from rule_builder.rules import Rule, OptionFilter, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, HasFromListUnique, True_, False_
 from worlds.generic.Rules import CollectionRule
 from . import key_items
 from .items import character_names, stat_abilities, item_to_stat_value, aeon_names, overdrive_names, party_member_items, region_unlock_items, equipItemOffset
 from .locations import TreasureOffset, OtherOffset, BossOffset, PartyMemberOffset, CaptureOffset, OverdriveOffset
+from .options import CustomizationRecipes
 
 if typing.TYPE_CHECKING:
     from .__init__ import FFXWorld
@@ -351,43 +352,46 @@ class RegionAccessRule(Rule[FFXWorld], game="Final Fantasy X"):
 class HasOffensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        if world.options.customization_recipes == 0:
-            return True_().resolve(world)
-        else:
-            return ( \
-                HasAll(
-                    "Gear Customization: First Strike",
-                    "Gear Customization: Auto-Haste",
-                    "Gear Customization: Break Damage Limit"
-                ) &
-                HasAny("Gear Customization: Evade & Counter", "Gear Customization: Magic Counter")
-            ).resolve(world)
+        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off) ]
+        filtered_resolution = True
+
+        return (
+            HasAll(
+                "Gear Customization: First Strike",
+                "Gear Customization: Auto-Haste",
+                "Gear Customization: Break Damage Limit"
+            )
+            & HasAny(
+                "Gear Customization: Evade & Counter",
+                "Gear Customization: Magic Counter"
+            )
+        ).resolve(world)
 
 
 @dataclass()
 class HasDefensiveRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        if world.options.customization_recipes == 0:
-            return True_().resolve(world)
-        else:
-            return ( \
-                (Has("Gear Customization: Ribbon") |
-                    HasAll("Gear Customization: Stoneproof", "Gear Customization: Confuseproof")) &
-                (Has("Gear Customization: Auto-Phoenix") |
-                    HasAll("Gear Customization: Break HP Limit", "Gear Customization: Auto-Potion")) &
-                HasAll("Gear Customization: Auto-Protect", "Gear Customization: Auto-Shell")
-            ).resolve(world)
+        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off) ]
+        filtered_resolution = True
+
+        return (
+            (Has("Gear Customization: Ribbon")
+                | HasAll("Gear Customization: Stoneproof", "Gear Customization: Confuseproof"))
+            & (Has("Gear Customization: Auto-Phoenix")
+                | HasAll("Gear Customization: Break HP Limit", "Gear Customization: Auto-Potion"))
+            & HasAll("Gear Customization: Auto-Protect", "Gear Customization: Auto-Shell")
+        ).resolve(world)
 
 
 @dataclass()
 class HasLategameRecipesRule(Rule[FFXWorld], game="Final Fantasy X"):
     @override
     def _instantiate(self, world: FFXWorld) -> Rule.Resolved:
-        if world.options.customization_recipes == 0:
-            return True_().resolve(world)
-        else:
-            return (HasOffensiveRecipesRule() & HasDefensiveRecipesRule()).resolve(world)
+        options = [ OptionFilter(CustomizationRecipes, CustomizationRecipes.option_off) ]
+        filtered_resolution = True
+
+        return (HasOffensiveRecipesRule() & HasDefensiveRecipesRule()).resolve(world)
 
 
 @dataclass()
