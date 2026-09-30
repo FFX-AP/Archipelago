@@ -13,7 +13,7 @@ from .equipment import gear_name_data, PlySaveId, GearType, generate_equipment, 
 
 from .items import create_item_label_to_code_map, item_table, key_items, filler_items, AllItems, FFXItem, \
     party_member_items, stat_abilities, skill_abilities, region_unlock_items, trap_items, equip_items, \
-    overdrive_items
+    overdrive_items, other_items
 from .locations import create_location_label_to_id_map, FFXLocation, allLocations
 from .regions import create_regions
 from .options import FFXOptions, create_option_groups
@@ -171,6 +171,11 @@ class FFXWorld(World):
             overdrive = self.random.choice(overdrive_items[:4])
             self.multiworld.push_precollected(self.create_item(overdrive.itemName))
             required_items.remove(overdrive.itemName)
+
+        # ------------------------ Customization Recipes ------------------------ #
+        for item in other_items:
+            if item.progression == ItemClassification.progression:
+                required_items.append(item.itemName)
 
         # ------------------------ Unfilled Locations ------------------------ #
         unfilled_locations = len(self.multiworld.get_unfilled_locations(self.player))
