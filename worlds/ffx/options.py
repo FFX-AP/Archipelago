@@ -422,6 +422,29 @@ class HardcoreDreamsEnd(Toggle):
     option_on = 1
 
 
+class CustomizationRecipes(Choice):
+    """
+    Sets whether gear 
+    - Gear Customization items are required to be able to customize gear with their respective auto-abilities.
+    - Aeon Customization items are required to be able to teach aeons their respective abilities.
+    
+    - Off:
+        Customizations are always available. Gear/Aeon Customization items make one free.
+    - On:
+        Customizations are only available after receiving the respective Gear/Aeon Customization item.
+        Afterwards, the first customization is free.
+    - Always Free:
+        Customizations are only available after receiving the respective Gear/Aeon Customization item.
+        From then on, they are always free.
+    Default is off.
+    """
+    display_name = "Customization Recipes"
+    default = 0
+    option_off = 0
+    option_on = 1
+    option_always_free = 2
+
+
 class Deathlink(Toggle):
     """
     Sets whether deathlink is enabled when you start a new game.
@@ -517,6 +540,7 @@ class FFXOptions(PerGameCommonOptions):
     capture_damage: CaptureDamage
     skip_contest_of_aeons: SkipContestOfAeons
     hardcore_dreams_end: HardcoreDreamsEnd
+    customization_recipes: CustomizationRecipes
     deathlink: Deathlink
     deathlink_send_type: DeathlinkSendType
     deathlink_receive_type: DeathlinkReceiveType
@@ -552,6 +576,7 @@ ffx_option_groups: dict[str, list[Any]] = {
         AlwaysSensor,
         SkipContestOfAeons,
         HardcoreDreamsEnd,
+        CustomizationRecipes,
         SphereGridRandomization,
     ],
 
