@@ -15,6 +15,7 @@ import time
 import typing
 import sys
 from asyncio import AbstractEventLoop
+from collections.abc import Iterable
 
 import psutil
 import websockets
@@ -29,6 +30,7 @@ from MultiServer import (
 from Utils import restricted_loads, cache_argsless
 from NetUtils import GamesPackage
 from apmw.webhost.customserver.gamespackagecache import DBGamesPackageCache
+
 from .locker import Locker
 from .models import Command, Room, db
 
@@ -102,18 +104,8 @@ class WebHostContext(Context):
         self.games_package_cache = games_package_cache
 
     def __del__(self):
-        try:
-            import psutil
-            from Utils import format_SI_prefix
-            self.logger.debug(f"Context destroyed, Mem: {format_SI_prefix(psutil.Process().memory_info().rss, 1024)}iB")
-        except ImportError:
-            self.logger.debug("Context destroyed")
-
-    def _load_game_data(self):
-        for key, value in self.static_server_data.items():
-            # NOTE: attributes are mutable and shared, so they will have to be copied before being modified
-            setattr(self, key, value)
-        self.non_hintable_names = collections.defaultdict(frozenset, self.non_hintable_names)
+        from Utils import format_SI_prefix
+        self.logger.debug(f"Context destroyed, Mem: {format_SI_prefix(psutil.Process().memory_info().rss, 1024)}iB")
 
     async def listen_to_db_commands(self):
         cmdprocessor = DBCommandProcessor(self)
@@ -149,8 +141,12 @@ class WebHostContext(Context):
     def _load_world_data(self):
         # Use static_server_data, but skip static data package since that is in cache anyway.
         # Also NOT importing worlds here!
-        # FIXME: does this copy the non_hintable_names (also for games not part of the room)?
-        self.non_hintable_names = collections.defaultdict(frozenset, self.static_server_data["non_hintable_names"])
+        non_hintable_names = {
+            game: item_names
+            for game, item_names in self.static_server_data["non_hintable_names"].items()
+            if game in self.played_games
+        }
+        self.non_hintable_names = collections.defaultdict(Utils.empty_frozenset_factory, non_hintable_names)
         del self.static_server_data  # Not used past this point. Free memory.
 
     def init_save(self, enabled: bool = True):
@@ -180,97 +176,96 @@ class WebHostContext(Context):
 
 
 class GameRangePorts(typing.NamedTuple):
-    parsed_ports: list[range]
-    weights: list[int]
+    valid_ports: list[int]
     ephemeral_allowed: bool
 
 
-@functools.cache
-def parse_game_ports(game_ports: tuple[str | int, ...]) -> GameRangePorts:
-    parsed_ports: list[range] = []
-    weights: list[int] = []
-    ephemeral_allowed = False
-    total_length = 0
+class RandomPortSocketCreator:
+    """ Creates server sockets on random available ports from a configured range. """
 
-    for item in game_ports:
-        if isinstance(item, str) and "-" in item:
-            start, end = map(int, item.split("-"))
-            x = range(start, end + 1)
-            total_length += len(x)
-            weights.append(total_length)
-            parsed_ports.append(x)
-        elif int(item) == 0:
-            ephemeral_allowed = True
-        else:
-            total_length += 1
-            weights.append(total_length)
-            num = int(item)
-            parsed_ports.append(range(num, num + 1))
+    _next_port_index: int
+    _used_ports_cache: tuple[frozenset[int], int] | None
+    _parsed_ports: GameRangePorts
 
-    return GameRangePorts(parsed_ports, weights, ephemeral_allowed)
+    def __init__(self, game_ports: Iterable[str | int]) -> None:
+        self._next_port_index = 0
+        self._used_ports_cache = None
+        self._parsed_ports = self._parse_game_ports(game_ports)
 
+    @staticmethod
+    def _parse_game_ports(game_ports: Iterable[str | int]) -> GameRangePorts:
+        """ Parse the game ports configuration into a structured format. """
+        valid_ports: list[int] = []
+        ephemeral_allowed = False
 
-def weighted_random(ranges: list[range], cum_weights: list[int]) -> int:
-    [picked] = random.choices(ranges, cum_weights=cum_weights)
-    return random.randrange(picked.start, picked.stop, picked.step)
+        for item in game_ports:
+            if isinstance(item, str) and "-" in item:
+                start, end = map(int, item.split("-"))
+                x = range(start, end + 1)
+                valid_ports.extend(x)
+            elif int(item) == 0:
+                ephemeral_allowed = True
+            else:
+                valid_ports.append(int(item))
 
+        random.shuffle(valid_ports)
+        return GameRangePorts(valid_ports, ephemeral_allowed)
 
-def create_random_port_socket(game_ports: tuple[str | int, ...], host: str) -> socket.socket:
-    parsed_ports, weights, ephemeral_allowed = parse_game_ports(game_ports)
-    used_ports = get_used_ports()
-    i = 1024 if len(parsed_ports) > 0 else 0
-    while i > 0:
-        port_num = weighted_random(parsed_ports, weights)
-        if port_num in used_ports:
-            used_ports = get_used_ports()
-            continue
+    @staticmethod
+    def _try_conns_per_process(p: psutil.Process) -> Iterable[int]:
+        """ Get ports from a single process's connections. """
+        try:
+            return (c.laddr.port for c in p.net_connections("tcp4") if c.laddr)
+        except psutil.AccessDenied:
+            return ()
 
-        i -= 0
+    @staticmethod
+    def _get_active_net_connections() -> Iterable[int]:
+        """ Get all active TCP4 connections on the system. """
+        # Don't even try to check if system using AIX
+        if psutil.AIX:
+            return ()
 
         try:
-            return socket.create_server((host, port_num))
-        except OSError:
-            pass
+            return (c.laddr.port for c in psutil.net_connections("tcp4") if c.laddr)
+        # raises AccessDenied when done on macOS
+        except psutil.AccessDenied:
+            # flatten the list of iterables
+            return itertools.chain.from_iterable(map(
+                RandomPortSocketCreator._try_conns_per_process,
+                psutil.process_iter(["net_connections"])
+            ))
 
-    if ephemeral_allowed:
-        return socket.create_server((host, 0))
+    def _get_used_ports(self) -> frozenset[int]:
+        """ Get currently used ports with 90-second caching. """
+        t_hash = round(time.monotonic() / 90)
+        if self._used_ports_cache is None or self._used_ports_cache[1] != t_hash:
+            self._used_ports_cache = (frozenset(self._get_active_net_connections()), t_hash)
 
-    raise OSError(98, "No available ports")
+        return self._used_ports_cache[0]
 
+    def create(self, host: str) -> socket.socket:
+        """ Create a server socket on an available port. """
+        valid_ports, ephemeral_allowed = self._parsed_ports
+        used_ports = self._get_used_ports()
 
-def try_conns_per_process(p: psutil.Process) -> typing.Iterable[int]:
-    try:
-        return (c.laddr.port for c in p.net_connections("tcp4"))
-    except psutil.AccessDenied:
-        return ()
+        next_index = self._next_port_index
+        for i, port in enumerate(itertools.chain(valid_ports[next_index:], valid_ports[:next_index])):
+            if port in used_ports:
+                continue
 
+            try:
+                res = socket.create_server((host, port))
+                next_index = (next_index + i + 1) % len(valid_ports)
+                self._next_port_index = next_index
+                return res
+            except OSError:
+                pass
 
-def get_active_net_connections() -> typing.Iterable[int]:
-    # Don't even try to check if system using AIX
-    if psutil.AIX:
-        return ()
+        if ephemeral_allowed:
+            return socket.create_server((host, 0))
 
-    try:
-        return (c.laddr.port for c in psutil.net_connections("tcp4"))
-    # raises AccessDenied when done on macOS
-    except psutil.AccessDenied:
-        # flatten the list of iterables
-        return itertools.chain.from_iterable(map(
-            # get the net connections of the process and then map its ports
-            try_conns_per_process,
-            # this method has caching handled by psutil
-            psutil.process_iter(["net_connections"])
-        ))
-
-
-def get_used_ports():
-    last_used_ports: tuple[frozenset[int], float] | None = getattr(get_used_ports, "last", None)
-    t_hash = round(time.time() / 90)  # cache for 90 seconds
-    if last_used_ports is None or last_used_ports[1] != t_hash:
-        last_used_ports = (frozenset(get_active_net_connections()), t_hash)
-        setattr(get_used_ports, "last", last_used_ports)
-
-    return last_used_ports[0]
+        raise OSError(98, "No available ports")
 
 
 class StaticServerData(typing.TypedDict, total=True):
@@ -286,6 +281,7 @@ def get_static_server_data() -> StaticServerData:
         "non_hintable_names": {
             world_name: world.hint_blacklist
             for world_name, world in worlds.AutoWorldRegister.world_types.items()
+            if world.hint_blacklist
         },
         "games_package": worlds.network_data_package["games"]
     }
@@ -322,9 +318,19 @@ def tear_down_logging(room_id):
         del logging.Logger.manager.loggerDict[logger_name]
 
 
-def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
-                       cert_file: typing.Optional[str], cert_key_file: typing.Optional[str],
-                       host: str, rooms_to_run: multiprocessing.Queue, rooms_shutting_down: multiprocessing.Queue):
+def run_server_process(
+        name: str,
+        ponyconfig: dict[str, typing.Any],
+        static_server_data: StaticServerData,
+        cert_file: str | None,
+        cert_key_file: str | None,
+        host: str,
+        game_ports: Iterable[str | int],
+        rooms_to_run: multiprocessing.Queue,
+        rooms_shutting_down: multiprocessing.Queue,
+) -> None:
+    import gc
+
     from setproctitle import setproctitle
 
     setproctitle(name)
@@ -342,8 +348,6 @@ def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
 
     # prime the data package cache with static data
     games_package_cache = DBGamesPackageCache(static_server_data["games_package"])
-    # convert to tuple because its hashable
-    game_ports = tuple(game_ports)
 
     # establish DB connection for multidata and multisave
     db.bind(**ponyconfig)
@@ -371,6 +375,7 @@ def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
     gc.collect()  # free intermediate objects used during setup
 
     loop = asyncio.get_event_loop()
+    socket_creator = RandomPortSocketCreator(game_ports)
 
     async def start_room(room_id):
         with Locker(f"RoomLocker {room_id}"):
@@ -395,7 +400,7 @@ def run_server_process(name: str, ponyconfig: dict, static_server_data: dict,
                 if ctx.port == 0:
                     ctx.server = websockets.serve(
                         functools.partial(server, ctx=ctx),
-                        sock=create_random_port_socket(game_ports, ctx.host),
+                        sock=socket_creator.create(ctx.host),
                         ssl=get_ssl_context(),
                         extensions=[server_per_message_deflate_factory],
                     )
