@@ -848,6 +848,11 @@ other_items: list[ItemData] = [ItemData(x[0], x[1], x[2] | otherItemOffset) for 
     #("Aeon Customization: LCK +1",          ItemClassification.useful, 0x004A + 0x7D),
     #("Aeon Customization: EVA +1",          ItemClassification.useful, 0x004B + 0x7D),
     #("Aeon Customization: ACC +1",          ItemClassification.useful, 0x004C + 0x7D),
+
+    ("Sphere Grid: Unlock All Lv. 1 Locks", ItemClassification.progression, 0x100 + 0),
+    ("Sphere Grid: Unlock All Lv. 2 Locks", ItemClassification.progression, 0x100 + 1),
+    ("Sphere Grid: Unlock All Lv. 3 Locks", ItemClassification.progression, 0x100 + 2),
+    ("Sphere Grid: Unlock All Lv. 4 Locks", ItemClassification.progression, 0x100 + 3),
 ]]
 
 stat_abilities = [ability for ability in abilities_per_character if ability.itemID & 0xFF <= 0x26]
